@@ -21,7 +21,7 @@ for d in "$REPO_ROOT"/skills/*/; do
   [ "${#desc}" -le 300 ] && pass "$name: description ${#desc} <= 300 chars" || fail "$name: description ${#desc} chars"
   words="$(wc -w <"$f" | tr -d ' ')"
   [ "$words" -le 900 ] && pass "$name: body $words <= 900 words" || fail "$name: body $words words"
-  case "$name" in pre-done) continue ;; esac # pre-done reviews a diff, it does not measure a session
+  case "$name" in pre-done | kontrola-planu) continue ;; esac # pre-done and kontrola-planu review text, they do not measure a session
   grep -q 'scripts/session-metrics" --session "${CLAUDE_SESSION_ID}"' "$f" && pass "$name: runs session-metrics by session id" \
     || fail "$name: does not run session-metrics by session id"
 done
@@ -42,6 +42,23 @@ assert_eq "log-reader name" log-reader "$(frontmatter "$f" name)"
 assert_eq "log-reader model" haiku "$(frontmatter "$f" model)"
 assert_eq "log-reader tools" "Read, Grep, Glob, Bash" "$(frontmatter "$f" tools)"
 grep -q "at most 30 lines" "$f" && pass "log-reader: 30-line cap" || fail "log-reader: no 30-line cap"
+
+echo "kontrola-planu: skill, agents, eval"
+for a in kontrola-souladu kontrola-auditu; do
+  f="$REPO_ROOT/agents/$a.md"
+  [ -f "$f" ] && pass "$a: file exists" || { fail "$a: missing"; continue; }
+  assert_eq "$a name" "$a" "$(frontmatter "$f" name)"
+  [ -n "$(frontmatter "$f" description)" ] && pass "$a: description" || fail "$a: no description"
+  assert_eq "$a model" sonnet "$(frontmatter "$f" model)"
+  assert_eq "$a tools (read-only)" "Read, Grep, Glob" "$(frontmatter "$f" tools)"
+  grep -q "OPRAVIT" "$f" && grep -q "ZEPTAT" "$f" && grep -q "ZAMÍTNOUT" "$f" && pass "$a: three buckets" || fail "$a: buckets missing"
+done
+grep -q "Malý plán (do 3 úkolů)" "$REPO_ROOT/agents/kontrola-souladu.md" && pass "kontrola-souladu: small-plan section" || fail "kontrola-souladu: no small-plan section"
+f="$REPO_ROOT/skills/kontrola-planu/SKILL.md"
+grep -q "honzapowers:kontrola-souladu" "$f" && grep -q "honzapowers:kontrola-auditu" "$f" && pass "kontrola-planu: names both agents" || fail "kontrola-planu: agents not named"
+grep -qi "nikdy neupravuj plugin" "$f" && pass "kontrola-planu: never edits plugin or policy" || fail "kontrola-planu: no never-edit rule"
+E="$REPO_ROOT/evals/kontrola-planu-fires"
+[ -f "$E/prompt.md" ] && [ "$(ls "$E"/graders/*.md | wc -l)" -ge 3 ] && pass "kontrola-planu eval: prompt and 3+ graders" || fail "kontrola-planu eval incomplete"
 
 echo "Policy rule IDs match the rule ledger"
 policy_ids="$(grep -oE '^(L[0-9]+|M[0-9]+|S[0-9]+|F[0-9]+|G[0-9]+) ' "$REPO_ROOT/policy/policy.md" | tr -d ' ' | sort)"
