@@ -2,6 +2,7 @@
 
 ## 0.2.0 — 2026-11-21
 - Plugin přejmenován z `lean-workflow` na `honzapowers` (nové repo s čistou historií).
+- README česky, nový návod `docs/pouziti.md`, licence MIT.
 - Proměnné prostředí `HONZAPOWERS_HANDOVER_TOKENS`, `HONZAPOWERS_HANDOVER_STEP`, `HONZAPOWERS_RESUME_TOKENS` a `HONZAPOWERS_REAL_TRANSCRIPT` mají přednost; původní `LEAN_WORKFLOW_*` dál fungují jako záloha.
 
 ## 0.1.5 — 2026-11-17
