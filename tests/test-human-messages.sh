@@ -25,6 +25,11 @@ printf '{"ccr":{"data":[{"created_at":"2026-10-30T21:00:00Z","user":{"internal_a
   | sed 's/\\t/\t/' >"$tab"
 python3 -I "$SCRIPT" "$tab" | grep -q 'zalomením' && pass "skript nespadne na tabulátoru" || fail "skript spadl na tabulátoru"
 
+echo "Výstup v cp1252 (Windows): skript musí vynutit UTF-8"
+# Bez -I: izolovaný režim ignoruje PYTHONIOENCODING a test by nic neověřil.
+out="$(PYTHONIOENCODING=cp1252 python3 "$SCRIPT" "$FIXTURES/list-events-sample.txt" 2>&1)"
+has "diakritika při cp1252 nespadne" 'has_more=True before_id=abc-123'
+
 echo "Chybné vstupy"
 python3 -I "$SCRIPT" >/dev/null 2>&1; assert_eq "bez argumentu skončí kódem 2" 2 "$?"
 printf 'bez json\n' >"$TEST_ROOT/bad.txt"
