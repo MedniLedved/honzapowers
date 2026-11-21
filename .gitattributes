@@ -1,0 +1,12 @@
+# Hook scripts are run by bash on every OS; CRLF would break them on Windows.
+hooks/session-start text eol=lf
+hooks/user-prompt-submit text eol=lf
+hooks/pre-compact text eol=lf
+scripts/session-metrics text eol=lf
+*.sh text eol=lf
+# The polyglot wrapper is parsed by both cmd and bash and must stay LF.
+*.cmd text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.jsonl text eol=lf

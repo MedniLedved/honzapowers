@@ -1,0 +1,2 @@
+{"parentUuid":null,"isSidechain":false,"type":"user","message":{"role":"user","content":"x"},"uuid":"u1","timestamp":"2026-11-09T10:00:00Z","sessionId":"s1"}
+{"type":"assistant","requestId":"req_9","message":{"usage":{"output_tokens":5,"cache_read_input_tokens":60000,"input_tokens":1000,"cache_creation_input_tokens":40000}}}

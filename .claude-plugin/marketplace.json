@@ -1,0 +1,18 @@
+{
+  "name": "honzapowers",
+  "description": "Marketplace for the honzapowers plugin",
+  "owner": {
+    "name": "MedniLedved"
+  },
+  "plugins": [
+    {
+      "name": "honzapowers",
+      "description": "Lean working policy and session memory for Claude Code: standing rules and repo state at session start, a handover proposal at large contexts, handover and retro skills with measured session metrics, and a Haiku log reader.",
+      "version": "0.2.0",
+      "source": "./",
+      "author": {
+        "name": "MedniLedved"
+      }
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+#!/usr/bin/env bash
+# SessionStart hook for honzapowers.
+#
+# Injects the standing policy (startup/clear/compact) and a compact repo state
+# (every source) as additionalContext. Prints only paths and counts, never
+# repository file contents. Read-only, no network, no jq, always exits 0.
+set -u
+export LC_ALL=C
+trap 'exit 0' EXIT
+
+MAX_CONTEXT=3800   # total additionalContext cap: policy <= 3200 + state (chars)
+RESUME_TOKENS="${HONZAPOWERS_RESUME_TOKENS:-${LEAN_WORKFLOW_RESUME_TOKENS:-50000}}"
+case "$RESUME_TOKENS" in '' | *[!0-9]*) RESUME_TOKENS=50000 ;; esac
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" 2>/dev/null && pwd)"
+PLUGIN_ROOT="${SCRIPT_DIR%/*}"
+# shellcheck source=lib/common.sh
+. "$SCRIPT_DIR/lib/common.sh" 2>/dev/null || exit 0
+
+input="$(cat 2>/dev/null)"
+
+# --- input parsing (bash regex only, helpers in lib/common.sh) -------------
+
+source_kind="$(json_string source)"
+cwd="$(json_string cwd)"
+[ -n "$cwd" ] || cwd="$PWD"
+cwd="$(to_bash_path "$cwd")"
+
+# --- helpers ----------------------------------------------------------------
+
+newest_md() { # $@ = dirs relative to cwd; prints newest *.md by name, first dir that has one
+  local d f last
+  for d in "$@"; do
+    last=""
+    for f in "$cwd/$d"/*.md; do
+      [ -f "$f" ] && last="$f"
+    done
+    if [ -n "$last" ]; then
+      printf '%s' "${last#"$cwd"/}"
+      return 0
+    fi
+  done
+  return 1
+}
+
+# --- repo state ---------------------------------------------------------------
+
+state="Repo state (honzapowers; paths and counts only):"
+if [ -d "$cwd" ]; then
+  branch="$(git -C "$cwd" symbolic-ref --short -q HEAD 2>/dev/null)"
+  if [ -z "$branch" ]; then
+    sha="$(git -C "$cwd" rev-parse --short -q HEAD 2>/dev/null)"
+    if [ -n "$sha" ]; then
+      branch="detached at $sha"
+    elif git -C "$cwd" rev-parse --git-dir >/dev/null 2>&1; then
+      branch="unknown"
+    else
+      branch="not a git repo"
+    fi
+  fi
+  case "$branch" in
+    "not a git repo" | unknown | "detached at "*) ;;
+    *) branch="$(sanitize "$branch")" ;;
+  esac
+  state+=$'\n'"- Branch: $branch"
+
+  plan="$(newest_md docs/superpowers/plans docs/plans)"
+  if [ -z "$plan" ] && [ -f "$cwd/docs/plan.md" ]; then plan="docs/plan.md"; fi
+  open=0
+  if [ -n "$plan" ]; then
+    open="$(grep -c '^[[:space:]]*- \[ \]' "$cwd/$plan" 2>/dev/null)"
+    case "$open" in '' | *[!0-9]*) open=0 ;; esac
+    plan_safe="$(sanitize "$plan")"
+    state+=$'\n'"- Plan: $plan_safe ($open open tasks)"
+  else
+    state+=$'\n'"- Plan: none found"
+  fi
+
+  handover="$(newest_md docs/handover docs/audit)"
+  if [ -n "$handover" ]; then
+    handover_safe="$(sanitize "$handover")"
+    state+=$'\n'"- Handover: $handover_safe"
+  else
+    state+=$'\n'"- Handover: none found"
+  fi
+
+  if [ -n "$plan" ] && [ "$open" -gt 0 ]; then
+    state+=$'\n'"- Next step: continue $plan_safe ($open open tasks)."
+  elif [ -n "$handover" ]; then
+    state+=$'\n'"- Next step: read $handover_safe."
+  fi
+else
+  state+=$'\n'"- Working directory not accessible."
+fi
+
+case "$source_kind" in
+  resume | fork)
+    tokens="$(json_number context_tokens)"
+    tokens="${tokens%%.*}"
+    if [ -n "$tokens" ] && json_true prompt_cache_likely_expired && [ "$tokens" -ge "$RESUME_TOKENS" ]; then
+      note="- Resumed with ~$((tokens / 1000))k context tokens and an expired prompt cache"
+      usd="$(json_number estimated_cache_write_usd)"
+      if [ -n "$usd" ]; then
+        usd="$(printf '%.2f' "$usd" 2>/dev/null)"
+        [ -n "$usd" ] && note+=" (cache rewrite ~\$$usd)"
+      fi
+      state+=$'\n'"$note: propose (do not run) pre-done if code changed, then a handover and /clear or a fresh session; wait for the user."
+    fi
+    ;;
+esac
+
+# --- assemble -----------------------------------------------------------------
+
+context="$state"
+case "$source_kind" in
+  resume | fork) ;;
+  *)
+    policy=""
+    [ -f "$PLUGIN_ROOT/policy/policy.md" ] && policy="$(<"$PLUGIN_ROOT/policy/policy.md")"
+    [ -n "$policy" ] && context="$policy"$'\n\n'"$state"
+    ;;
+esac
+context="${context:0:$MAX_CONTEXT}"
+
+printf '{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"%s"}}\n' \
+  "$(escape_for_json "$context")"
+exit 0

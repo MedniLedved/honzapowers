@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# PreCompact hook for honzapowers.
+#
+# Its stdout becomes extra instructions for the compaction summary. It asks to
+# keep only task state; the policy and repo state come back through
+# SessionStart(compact). Static text, no input needed, always exits 0.
+set -u
+trap 'exit 0' EXIT
+cat >/dev/null 2>&1
+cat <<'TEXT'
+honzapowers: in the summary, keep verbatim the last verification command and its PASS/FAIL result, every open approval gate (credential, destructive operation, production change, push to a shared or default branch) with its status, the current task and its step, decisions or ledger rulings made in this session, and open items. Drop the standing policy and repo state (branch, plan, handover); they are re-injected after compaction.
+TEXT
+exit 0

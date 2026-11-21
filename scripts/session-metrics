@@ -1,0 +1,182 @@
+#!/usr/bin/env bash
+# session-metrics: measurable efficiency facts about one Claude Code session,
+# computed from its transcript JSONL. Used by the handover and retro skills and
+# as the pilot metric (plan §4.2, §4.6).
+#
+# Usage: session-metrics [transcript.jsonl | --session <session-id>]
+#   --session: <config>/projects/*/<session-id>.jsonl (skills pass ${CLAUDE_SESSION_ID}).
+#   No argument: newest transcript of the current directory's project
+#   (${CLAUDE_CONFIG_DIR:-~/.claude}/projects/<cwd slug>/), else the newest overall.
+#
+# Output: at most 30 lines of numbers with line:N references into the
+# transcript. It never prints transcript content (no commands, paths or text),
+# only tool names. Bash + POSIX awk, no jq. Read-only.
+set -u
+export LC_ALL=C
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" 2>/dev/null && pwd)"
+# shellcheck source=../hooks/lib/common.sh
+. "$SCRIPT_DIR/../hooks/lib/common.sh" || exit 1
+# shellcheck source=../hooks/lib/usage.sh
+. "$SCRIPT_DIR/../hooks/lib/usage.sh" || exit 1
+
+find_transcript() {
+  local base="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/projects" cwd slug f
+  cwd="$(pwd -W 2>/dev/null || pwd)" # Windows form under Git Bash, as Claude Code names it
+  slug="${cwd//[^A-Za-z0-9]/-}"
+  f="$(ls -t "$base/$slug"/*.jsonl 2>/dev/null | head -n 1)"
+  [ -n "$f" ] || f="$(ls -t "$base"/*/*.jsonl 2>/dev/null | head -n 1)"
+  printf '%s' "$f"
+}
+
+if [ "${1:-}" = "--session" ]; then
+  sid="$(sanitize "${2:-}")"
+  sid="${sid//\//}"
+  transcript=""
+  [ -n "$sid" ] && transcript="$(ls -t "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/projects"/*/"$sid.jsonl" 2>/dev/null | head -n 1)"
+  [ -n "$transcript" ] || { echo "session-metrics: no transcript for that session id" >&2; exit 1; }
+else
+  transcript="$(to_bash_path "${1:-}")"
+  [ -n "$transcript" ] || transcript="$(find_transcript)"
+fi
+if [ -z "$transcript" ] || [ ! -f "$transcript" ]; then
+  echo "session-metrics: no transcript found${1:+ at the given path}" >&2
+  exit 1
+fi
+
+now="$(last_context_tokens "$transcript")" || now=""
+bytes="$(wc -c <"$transcript" | tr -d ' ')"
+
+awk -v NOW="$now" -v BYTES="$bytes" -v NAME="$(sanitize "${transcript##*/}")" '
+function k(n) {
+  if (n >= 1000000) return sprintf("%.1fM", n / 1000000)
+  if (n >= 100000) return sprintf("%.0fk", n / 1000)
+  if (n >= 1000) return sprintf("%.1fk", n / 1000)
+  return n ""
+}
+function num(s, key,   re) { # number after "key": in s, or 0
+  re = "\"" key "\":[ ]*[0-9]+"
+  if (!match(s, re)) return 0
+  s = substr(s, RSTART, RLENGTH); sub(/.*:[ ]*/, "", s); return s + 0
+}
+function str(s, key,   re) { # raw (escaped) JSON string after "key":"
+  re = "\"" key "\":\""
+  if (!match(s, re)) return ""
+  s = substr(s, RSTART + RLENGTH)
+  # cut at the first quote not preceded by an odd run of backslashes
+  out = ""
+  while (match(s, /"/)) {
+    pre = substr(s, 1, RSTART - 1); out = out pre
+    bs = pre; n = 0; while (bs ~ /\\$/) { n++; bs = substr(bs, 1, length(bs) - 1) }
+    if (n % 2 == 0) return out
+    out = out "\""; s = substr(s, RSTART + 1)
+  }
+  return out
+}
+function add_top(bytes, label, line,   i, j) { # keep the 3 largest tool results
+  for (i = 1; i <= 3; i++) if (bytes > topb[i]) break
+  if (i > 3) return
+  for (j = 3; j > i; j--) { topb[j] = topb[j-1]; topl[j] = topl[j-1]; topn[j] = topn[j-1] }
+  topb[i] = bytes; topl[i] = label; topn[i] = line
+}
+function safe(name) { gsub(/[^A-Za-z0-9_]/, "", name); return substr(name, 1, 40) }
+function tool_call(name, block, line,   cmd, key, f) {
+  calls++; bycount[name]++
+  if (!(name in seen_name)) { seen_name[name] = 1; names[++nnames] = name }
+  if (name == "Bash") {
+    cmd = str(block, "command"); key = cmd; gsub(/[0-9]+/, "#", key)
+    if (prev_tool == "Bash" && key == prev_key) { run++ } else { flush_run(); run = 1; run_line = line }
+    prev_key = key
+    if (cmd ~ /(^|[^A-Za-z])(test|tests|pytest|jest|vitest|tsc|run-tests)([^A-Za-z]|$)|npm (run )?test|go test|cargo test/) {
+      if ((key in test_change) && test_change[key] == changes) { reruns++; if (reruns <= 3) rerun_lines = rerun_lines " line:" line }
+      test_change[key] = changes
+    } else if (cmd ~ /sed -i|tee |cat >|(^|[ ;&|])(mv|cp|rm|patch) |git (checkout|apply|restore|stash|reset)|python[0-9.]* -|perl -[pi]/) {
+      changes++
+    }
+    flush_edit()
+  } else {
+    flush_run()
+    if (name == "Edit" || name == "MultiEdit" || name == "Write" || name == "NotebookEdit") changes++
+    if (name == "Edit" || name == "MultiEdit") {
+      f = str(block, "file_path")
+      if (f == edit_file) edits++; else { flush_edit(); edit_file = f; edits = 1; edit_line = line }
+    }
+  }
+  prev_tool = name
+}
+function flush_run() {
+  if (run >= 3) { nruns++; if (nruns <= 3) run_desc = run_desc " line:" run_line " x" run }
+  run = 0; prev_key = ""
+}
+function flush_edit() {
+  if (edits >= 3) { nedit++; if (nedit <= 3) edit_desc = edit_desc " line:" edit_line " x" edits }
+  edits = 0; edit_file = ""
+}
+
+{
+  line = $0
+  if (index(line, "\"type\":\"assistant\"")) {
+    req = str(line, "requestId"); if (req == "") req = "line" NR
+    if (match(line, /"usage":\{[^}]*/)) {
+      u = substr(line, RSTART, RLENGTH)
+      sum = num(u, "input_tokens") + num(u, "cache_creation_input_tokens") + num(u, "cache_read_input_tokens")
+      if (sum > 0 && !(req in seen_req)) {
+        seen_req[req] = 1; responses++
+        if (responses == 1) first = sum
+        last = sum; if (sum > maxc) maxc = sum
+        in_total += sum; cache_read += num(u, "cache_read_input_tokens"); out_total += num(u, "output_tokens")
+      }
+    }
+    rest = line
+    while (match(rest, /"type":"tool_use","id":"[^"]*","name":"[^"]*"/)) {
+      hdr = substr(rest, RSTART, RLENGTH); rest = substr(rest, RSTART + RLENGTH)
+      id = str(hdr, "id"); name = safe(str(hdr, "name"))
+      if (id in tool_name) continue
+      tool_name[id] = name
+      tool_call(name, rest, NR)
+    }
+    rest = line
+    while (match(rest, /"type":"text","text":"/)) {
+      rest = substr(rest, RSTART + 7)
+      t = str(rest, "text"); replies++; text_total += length(t)
+      if (length(t) > text_max) { text_max = length(t); text_max_line = NR }
+    }
+  } else if (index(line, "\"tool_result\"")) {
+    id = str(line, "tool_use_id")
+    label = (id in tool_name) ? tool_name[id] : "tool"
+    add_top(length(line), label, NR)
+    if (match(line, /[^\\]"numLines":[0-9]+,"startLine":1,"totalLines":[0-9]+/)) {
+      m = substr(line, RSTART + 1, RLENGTH - 1)
+      nl = num(m, "numLines"); tl = num(m, "totalLines")
+      if (nl == tl && nl > 300) { nread++; if (nread <= 3) read_desc = read_desc " line:" NR " (" nl " lines)" }
+    }
+  }
+}
+
+END {
+  flush_run(); flush_edit()
+  printf "session-metrics: %s (%d lines, %s bytes)\n", NAME, NR, k(BYTES)
+  printf "Responses: %d (deduplicated by requestId)\n", responses
+  if (responses) {
+    printf "Context tokens: first %s, last %s, max %s, growth +%s\n", k(first), k(last), k(maxc), k(last - first)
+    printf "Input tokens processed: %s (cache reads %s, %d%%); output: %s\n", k(in_total), k(cache_read), int(100 * cache_read / in_total), k(out_total)
+  } else print "Context tokens: no usage records"
+  if (NOW != "") printf "Context now (hook parser): %s\n", k(NOW + 0)
+  s = ""
+  for (i = 1; i <= nnames; i++) { # sort names by count, descending (small n)
+    for (j = i + 1; j <= nnames; j++) if (bycount[names[j]] > bycount[names[i]]) { x = names[i]; names[i] = names[j]; names[j] = x }
+  }
+  for (i = 1; i <= nnames && i <= 8; i++) s = s (i > 1 ? ", " : "") names[i] " " bycount[names[i]]
+  if (nnames > 8) s = s ", +" (nnames - 8) " more"
+  printf "Tool calls: %d%s\n", calls, (calls ? " (" s ")" : "")
+  printf "Identical Bash runs >= 3 in a row (digits ignored): %d%s\n", nruns, run_desc
+  printf "Edits to one file >= 3 in a row without a Bash run: %d%s\n", nedit, edit_desc
+  printf "Test re-runs with no change since the same run: %d%s\n", reruns, rerun_lines
+  printf "Whole-file reads over 300 lines: %d%s\n", nread, read_desc
+  s = ""
+  for (i = 1; i <= 3; i++) if (topb[i]) s = s " " topl[i] " " k(topb[i]) "B line:" topn[i] ";"
+  printf "Largest tool results:%s\n", (s == "" ? " none" : s)
+  printf "Reply text blocks: %d, %s chars total, max %s", replies, k(text_total), k(text_max)
+  if (text_max_line) printf " (line:%d)", text_max_line
+  printf "\n"
+}' "$transcript"

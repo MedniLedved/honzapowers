@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+# UserPromptSubmit hook for honzapowers.
+#
+# Reads the context size from the newest usage record in the transcript and,
+# when it crosses a threshold (default 250k, then every +50k), adds one short
+# note suggesting a handover. Notes once per crossing, with the last noted
+# bucket kept per session. Silent otherwise. Never prints transcript content.
+# Read-only except the state file, no network, no jq, always exits 0.
+set -u
+export LC_ALL=C
+trap 'exit 0' EXIT
+
+THRESHOLD="${HONZAPOWERS_HANDOVER_TOKENS:-${LEAN_WORKFLOW_HANDOVER_TOKENS:-250000}}"
+case "$THRESHOLD" in '' | *[!0-9]* | 0) THRESHOLD=250000 ;; esac
+STEP="${HONZAPOWERS_HANDOVER_STEP:-${LEAN_WORKFLOW_HANDOVER_STEP:-50000}}"
+case "$STEP" in '' | *[!0-9]* | 0) STEP=50000 ;; esac
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" 2>/dev/null && pwd)"
+# shellcheck source=lib/common.sh
+. "$SCRIPT_DIR/lib/common.sh" 2>/dev/null || exit 0
+# shellcheck source=lib/usage.sh
+. "$SCRIPT_DIR/lib/usage.sh" 2>/dev/null || exit 0
+
+input="$(cat 2>/dev/null)"
+
+transcript="$(to_bash_path "$(json_string transcript_path)")"
+[ -n "$transcript" ] && [ -f "$transcript" ] || exit 0
+
+# State key: session id, else the transcript file name. No key, no note
+# (a note without state would repeat on every prompt).
+key="$(sanitize "$(json_string session_id)")"
+key="${key//\//}"
+if [ -z "$key" ]; then
+  key="${transcript##*/}"
+  key="$(sanitize "${key%.jsonl}")"
+  key="${key//\//}"
+fi
+[ -n "$key" ] || exit 0
+
+estimated=""
+if ! tokens="$(last_context_tokens "$transcript")"; then
+  tokens="$(file_size_tokens "$transcript")" || exit 0
+  estimated=1
+fi
+case "$tokens" in '' | *[!0-9]*) exit 0 ;; esac
+
+bucket=0
+[ "$tokens" -ge "$THRESHOLD" ] && bucket=$((1 + (tokens - THRESHOLD) / STEP))
+
+state_dir="${CLAUDE_PLUGIN_DATA:-${TMPDIR:-/tmp}/honzapowers}"
+state_file="$state_dir/upsubmit-$key"
+prev=0
+[ -f "$state_file" ] && prev="$(head -c 20 "$state_file" 2>/dev/null)"
+case "$prev" in '' | *[!0-9]*) prev=0 ;; esac
+
+# Always store the current bucket, so a drop (after /compact) and a later
+# re-crossing notes again. Only write when it changed.
+if [ "$bucket" -ne "$prev" ]; then
+  mkdir -p "$state_dir" 2>/dev/null && printf '%s\n' "$bucket" >"$state_file" 2>/dev/null
+fi
+[ "$bucket" -gt "$prev" ] || exit 0
+
+k=$((tokens / 1000))
+if [ -n "$estimated" ]; then
+  size="roughly ${k}k tokens (estimated from the transcript size)"
+else
+  size="~${k}k tokens (from the transcript usage record)"
+fi
+note="honzapowers: the session context is now $size, past the $((THRESHOLD / 1000))k handover threshold. Context is large: propose to the user in one sentence pre-done (if the session changed code) and then a handover; run nothing until they answer."
+
+printf '{"hookSpecificOutput":{"hookEventName":"UserPromptSubmit","additionalContext":"%s"}}\n' \
+  "$(escape_for_json "$note")"
+exit 0
