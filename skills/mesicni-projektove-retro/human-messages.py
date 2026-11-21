@@ -60,6 +60,8 @@ def zpravy_cloveka(ccr: dict):
 
 
 def main(cesta: str) -> int:
+    # Na Windows by výstup šel do cp1252 a spadl na české diakritice.
+    sys.stdout.reconfigure(encoding="utf-8")
     with open(cesta, encoding="utf-8") as f:
         ccr = nacti(f.read())
     for cas, sid, text in zpravy_cloveka(ccr):
