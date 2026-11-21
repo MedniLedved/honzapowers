@@ -12,22 +12,23 @@
 | Soubor | Kdo ho vytváří | K čemu |
 |---|---|---|
 | `docs/handover/RRRR-MM-DD-<téma>.md` | skill `handover` | předání práce další session, včetně krátkého retro; až po tvém souhlasu se commituje |
-| `docs/retro/RRRR-MM-DD-<téma>.md` | skill `retro`, `mesicni-projektove-retro` | změřená session nebo retrospektiva období s nálezy |
+| `docs/retro/RRRR-MM-DD-<téma>.md` | skill `retro` | změřená session s nálezy |
+| `docs/retro/RRRR-MM-DD-obdobi-<téma>.md` | skill `mesicni-projektove-retro` | retrospektiva projektu za období |
 | `.claude/kontrola-planu.md` | skill `kontrola-planu` (po tvém schválení) | kritéria kontroly plánu specifická pro projekt, nejvýš 15 bodů |
 
-Cesty a názvy může projekt přepsat vlastní konvencí; skilly se řídí tím, co projekt stanoví.
+Skill `handover` se řídí konvencí projektu (cesta `docs/handover/` je jen výchozí). Cesty skillů `retro`, `mesicni-projektove-retro` a `kontrola-planu` jsou pevné.
 
 ## Na které úrovni pravidla platí
-Od nejslabší po nejsilnější:
-1. **Výchozí** (plugin): `policy/policy.md`, vkládá se na začátku každé session. Mění se jen ručně vydanou verzí pluginu, nikdy retrem, kontrolou plánu ani handoverem.
-2. **Uživatel** (osobní vrstva): vlastní pravidla v osobním pluginu vytvořeném ze šablony `honzapowers-sablona` (soubor `pravidla.md`, max 800 znaků). Platí ve všech tvých projektech.
-3. **Projekt**: `CLAUDE.md` / `AGENTS.md` repa a `.claude/kontrola-planu.md`. Při střetu vyhrává projekt (brána `G1` a pravidla v policy to říkají výslovně).
+1. **Výchozí** (plugin): `policy/policy.md`, vkládá se při startu session, po `/clear` a po kompaktaci (ne při `resume` a `fork`, tam přijde jen stav repa). Mění se jen ručně vydanou verzí pluginu, nikdy retrem, kontrolou plánu ani handoverem.
+2. **Uživatel** (osobní vrstva): vlastní pravidla v osobním pluginu vytvořeném ze šablony `honzapowers-sablona` (soubor `pravidla.md`, max 800 znaků). Platí ve všech tvých projektech a doplňuje výchozí pravidla.
+3. **Projekt**: `CLAUDE.md` / `AGENTS.md` repa a `.claude/kontrola-planu.md`. Při střetu s pravidly pluginu vyhrává projekt; stojí to v první řádce policy.
 
-Nový poznatek tedy patří na nejnižší úroveň, kde platí: jednorázové věci nikam, projektové do projektu, obecné jako návrh na další vydání pluginu.
+Nový poznatek patří tam, kde platí: jednorázové věci nikam, projektové do projektu, obecné jako návrh na další vydání pluginu.
 
 ## Nastavení
 - `HONZAPOWERS_HANDOVER_TOKENS` – práh prvního návrhu handoveru (výchozí 250000).
 - `HONZAPOWERS_HANDOVER_STEP` – další upozornění po tolika tokenech (výchozí 50000).
+- `HONZAPOWERS_RESUME_TOKENS` – po `resume` nebo `fork` s vypršenou cache promptu a kontextem aspoň tolik tokenů hook navrhne handover a novou session (výchozí 50000).
 - Starší proměnné `LEAN_WORKFLOW_*` fungují jako záloha.
 
 ## Co plugin nedělá
