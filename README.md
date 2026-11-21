@@ -12,6 +12,7 @@ A Claude Code plugin that keeps sessions lean and continuous.
 | Skill `handover` | Writes a dated handover (project convention, default `docs/handover/YYYY-MM-DD-<topic>.md`) with a short retro. Runs only on the user's request or yes; checks for `pre-done` first and commits only after consent. |
 | Skill `kontrola-planu` | Checks a written plan before execution with read-only agents `kontrola-souladu` and `kontrola-auditu` (the second only for plans over 3 tasks); sorts findings into fix, ask, reject and proposes a lesson for the project's `.claude/kontrola-planu.md`. |
 | Skill `skilly-kdy-ktery` | Work classes and the standard skill path, with when `pre-done`, `retro` and `handover` are due. |
+| Skill `mesicni-projektove-retro` | Retrospective of a project over a period: objective git signals (`git-signals.sh`), CI numbers and, in the cloud, the user's own messages from session transcripts (`human-messages.py`); an independent analyst proposes at most 3 rule changes with evidence. Never edits the default policy. |
 | Skill `retro` | Measures the session with `scripts/session-metrics` and proposes at most 5 classified findings (rule ID, general/project/one-off, rule-ladder rung). Never edits rules. |
 | Agent `log-reader` | Haiku; reads a long log and returns the verdict and failing lines (≤ 30 lines). |
 | `scripts/session-metrics` | ≤ 30 lines of numbers from a transcript: context growth, tokens, tool calls, repeated commands, test re-runs, large outputs. No transcript content. |

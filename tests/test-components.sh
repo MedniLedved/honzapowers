@@ -21,7 +21,7 @@ for d in "$REPO_ROOT"/skills/*/; do
   [ "${#desc}" -le 300 ] && pass "$name: description ${#desc} <= 300 chars" || fail "$name: description ${#desc} chars"
   words="$(wc -w <"$f" | tr -d ' ')"
   [ "$words" -le 900 ] && pass "$name: body $words <= 900 words" || fail "$name: body $words words"
-  case "$name" in pre-done | kontrola-planu | skilly-kdy-ktery) continue ;; esac # pre-done and kontrola-planu review text, they do not measure a session
+  case "$name" in pre-done | kontrola-planu | skilly-kdy-ktery | mesicni-projektove-retro) continue ;; esac # pre-done and kontrola-planu review text, they do not measure a session
   grep -q 'scripts/session-metrics" --session "${CLAUDE_SESSION_ID}"' "$f" && pass "$name: runs session-metrics by session id" \
     || fail "$name: does not run session-metrics by session id"
 done
@@ -59,6 +59,14 @@ grep -q "honzapowers:kontrola-souladu" "$f" && grep -q "honzapowers:kontrola-aud
 grep -qi "nikdy neupravuj plugin" "$f" && pass "kontrola-planu: never edits plugin or policy" || fail "kontrola-planu: no never-edit rule"
 E="$REPO_ROOT/evals/kontrola-planu-fires"
 [ -f "$E/prompt.md" ] && [ "$(ls "$E"/graders/*.md | wc -l)" -ge 3 ] && pass "kontrola-planu eval: prompt and 3+ graders" || fail "kontrola-planu eval incomplete"
+
+echo "mesicni-projektove-retro"
+M="$REPO_ROOT/skills/mesicni-projektove-retro"
+for x in SKILL.md analyst-prompt.md sablona.md git-signals.sh human-messages.py; do
+  [ -f "$M/$x" ] && pass "mesicni-projektove-retro: $x" || fail "mesicni-projektove-retro: chybí $x"
+done
+grep -q "Nikdy" "$M/SKILL.md" && grep -q "policy/policy.md" "$M/SKILL.md" && pass "mesicni-projektove-retro: nikdy nemění výchozí policy" || fail "mesicni-projektove-retro: chybí zákaz změny policy"
+[ -f "$REPO_ROOT/evals/mesicni-projektove-retro-fires/prompt.md" ] && pass "mesicni-projektove-retro: eval" || fail "mesicni-projektove-retro: chybí eval"
 
 echo "Skill-visibility rule and S2 pointer"
 grep -q '^V1 .*🧩 Skill' "$REPO_ROOT/policy/policy.md" && pass "policy V1 has the 🧩 line" || fail "policy V1 missing"
