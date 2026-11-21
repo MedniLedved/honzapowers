@@ -1,41 +1,43 @@
 # honzapowers
 
-> Původně vznikl jako `lean-workflow`; proměnné `LEAN_WORKFLOW_*` dál fungují jako záloha k `HONZAPOWERS_*`.
+Plugin pro Claude Code, který drží session úsporné a navazující: na začátku vloží krátká pravidla a stav repa, u velkého kontextu navrhne předání (handover) a po práci pomůže změřit a zhodnotit session.
 
-A Claude Code plugin that keeps sessions lean and continuous.
+Původně vznikl jako `lean-workflow`; proměnné `LEAN_WORKFLOW_*` dál fungují jako záloha k `HONZAPOWERS_*`.
 
-| Component | What it does |
+## Komponenty
+
+| Komponenta | Co dělá |
 |---|---|
-| `SessionStart` hook | Injects a short standing policy (lean-ops rules `L1`–`L14`, Superpowers steering `S1`–`S6`, skill visibility `V1`, fallback `F1`, gates `G1`) and a compact repo state: branch, newest plan with its open-task count, latest handover, a suggested next step. Paths and counts only, never file contents. |
-| `UserPromptSubmit` hook | Reads the context size from the transcript's last `usage` record. At 250k tokens, then every +50k, it adds one note asking to propose `pre-done` and then the `handover` skill, running nothing until the user answers. Overrides: `HONZAPOWERS_HANDOVER_TOKENS` (the older `LEAN_WORKFLOW_HANDOVER_TOKENS` still works as a fallback), `HONZAPOWERS_HANDOVER_STEP` (the older `LEAN_WORKFLOW_HANDOVER_STEP` still works as a fallback). |
-| `PreCompact` hook | Tells compaction to keep the last verification result, open approval gates and task state. |
-| Skill `handover` | Writes a dated handover (project convention, default `docs/handover/YYYY-MM-DD-<topic>.md`) with a short retro. Runs only on the user's request or yes; checks for `pre-done` first and commits only after consent. |
-| Skill `kontrola-planu` | Checks a written plan before execution with read-only agents `kontrola-souladu` and `kontrola-auditu` (the second only for plans over 3 tasks); sorts findings into fix, ask, reject and proposes a lesson for the project's `.claude/kontrola-planu.md`. |
-| Skill `skilly-kdy-ktery` | Work classes and the standard skill path, with when `pre-done`, `retro` and `handover` are due. |
-| Skill `mesicni-projektove-retro` | Retrospective of a project over a period: objective git signals (`git-signals.sh`), CI numbers and, in the cloud, the user's own messages from session transcripts (`human-messages.py`); an independent analyst proposes at most 3 rule changes with evidence. Never edits the default policy. |
-| Skill `retro` | Measures the session with `scripts/session-metrics` and proposes at most 5 classified findings (rule ID, general/project/one-off, rule-ladder rung). Never edits rules. |
-| Agent `log-reader` | Haiku; reads a long log and returns the verdict and failing lines (≤ 30 lines). |
-| `scripts/session-metrics` | ≤ 30 lines of numbers from a transcript: context growth, tokens, tool calls, repeated commands, test re-runs, large outputs. No transcript content. |
+| Hook `SessionStart` | Vloží krátká stálá pravidla (úsporný provoz `L1`–`L14`, vedení Superpowers `S1`–`S6`, viditelnost skillů `V1`, záložní postup `F1`, brány `G1`) a stručný stav repa: větev, nejnovější plán s počtem otevřených úkolů, poslední handover, navržený další krok. Jen cesty a počty, nikdy obsah souborů. |
+| Hook `UserPromptSubmit` | Přečte velikost kontextu z posledního záznamu `usage` v přepisu. Při 250k tokenech, pak po každých dalších +50k, přidá jednu poznámku: navrhni `pre-done` a potom `handover`, nic nespouštěj, dokud uživatel neodpoví. Přepsání: `HONZAPOWERS_HANDOVER_TOKENS`, `HONZAPOWERS_HANDOVER_STEP` (starší `LEAN_WORKFLOW_*` fungují jako záloha). |
+| Hook `PreCompact` | Řekne kompaktaci, aby zachovala poslední výsledek ověření, otevřené brány souhlasu a stav úkolů. |
+| Skill `handover` | Napíše datovaný handover (konvence projektu, výchozí `docs/handover/RRRR-MM-DD-<téma>.md`) s krátkým retro. Spustí se jen na přání nebo „ano“ uživatele; nejdřív zkontroluje `pre-done`, commit až po souhlasu. |
+| Skill `pre-done` | Před slovem „hotovo“ nebo PR dá diff zkontrolovat revizorovi v čistém kontextu a u UI toků projde hlavní cestu ručně. |
+| Skill `kontrola-planu` | Před provedením zkontroluje napsaný plán čtecími agenty `kontrola-souladu` a `kontrola-auditu` (druhý jen u plánů nad 3 úkoly), roztřídí nálezy (opravit, zeptat se, zamítnout) a navrhne poučení do `.claude/kontrola-planu.md` projektu. |
+| Skill `skilly-kdy-ktery` | Třídy práce a standardní cesta skilly, kdy je na řadě `pre-done`, `retro` a `handover`. |
+| Skill `mesicni-projektove-retro` | Retrospektiva projektu za období: objektivní signály z gitu (`git-signals.sh`), čísla z CI a v cloudu i vlastní zprávy uživatele z přepisů session (`human-messages.py`). Nezávislý analytik navrhne nejvýš 3 změny pravidel s důkazy. Výchozí policy nikdy neupravuje. |
+| Skill `retro` | Změří session pomocí `scripts/session-metrics` a navrhne nejvýš 5 roztříděných nálezů (ID pravidla, obecné/projektové/jednorázové, příčka žebříčku pravidel). Pravidla nikdy sám nemění. |
+| Agent `log-reader` | Haiku; přečte dlouhý log a vrátí verdikt a řádky s chybou (≤ 30 řádků). |
+| `scripts/session-metrics` | ≤ 30 řádků čísel z přepisu: růst kontextu, tokeny, volání nástrojů, opakované příkazy, opakované běhy testů, velké výstupy. Žádný obsah přepisu. |
 
-Rule ledger and findings index: [`docs/learnings.md`](docs/learnings.md).
+Jak se s pluginem pracuje v praxi: [`docs/pouziti.md`](docs/pouziti.md).
+Rejstřík pravidel a nálezů: [`docs/learnings.md`](docs/learnings.md).
 
-Design and roadmap: [`docs/plan.md`](docs/plan.md).
+## Instalace
 
-## Install
+Na claude.ai: Customize → Plugins → Add → **Add marketplace** → `MedniLedved/honzapowers`, zapni **Sync automatically** a pak povol `honzapowers`. Synchronizuje se do terminálu na počítači i do cloudových session.
 
-On claude.ai: Customize → Plugins → Add → **Add marketplace** → `MedniLedved/honzapowers`, turn on **Sync automatically**, then enable `honzapowers`. It syncs to the PC terminal and to cloud sessions.
-
-In a terminal without account sync:
+V terminálu bez synchronizace účtu:
 
 ```bash
 /plugin install honzapowers --marketplace MedniLedved/honzapowers
 ```
 
-## Rollback
+## Návrat zpět
 
-Disable the plugin on claude.ai, or set `"honzapowers@synced": false` in your settings. Nothing else needs removing.
+Plugin vypni na claude.ai, nebo v nastavení dej `"honzapowers@synced": false`. Nic dalšího se nemusí odstraňovat.
 
-## Development
+## Vývoj
 
 ```bash
 bash tests/run-tests.sh
@@ -50,15 +52,19 @@ claude --plugin-dir . plugin details honzapowers
 ```
 
 ```bash
-bash scripts/session-metrics path/to/transcript.jsonl
+bash scripts/session-metrics cesta/k/prepisu.jsonl
 ```
 
-Eval cases live in `evals/` (skill triggering, with a no-plugin baseline arm). Running them starts real agent sessions on your account (3 cases × 3 runs × 2 arms):
+Případy pro eval jsou v `evals/` (spouštění skillů, s ramenem bez pluginu). Spuštění zakládá skutečné agentní session na tvém účtu (3 případy × 3 běhy × 2 ramena):
 
 ```bash
 claude plugin eval . --allow-tools Write Edit Bash --max-cost-usd 5
 ```
 
-CI only checks that the cases load (`--max-cost-usd 0`, no agent runs).
+CI jen kontroluje, že se případy načtou (`--max-cost-usd 0`, žádný agent neběží).
 
-Hooks are extensionless bash scripts run through `hooks/run-hook.cmd`, so they work on Windows with Git Bash. Shared helpers live in `hooks/lib/`. Hooks always exit 0, stay read-only (except the per-session state file in `${CLAUDE_PLUGIN_DATA}`), use no network and no `jq`.
+Hooky jsou bash skripty bez přípony spouštěné přes `hooks/run-hook.cmd`, takže fungují i na Windows s Git Bash. Sdílené pomocné funkce jsou v `hooks/lib/`. Hooky vždy končí s kódem 0, jsou jen pro čtení (kromě stavového souboru session v `${CLAUDE_PLUGIN_DATA}`), nepoužívají síť ani `jq`.
+
+## Licence
+
+MIT, viz [`LICENSE`](LICENSE).
