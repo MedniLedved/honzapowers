@@ -1,4 +1,4 @@
-# lean-workflow learnings
+# honzapowers learnings
 
 The running index of the continuous improvement loop (plan §4.6). The `retro`
 skill reads this file for the promotion gate; the user approves every change

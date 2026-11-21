@@ -10,7 +10,8 @@ do_="${2:?Chybí <do> (RRRR-MM-DD)}"
 
 vychozi_vetev() {
   local b c
-  if b="$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null)" && [ -n "$b" ]; then
+  if b="$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null)" && [ -n "$b" ] \
+     && git rev-parse --verify --quiet "$b^{commit}" >/dev/null; then
     echo "$b"; return
   fi
   for b in main master; do
@@ -50,9 +51,9 @@ echo "## Commity opravující dřívější práci (fix:), s relací na session"
 echo "| sha | datum | zpráva | session |"
 echo "|---|---|---|---|"
 git log "${rozsah[@]}" --reverse --date=format:'%d.%m %H:%M' \
-  --format='%h|%ad|%s|%(trailers:key=Claude-Session,valueonly,separator=%x2C)' \
-  | { grep -E '^[0-9a-f]+\|[^|]*\|fix(\(|:)' || true; } \
-  | awk -F'|' '{ s=$4; sub(/.*session_/, "session_", s); gsub(/\n/, "", s); printf "| %s | %s | %s | %s |\n", $1, $2, substr($3,1,90), s }'
+  --format='%h%x1f%ad%x1f%s%x1f%(trailers:key=Claude-Session,valueonly,separator=%x2C)' \
+  | { grep -E $'^[0-9a-f]+\x1f[^\x1f]*\x1ffix(\\(|:)' || true; } \
+  | awk -F'\037' '{ s=$4; sub(/.*session_/, "session_", s); gsub(/\n/, "", s); m=substr($3,1,90); gsub(/\|/, "/", m); printf "| %s | %s | %s | %s |\n", $1, $2, m, s }'
 
 echo
 echo "## Soubory měněné nejčastěji (kandidáti na sdílený soubor, kde se session potkávají)"

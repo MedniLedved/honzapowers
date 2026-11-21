@@ -20,7 +20,7 @@ Nejsi-li si jistý třídou, vol vyšší.
 ## 3. Kdy je který krok povinný
 - **`kontrola-planu`:** po každém `writing-plans`, před prvním řádkem kódu. U triviální práce ne.
 - **`verification-before-completion`:** vždy před tvrzením „hotovo“, commitem a PR: ukaž příkaz a výstup. Testy, které prošly, bez nové změny znovu nepouštěj.
-- **`pre-done`:** u architektonické práce a u změny, která maže nebo přepisuje data, mění sdílené rozhraní nebo jde do PR. Jinak jen na požádání. Patří před handover, pokud se měnil kód.
+- **`pre-done`:** u architektonické práce a u změny, která maže nebo přepisuje data nebo mění sdílené rozhraní. U ostatních změn jen na požádání nebo když to vyžaduje projekt. Patří před handover, pokud se měnil kód.
 - **`retro`:** jen když byla session pomalá, drahá nebo se točila v kruhu, nebo na požádání. Vždy před handoverem, který ho zmiňuje.
 - **`handover`:** konec session, před `/clear`, při velkém kontextu nebo po pauze přes hodinu. **Nikdy ho nespouštěj sám**: jednou větou navrhni („`pre-done` a potom handover“, pokud kód měnil) a počkej na výslovné „ano“. Commit a push handoveru až po dalším souhlasu.
 

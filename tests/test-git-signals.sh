@@ -23,29 +23,48 @@ run() { # <adresář> <argumenty...>; nastaví OUT a CODE
 
 echo "Výchozí větev: main bez origin/HEAD"
 mkrepo "$TEST_ROOT/r-main" main
-run "$TEST_ROOT/r-main" 2000-01-01 2100-01-01
+run "$TEST_ROOT/r-main" 2000-01-01 2099-12-31
 assert_eq "exit" 0 "$CODE"
 grep -q 'Signály z gitu: main,' <<<"$OUT" && pass "použije main" || fail "nepoužil main: $(head -1 <<<"$OUT")"
 grep -q 'Soubory měněné nejčastěji' <<<"$OUT" && pass "doběhne za sekci oprav" || fail "nedoběhl za sekci oprav"
 
 echo "Výchozí větev: jen trunk"
 mkrepo "$TEST_ROOT/r-trunk" trunk
-run "$TEST_ROOT/r-trunk" 2000-01-01 2100-01-01
+run "$TEST_ROOT/r-trunk" 2000-01-01 2099-12-31
 assert_eq "exit" 0 "$CODE"
 grep -q 'Signály z gitu: trunk,' <<<"$OUT" && pass "použije aktuální větev trunk" || fail "nepoužil trunk: $(head -1 <<<"$OUT")"
 
 echo "Výchozí větev: master, když není main"
 mkrepo "$TEST_ROOT/r-master" master
-run "$TEST_ROOT/r-master" 2000-01-01 2100-01-01
+run "$TEST_ROOT/r-master" 2000-01-01 2099-12-31
 grep -q 'Signály z gitu: master,' <<<"$OUT" && pass "použije master" || fail "nepoužil master: $(head -1 <<<"$OUT")"
 
 echo "Výchozí větev: origin/HEAD má přednost"
 git clone -q "$TEST_ROOT/r-trunk" "$TEST_ROOT/r-clone" 2>/dev/null
-run "$TEST_ROOT/r-clone" 2000-01-01 2100-01-01
+run "$TEST_ROOT/r-clone" 2000-01-01 2099-12-31
 grep -q 'Signály z gitu: origin/trunk,' <<<"$OUT" && pass "použije origin/trunk z origin/HEAD" || fail "nepoužil origin/HEAD: $(head -1 <<<"$OUT")"
 
+echo "Výchozí větev: origin/HEAD ukazuje na chybějící origin/<větev>"
+git clone -q "$TEST_ROOT/r-trunk" "$TEST_ROOT/r-broken" 2>/dev/null
+git -C "$TEST_ROOT/r-broken" update-ref -d refs/remotes/origin/trunk
+run "$TEST_ROOT/r-broken" 2000-01-01 2099-12-31
+assert_eq "exit" 0 "$CODE"
+grep -q 'Signály z gitu: trunk,' <<<"$OUT" && pass "spadne na aktuální větev" || fail "nespadl na aktuální větev: $(head -1 <<<"$OUT")"
+
+echo "Prefixy, fix s relací na session, revert a svislítko ve zprávě"
+R="$TEST_ROOT/r-fix"; mkrepo "$R" main
+echo 1 >"$R/a.txt"; git -C "$R" add . && "${GIT[@]}" -C "$R" commit -q -m 'feat: přidat a'
+echo 2 >"$R/a.txt"; git -C "$R" add . && "${GIT[@]}" -C "$R" commit -q -m 'fix(a): oprava b | c' -m 'Claude-Session: https://claude.ai/code/session_ABC123'
+echo 3 >"$R/a.txt"; git -C "$R" add . && "${GIT[@]}" -C "$R" commit -q -m 'Revert "feat: přidat a"'
+run "$R" 2000-01-01 2099-12-31
+assert_eq "exit" 0 "$CODE"
+grep -q 'Podíl oprav fix/(feat+fix): 1 z 2 (50 %)' <<<"$OUT" && pass "podíl oprav 1 z 2" || fail "podíl oprav: $(grep 'Podíl' <<<"$OUT")"
+grep -q '^| [0-9a-f]* | .* | fix(a): oprava b / c | session_ABC123 |$' <<<"$OUT" && pass "řádek fix: se session a bez rozbití tabulky" || fail "řádek fix: $(grep 'fix(a)' <<<"$OUT")"
+grep -q 'Revert "feat: přidat a"' <<<"$OUT" && pass "revert je vypsán" || fail "revert chybí"
+grep -q -- '- 1 revert' <<<"$OUT" && pass "prefix revert spočítán" || fail "prefix revert nespočítán"
+
 echo "Chybějící větev a argumenty"
-run "$TEST_ROOT/r-main" 2000-01-01 2100-01-01 neexistuje
+run "$TEST_ROOT/r-main" 2000-01-01 2099-12-31 neexistuje
 [ "$CODE" -ne 0 ] && pass "neexistující větev selže" || fail "neexistující větev prošla"
 run "$TEST_ROOT/r-main"
 [ "$CODE" -ne 0 ] && pass "bez období selže" || fail "bez období prošlo"
