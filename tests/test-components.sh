@@ -46,7 +46,7 @@ grep -q "at most 30 lines" "$f" && pass "log-reader: 30-line cap" || fail "log-r
 echo "Policy rule IDs match the rule ledger"
 policy_ids="$(grep -oE '^(L[0-9]+|M[0-9]+|S[0-9]+|F[0-9]+|G[0-9]+) ' "$REPO_ROOT/policy/policy.md" | tr -d ' ' | sort)"
 ledger_ids="$(grep -oE '^\| (L[0-9]+|M[0-9]+|S[0-9]+|F[0-9]+|G[0-9]+) \|' "$REPO_ROOT/docs/learnings.md" | tr -d '| ' | sort)"
-assert_eq "policy rule count" 23 "$(printf '%s\n' "$policy_ids" | grep -c .)"
+assert_eq "policy rule count" 21 "$(printf '%s\n' "$policy_ids" | grep -c .)"
 [ "$policy_ids" = "$ledger_ids" ] && pass "every policy ID has one ledger row and vice versa" \
   || fail "policy/ledger mismatch: $(diff <(echo "$policy_ids") <(echo "$ledger_ids") | tr '\n' ' ')"
 dups="$(printf '%s\n' "$policy_ids" | uniq -d)"

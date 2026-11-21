@@ -6,7 +6,7 @@ A Claude Code plugin that keeps sessions lean and continuous.
 
 | Component | What it does |
 |---|---|
-| `SessionStart` hook | Injects a short standing policy (lean-ops rules `L1`–`L14`, model `M1`, Superpowers steering `S1`–`S6`, fallback `F1`, gates `G1`) and a compact repo state: branch, newest plan with its open-task count, latest handover, a suggested next step. Paths and counts only, never file contents. |
+| `SessionStart` hook | Injects a short standing policy (lean-ops rules `L1`–`L14`, Superpowers steering `S1`–`S6`, fallback `F1`, gates `G1`) and a compact repo state: branch, newest plan with its open-task count, latest handover, a suggested next step. Paths and counts only, never file contents. |
 | `UserPromptSubmit` hook | Reads the context size from the transcript's last `usage` record. At 250k tokens, then every +50k, it adds one note asking to propose `pre-done` and then the `handover` skill, running nothing until the user answers. Overrides: `LEAN_WORKFLOW_HANDOVER_TOKENS`, `LEAN_WORKFLOW_HANDOVER_STEP`. |
 | `PreCompact` hook | Tells compaction to keep the last verification result, open approval gates and task state. |
 | Skill `handover` | Writes a dated handover (project convention, default `docs/handover/YYYY-MM-DD-<topic>.md`) with a short retro. Runs only on the user's request or yes; checks for `pre-done` first and commits only after consent. |

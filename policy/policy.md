@@ -16,12 +16,9 @@ L12 CLAUDE.md/AGENTS.md under 200 lines; procedures go into skills.
 L13 Every "done" claim shows evidence: the command and its output; before "done" run the `pre-done` check.
 L14 Between steps report only the verdict, what changed and what remains.
 
-M1 Model: default is opusplan; where it is not offered (cloud), for planning-heavy work propose /model opus and /plan once.
-
 Superpowers (user instructions override skills):
 S1 Inline executing-plans; subagent-driven development only for 5+ independent tasks or real context pressure.
 S2 Brainstorming classes: trivial = no skill, bounded = no spec file, architectural = full path.
-S3 Final review on Sonnet, effort high; Opus only for architectural or risky changes. It checks plan completion, evidence and project gates.
 S4 Worktrees only locally and only if the project wants them; project git rules override finishing-a-development-branch.
 S5 Carry ledger rulings and open items into the handover before the plan workspace is deleted; propose it (pre-done first), never start it unasked.
 S6 Visual companion only on request.

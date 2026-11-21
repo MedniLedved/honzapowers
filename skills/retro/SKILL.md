@@ -21,7 +21,7 @@ and do not quote their content in the retro.
 ## 2. Findings (at most 5)
 For each finding give:
 - **Evidence**: the metric with its number and `line:N`.
-- **Rule**: the policy rule ID it violates or uses (`L1`..`L14`, `M1`, `S1`..`S6`, `F1`, `G1`; see `${CLAUDE_SKILL_DIR}/../../policy/policy.md`) or `new`.
+- **Rule**: the policy rule ID it violates or uses (`L1`..`L14`, `S1`..`S6`, `F1`, `G1`; see `${CLAUDE_SKILL_DIR}/../../policy/policy.md`) or `new`.
 - **Class**: `general` (would hold in every project), `project` (this repo only) or `one-off` (record only).
 - **Rung**: where the fix goes, cheapest first: `hard` (hook, deny rule or script, 0 context tokens), `skill`, `project` (`AGENTS.md`/`CLAUDE.md` line), `policy`. Say in one clause why it cannot go on a cheaper rung.
 - **Proposal**: the exact text or script to add, or the rule to rephrase.
