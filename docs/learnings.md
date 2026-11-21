@@ -29,10 +29,11 @@ deleted. Rungs: `hard` (hook, deny rule, script), `skill`, `project`, `policy`.
 | L13 | "Done" shows evidence | policy | 2026-11-10 (pilot: evidence was lint/tsc/tests only, and an independent review still found defects) | 0 |
 | L14 | Short step reports | policy | — | 0 |
 | S1 | Inline executing-plans by default | policy | 2026-11-10 (pilot B: inline `executing-plans`, no agents) | 0 |
-| S2 | Brainstorming path classes | policy | — | 0 |
+| S2 | Work classes; kontrola-planu after writing-plans | policy | — | 0 |
 | S4 | Worktrees only locally; project git rules win | policy | — | 0 |
 | S5 | Ledger rulings into the handover | policy | — | 0 |
 | S6 | Visual companion only on request | policy | — | 0 |
+| V1 | Visible skill use (🧩 line, "Použité skilly") | policy | — | 0 |
 | F1 | Fallback flow without Superpowers | policy | — | 0 |
 | G1 | Stop-and-ask gates | policy | — | 0 |
 

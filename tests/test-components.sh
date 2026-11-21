@@ -21,7 +21,7 @@ for d in "$REPO_ROOT"/skills/*/; do
   [ "${#desc}" -le 300 ] && pass "$name: description ${#desc} <= 300 chars" || fail "$name: description ${#desc} chars"
   words="$(wc -w <"$f" | tr -d ' ')"
   [ "$words" -le 900 ] && pass "$name: body $words <= 900 words" || fail "$name: body $words words"
-  case "$name" in pre-done | kontrola-planu) continue ;; esac # pre-done and kontrola-planu review text, they do not measure a session
+  case "$name" in pre-done | kontrola-planu | skilly-kdy-ktery) continue ;; esac # pre-done and kontrola-planu review text, they do not measure a session
   grep -q 'scripts/session-metrics" --session "${CLAUDE_SESSION_ID}"' "$f" && pass "$name: runs session-metrics by session id" \
     || fail "$name: does not run session-metrics by session id"
 done
@@ -60,10 +60,14 @@ grep -qi "nikdy neupravuj plugin" "$f" && pass "kontrola-planu: never edits plug
 E="$REPO_ROOT/evals/kontrola-planu-fires"
 [ -f "$E/prompt.md" ] && [ "$(ls "$E"/graders/*.md | wc -l)" -ge 3 ] && pass "kontrola-planu eval: prompt and 3+ graders" || fail "kontrola-planu eval incomplete"
 
+echo "Skill-visibility rule and S2 pointer"
+grep -q '^V1 .*🧩 Skill' "$REPO_ROOT/policy/policy.md" && pass "policy V1 has the 🧩 line" || fail "policy V1 missing"
+grep -q '^S2 .*kontrola-planu.*skilly-kdy-ktery' "$REPO_ROOT/policy/policy.md" && pass "policy S2 points to kontrola-planu and skilly-kdy-ktery" || fail "policy S2 pointer missing"
+[ -f "$REPO_ROOT/skills/skilly-kdy-ktery/SKILL.md" ] && pass "skilly-kdy-ktery exists" || fail "skilly-kdy-ktery missing"
 echo "Policy rule IDs match the rule ledger"
-policy_ids="$(grep -oE '^(L[0-9]+|M[0-9]+|S[0-9]+|F[0-9]+|G[0-9]+) ' "$REPO_ROOT/policy/policy.md" | tr -d ' ' | sort)"
-ledger_ids="$(grep -oE '^\| (L[0-9]+|M[0-9]+|S[0-9]+|F[0-9]+|G[0-9]+) \|' "$REPO_ROOT/docs/learnings.md" | tr -d '| ' | sort)"
-assert_eq "policy rule count" 21 "$(printf '%s\n' "$policy_ids" | grep -c .)"
+policy_ids="$(grep -oE '^(L[0-9]+|M[0-9]+|S[0-9]+|F[0-9]+|G[0-9]+|V[0-9]+) ' "$REPO_ROOT/policy/policy.md" | tr -d ' ' | sort)"
+ledger_ids="$(grep -oE '^\| (L[0-9]+|M[0-9]+|S[0-9]+|F[0-9]+|G[0-9]+|V[0-9]+) \|' "$REPO_ROOT/docs/learnings.md" | tr -d '| ' | sort)"
+assert_eq "policy rule count" 22 "$(printf '%s\n' "$policy_ids" | grep -c .)"
 [ "$policy_ids" = "$ledger_ids" ] && pass "every policy ID has one ledger row and vice versa" \
   || fail "policy/ledger mismatch: $(diff <(echo "$policy_ids") <(echo "$ledger_ids") | tr '\n' ' ')"
 dups="$(printf '%s\n' "$policy_ids" | uniq -d)"

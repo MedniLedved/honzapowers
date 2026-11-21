@@ -21,8 +21,8 @@ and do not quote their content in the retro.
 ## 2. Findings (at most 5)
 For each finding give:
 - **Evidence**: the metric with its number and `line:N`.
-- **Rule**: the policy rule ID it violates or uses (`L1`..`L14`, `S1`..`S6`, `F1`, `G1`; see `${CLAUDE_SKILL_DIR}/../../policy/policy.md`) or `new`.
-- **Class**: `general` (would hold in every project), `project` (this repo only) or `one-off` (record only).
+- **Rule**: the policy rule ID it violates or uses (`L1`..`L14`, `S1`..`S6`, `V1`, `F1`, `G1`; see `${CLAUDE_SKILL_DIR}/../../policy/policy.md`) or `new`.
+- **Class**: `general` (would hold in every project of this user: a personal rule, never a change of the plugin's default policy), `project` (this repo only) or `one-off` (record only).
 - **Rung**: where the fix goes, cheapest first: `hard` (hook, deny rule or script, 0 context tokens), `skill`, `project` (`AGENTS.md`/`CLAUDE.md` line), `policy`. Say in one clause why it cannot go on a cheaper rung.
 - **Proposal**: the exact text or script to add, or the rule to rephrase.
 
@@ -38,5 +38,8 @@ another one.
 
 ## 4. Save and report
 - Save `docs/retro/YYYY-MM-DD-<topic>.md` in the project: the metrics block, the findings, and a line `Rules flagged: <IDs>` for the honzapowers rule ledger.
-- Never edit `policy/policy.md`, `docs/learnings.md`, `AGENTS.md` or `CLAUDE.md` in this step. Changes go as pull requests the user approves (general ones to honzapowers, project ones to the project).
+- Never edit `policy/policy.md`, `docs/learnings.md`, `AGENTS.md` or `CLAUDE.md` in this step. Changes go only with the user's consent:
+  - `project` finding: a diff or PR in the project;
+  - `general` finding: if the context has a block "Personal rules (honzapowers-osobni)", propose a diff to `pravidla.md` of that personal plugin; otherwise give the text to paste into the personal preferences on claude.ai. A `general` finding is proposed only after the same finding was confirmed in a second project;
+  - never a change of the default policy of honzapowers: that is a manual release with the user's consent.
 - Report in a few lines: the findings and which proposals are ready for a PR. Ask which to open.

@@ -38,7 +38,7 @@ bash "${CLAUDE_SKILL_DIR}/../../scripts/session-metrics" --session "${CLAUDE_SES
 4. **Open items and gates**: what is unfinished, what waits on the user (credentials, destructive or production steps, pushes to shared or default branches).
 5. **Next step**: the concrete first action and its verification command.
 6. **Files and reading order**: paths to read first (plan, specs, this file), with section numbers.
-7. **Short retro**: 3 to 5 lines of the metrics that matter (context growth, repeated calls, re-runs, largest outputs) and at most 3 findings. Each finding: the metric as evidence, the policy rule ID it touches (`L1`..`G1`) or `new`, and the class `general`, `project` or `one-off`. For a full analysis, propose the `retro` skill.
+7. **Short retro**: 3 to 5 lines of the metrics that matter (context growth, repeated calls, re-runs, largest outputs) and at most 3 findings. Each finding: the metric as evidence, the policy rule ID it touches (`L1`..`G1`) or `new`, and the class `general` (a personal rule, not a change of the plugin policy), `project` or `one-off`. For a full analysis, propose the `retro` skill.
 
 ## 4. Finish
 - No secrets, tokens or keys; no long pastes from logs or files.

@@ -18,10 +18,11 @@ L14 Between steps report only the verdict, what changed and what remains.
 
 Superpowers (user instructions override skills):
 S1 Inline executing-plans; subagent-driven development only for 5+ independent tasks or real context pressure.
-S2 Brainstorming classes: trivial = no skill, bounded = no spec file, architectural = full path.
+S2 Work classes: trivial = no skill, bounded = no spec file, architectural = full path. After writing-plans always run kontrola-planu. Details: skilly-kdy-ktery.
 S4 Worktrees only locally and only if the project wants them; project git rules override finishing-a-development-branch.
 S5 Carry ledger rulings and open items into the handover before the plan workspace is deleted; propose it (pre-done first), never start it unasked.
 S6 Visual companion only on request.
+V1 Start each answer that used a skill with "> **🧩 Skill: <name>** – <what it did>"; end finished work with "**Použité skilly:** …" (or "žádné").
 
 F1 Without Superpowers: plan mode -> plan (files, tests, verification) -> one task and one commit at a time -> verify -> fresh-context review.
 

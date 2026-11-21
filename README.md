@@ -6,10 +6,12 @@ A Claude Code plugin that keeps sessions lean and continuous.
 
 | Component | What it does |
 |---|---|
-| `SessionStart` hook | Injects a short standing policy (lean-ops rules `L1`–`L14`, Superpowers steering `S1`–`S6`, fallback `F1`, gates `G1`) and a compact repo state: branch, newest plan with its open-task count, latest handover, a suggested next step. Paths and counts only, never file contents. |
+| `SessionStart` hook | Injects a short standing policy (lean-ops rules `L1`–`L14`, Superpowers steering `S1`–`S6`, skill visibility `V1`, fallback `F1`, gates `G1`) and a compact repo state: branch, newest plan with its open-task count, latest handover, a suggested next step. Paths and counts only, never file contents. |
 | `UserPromptSubmit` hook | Reads the context size from the transcript's last `usage` record. At 250k tokens, then every +50k, it adds one note asking to propose `pre-done` and then the `handover` skill, running nothing until the user answers. Overrides: `LEAN_WORKFLOW_HANDOVER_TOKENS`, `LEAN_WORKFLOW_HANDOVER_STEP`. |
 | `PreCompact` hook | Tells compaction to keep the last verification result, open approval gates and task state. |
 | Skill `handover` | Writes a dated handover (project convention, default `docs/handover/YYYY-MM-DD-<topic>.md`) with a short retro. Runs only on the user's request or yes; checks for `pre-done` first and commits only after consent. |
+| Skill `kontrola-planu` | Checks a written plan before execution with read-only agents `kontrola-souladu` and `kontrola-auditu` (the second only for plans over 3 tasks); sorts findings into fix, ask, reject and proposes a lesson for the project's `.claude/kontrola-planu.md`. |
+| Skill `skilly-kdy-ktery` | Work classes and the standard skill path, with when `pre-done`, `retro` and `handover` are due. |
 | Skill `retro` | Measures the session with `scripts/session-metrics` and proposes at most 5 classified findings (rule ID, general/project/one-off, rule-ladder rung). Never edits rules. |
 | Agent `log-reader` | Haiku; reads a long log and returns the verdict and failing lines (≤ 30 lines). |
 | `scripts/session-metrics` | ≤ 30 lines of numbers from a transcript: context growth, tokens, tool calls, repeated commands, test re-runs, large outputs. No transcript content. |
