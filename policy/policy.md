@@ -13,14 +13,14 @@ L9 Measure the cause before changing code (systematic-debugging). Propose /clear
 L10 After a break over ~1 h (cache expired), propose a handover and a fresh session. A handover is always a proposal and pre-done comes first if code changed.
 L11 Plans name files, steps and the verification command.
 L12 CLAUDE.md/AGENTS.md under 200 lines; procedures go into skills.
-L13 Every "done" claim shows evidence: the command and its output; before "done" run the `pre-done` check.
+L13 Every "done" claim shows evidence: the command and its output; run the `pre-done` check before "done" when skilly-kdy-ktery requires it.
 L14 Between steps report only the verdict, what changed and what remains.
 
 Superpowers (user instructions override skills):
 S1 Inline executing-plans; subagent-driven development only for 5+ independent tasks or real context pressure.
 S2 Work classes: trivial = no skill, bounded = no spec file, architectural = full path. After writing-plans always run kontrola-planu. Details: skilly-kdy-ktery.
 S4 Worktrees only locally and only if the project wants them; project git rules override finishing-a-development-branch.
-S5 Carry ledger rulings and open items into the handover before the plan workspace is deleted; propose it (pre-done first), never start it unasked.
+S5 Before a Superpowers plan's progress log is deleted, copy its decisions and open items into the handover; propose it (pre-done first), never start it unasked.
 S6 Visual companion only on request.
 V1 Start each answer that used a skill with "> **🧩 Skill: <name>** – <what it did>"; end finished work with "**Použité skilly:** …" (or "žádné").
 

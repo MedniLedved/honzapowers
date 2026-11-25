@@ -3,31 +3,31 @@ name: skilly-kdy-ktery
 description: Use when starting a task and deciding which skills to run and in what order, when the policy rule S2 or V1 is in play, or when unsure whether pre-done, retro or handover is due. Gives the work classes, the standard path and when each step is mandatory.
 ---
 
-# Skilly: kdy který
+# Skills: when and which
 
-Podrobnosti k pravidlům S2 a V1 z policy. Skilly spouštíš sám podle situace, uživatel na ně nemusí myslet. Na začátku úkolu jednou větou řekni, kterou cestu volíš, a krok, který vynecháváš, nezmiňuj. Brány a pravidla projektu v `AGENTS.md` / `CLAUDE.md` mají přednost.
+Details for the policy rules S2 and V1. You run skills yourself as the situation calls for them; the user does not have to think of them. At the start of a task, say in one sentence which path you take, and do not mention the steps you skip. Gates and rules of the project in `AGENTS.md` / `CLAUDE.md` win. Reply to the user in Czech.
 
-## 1. Třída práce
-- **Triviální** (překlep, drobná oprava, dokumentace): bez skillů, jen ověření.
-- **Ohraničená** (jasný rozsah, hotové zadání): plán → kontrola plánu → provedení.
-- **Architektonická** (nová část systému, změna schématu, není jasné, *co*): nejdřív `superpowers:brainstorming`, pak celá cesta.
+## 1. Work class
+- **Trivial** (typo, small fix, documentation): no skills, only verification.
+- **Bounded** (clear scope, finished request): plan → plan check → execution.
+- **Architectural** (a new part of the system, a schema change, unclear *what*): first `superpowers:brainstorming`, then the full path.
 
-Nejsi-li si jistý třídou, vol vyšší.
+When unsure about the class, pick the higher one.
 
-## 2. Cesta
-`superpowers:brainstorming` (jen architektonická) → `superpowers:writing-plans` → `kontrola-planu` → `superpowers:executing-plans` (inline, subagenti jen u 5 a více nezávislých úkolů) → `superpowers:verification-before-completion` → `honzapowers:pre-done` → (`honzapowers:retro`) → `honzapowers:handover`.
+## 2. Path
+`superpowers:brainstorming` (architectural only) → `superpowers:writing-plans` → `kontrola-planu` → `superpowers:executing-plans` (inline; subagents only for 5 or more independent tasks) → `superpowers:verification-before-completion` → `honzapowers:pre-done` → (`honzapowers:retro`) → `honzapowers:handover`.
 
-## 3. Kdy je který krok povinný
-- **`kontrola-planu`:** po každém `writing-plans`, před prvním řádkem kódu. U triviální práce ne.
-- **`verification-before-completion`:** vždy před tvrzením „hotovo“, commitem a PR: ukaž příkaz a výstup. Testy, které prošly, bez nové změny znovu nepouštěj.
-- **`pre-done`:** u architektonické práce a u změny, která maže nebo přepisuje data nebo mění sdílené rozhraní. U ostatních změn jen na požádání nebo když to vyžaduje projekt. Patří před handover, pokud se měnil kód.
-- **`retro`:** jen když byla session pomalá, drahá nebo se točila v kruhu, nebo na požádání. Vždy před handoverem, který ho zmiňuje.
-- **`handover`:** konec session, před `/clear`, při velkém kontextu nebo po pauze přes hodinu. **Nikdy ho nespouštěj sám**: jednou větou navrhni („`pre-done` a potom handover“, pokud kód měnil) a počkej na výslovné „ano“. Commit a push handoveru až po dalším souhlasu.
+## 3. When each step is mandatory
+- **`kontrola-planu`:** after every `writing-plans`, before the first line of code. Not for trivial work.
+- **`verification-before-completion`:** always before claiming "done", before a commit and a PR: show the command and its output. Do not re-run passed tests without a new change.
+- **`pre-done`:** for architectural work and for a change that deletes or overwrites data or changes a shared interface. For other changes only on request or when the project requires it. It comes before a handover if code changed.
+- **`retro`:** only when the session was slow, expensive or went in circles, or on request. Always before a handover that mentions it.
+- **`handover`:** end of the session, before `/clear`, with a large context or after a break of over an hour. **Never start it yourself**: propose it in one sentence ("`pre-done` and then a handover" if code changed) and wait for an explicit "yes". Commit and push the handover only after another yes.
 
-## 4. Chyba nebo nečekaný výsledek
-Nejdřív `superpowers:systematic-debugging`, oprava až po změření příčiny. Po dvou nepovedených opravách navrhni nový start s lepším zadáním.
+## 4. Error or unexpected result
+First `superpowers:systematic-debugging`; fix only after the cause is measured. After two failed fixes, propose a fresh start with a better prompt.
 
-## 5. Viditelnost (V1)
-Použitý skill musí být v odpovědi vidět, aby ho uživatel nemusel vyžadovat znovu:
-- hned na začátku odpovědi samostatný řádek `> **🧩 Skill: <název>** – <co udělal, jedna věta>`, u více skillů jeden řádek na každý;
-- když na konci shrnuješ hotovou práci, přidej řádek `**Použité skilly:** …` (nebo „žádné“).
+## 5. Visibility (V1)
+A skill you used must be visible in the answer, so the user does not have to ask for it again:
+- at the very start of the answer a separate line `> **🧩 Skill: <name>** – <what it did, one sentence>`, one line per skill if there are several;
+- when you sum up finished work, add the line `**Použité skilly:** …` (or `žádné`).

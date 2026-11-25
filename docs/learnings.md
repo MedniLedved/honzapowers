@@ -1,6 +1,6 @@
 # honzapowers learnings
 
-The running index of the continuous improvement loop (plan §4.6). The `retro`
+The running index of the plugin's improvement loop, kept by the maintainer. The `retro`
 skill reads this file for the promotion gate; the user approves every change
 to it, like every change to `policy/policy.md`.
 
@@ -26,9 +26,9 @@ deleted. Rungs: `hard` (hook, deny rule, script), `skill`, `project`, `policy`.
 | L10 | Handover after a cache-expiring break | policy | — | 0 |
 | L11 | Plans name files, steps, verification | policy | — | 0 |
 | L12 | CLAUDE.md/AGENTS.md under 200 lines | policy | — | 0 |
-| L13 | "Done" shows evidence | policy | 2026-11-10 (pilot: evidence was lint/tsc/tests only, and an independent review still found defects) | 0 |
+| L13 | "Done" shows evidence | policy | 2026-11-10 (evidence was lint/tsc/tests only; an independent review still found defects) | 0 |
 | L14 | Short step reports | policy | — | 0 |
-| S1 | Inline executing-plans by default | policy | 2026-11-10 (pilot B: inline `executing-plans`, no agents) | 0 |
+| S1 | Inline executing-plans by default | policy | 2026-11-10 (inline `executing-plans`, no agents) | 0 |
 | S2 | Work classes; kontrola-planu after writing-plans | policy | — | 0 |
 | S4 | Worktrees only locally; project git rules win | policy | — | 0 |
 | S5 | Ledger rulings into the handover | policy | — | 0 |

@@ -1,56 +1,56 @@
 ---
 name: kontrola-planu
-description: Use when a plan has just been written (writing-plans or any multi-step plan) and before it is executed, to check it against the spec and project rules with read-only checker agents, sort the findings into fix, ask or reject, and propose a lesson for the project's own criteria file.
+description: Use when a plan file has just been written (writing-plans, docs/plans) and before it is executed, to check it against the spec and project rules with read-only checker agents, sort the findings into fix, ask or reject, and propose a lesson for the project's own criteria file.
 ---
 
-# Kontrola plánu
+# Plan check
 
-Zkontroluj hotový plán dřív, než se začne provádět. Agenti jen čtou. Plán opravuješ ty, a jen v bodech, kde je oprava jednoznačná. Odpovídej česky.
+Check a finished plan before it is executed. The agents only read. You fix the plan, and only where the fix is unambiguous. Reply to the user in Czech.
 
-## 1. Podklady
-- Plán: cesta od uživatele, jinak nejnovější soubor v `docs/superpowers/plans/` nebo `docs/plans/`.
-- Zdroj pravdy: zadání nebo spec, ke kterému plán patří, `AGENTS.md` / `CLAUDE.md` projektu a dotčený kód.
-- Kritéria projektu: `.claude/kontrola-planu.md`. Pokud soubor existuje, načti ho. Pokud ne, kontroluj s obecnými kritérii (níže) a po každém běhu **vždy** nabídni, že soubor založíš (krok 6 a 7).
+## 1. Inputs
+- Plan: the path from the user, else the newest file in `docs/superpowers/plans/` or `docs/plans/`.
+- Source of truth: the request or spec the plan belongs to, the project's `AGENTS.md` / `CLAUDE.md` and the touched code.
+- Project criteria: `.claude/kontrola-planu.md`. If the file exists, load it. If not, check with the general criteria below. Offer to create the file once per project (steps 6 and 7); if the user declined it in this project, do not offer it again.
 
-Obecná kritéria: každý úkol jmenuje soubory, kroky a ověřovací příkaz; pořadí kroků dává smysl; plán odpovídá zadání (nic navíc, nic nechybí); kroky jsou proveditelné bez dalšího ptaní; výsledek i kód jsou úsporné.
+General criteria: every task names files, steps and a verification command; the order of steps makes sense; the plan matches the request (nothing extra, nothing missing); the steps can be done without asking again; result and code are economical.
 
-## 2. Seznam čtení
-Velký plán nebo zadání agenti nečtou celé. Ty jim připrav seznam `soubor ř. X–Y`:
-- `grep -n "^## \|^### "` v plánu a v zadání → jen oddíly, na které plán odkazuje;
-- u kódu jen hlavičky funkcí (`grep -n "^def \|^class "` nebo obdoba) a funkce, které plán mění;
-- pro `kontrola-souladu`: plán, pravidla projektu, zadání, kritéria; pro `kontrola-auditu`: plán, pravidla projektu, nejpodobnější hotový kód a navazující úkoly.
+## 2. Reading list
+The agents do not read a large plan or request whole. Prepare a list `file lines X–Y` for them:
+- `grep -n "^## \|^### "` in the plan and the request → only the sections the plan refers to;
+- for code only the function headers (`grep -n "^def \|^class "` or similar) and the functions the plan changes;
+- for `kontrola-souladu`: the plan, project rules, request, criteria; for `kontrola-auditu`: the plan, project rules, the most similar finished code and dependent tasks.
 
-## 3. Práh a agenti
-Spočítej otevřené úkoly (`- [ ]`).
-- **Do 3 úkolů:** spusť jen agenta `honzapowers:kontrola-souladu`.
-- **Víc než 3:** spusť `honzapowers:kontrola-souladu` a `honzapowers:kontrola-auditu` **paralelně** v jedné odpovědi.
+## 3. Threshold and agents
+Count the open tasks (`- [ ]`).
+- **Up to 3 tasks:** run only the agent `honzapowers:kontrola-souladu`.
+- **More than 3:** run `honzapowers:kontrola-souladu` and `honzapowers:kontrola-auditu` **in parallel** in one answer.
 
-Agentům předej seznam čtení z kroku 2 a jednu větu, co plán dělá, ne obsah souborů. Každý vrátí nejvýš 5 nálezů s košem `OPRAVIT|ZEPTAT|ZAMÍTNOUT`, závažností `kritický|ostatní`, značkou `OVĚŘENO` (s místem a citací) nebo `DOMNĚNKA`, místem v plánu a důvodem v jedné větě.
+Give the agents the reading list from step 2 and one sentence on what the plan does, not the file contents. Each returns at most 5 findings with a bin `OPRAVIT|ZEPTAT|ZAMÍTNOUT`, a severity `kritický|ostatní`, a mark `OVĚŘENO` (with place and quote) or `DOMNĚNKA`, the place in the plan and a one-sentence reason.
 
-Kdyby se agenti nenačetli (plugin není aktivní), spusť obecného subagenta na modelu sonnet a jako zadání mu dej tělo souboru agenta.
+If the agents did not load (the plugin is not active), run a general subagent on the sonnet model and give it the body of the agent file as its task.
 
-## 4. Roztřídění
-Sluč nálezy obou agentů, odstraň duplicity a rozhodni o koších sám (agent jen navrhuje):
-- **OPRAVIT:** oprava je jednoznačná a leží v plánu. Oprav ji hned.
-- **ZEPTAT:** mění dřívější rozhodnutí uživatele, je volbou mezi dvěma správnými řešeními, nebo chybí údaj, který zná jen uživatel. Všechny otázky polož **najednou**, každou s navrženou výchozí odpovědí a jednou větou proč.
-- **ZAMÍTNOUT:** nález neplatí nebo se míjí se zadáním. Napiš jednou větou proč.
+## 4. Sorting
+Merge the findings of both agents, remove duplicates and decide the bins yourself (the agent only proposes):
+- **`OPRAVIT`:** the fix is unambiguous and lies in the plan. Fix it now.
+- **`ZEPTAT`:** it changes an earlier decision of the user, is a choice between two correct solutions, or lacks a fact only the user knows. Ask all questions **at once**, each with a proposed default answer and one sentence why.
+- **`ZAMÍTNOUT`:** the finding does not hold or misses the request. Say why in one sentence.
 
-Ověřování šetří kontext: kritické nálezy a `DOMNĚNKY` si ověř přečtením citovaného místa, `OVĚŘENÉ` ostatní přijmi bez čtení, pokud citace sedí s plánem. Při rozporu agentů má fakt ze zadání nebo ze kódu přednost před úsporností. Text do plánu píšeš ty, ne agent.
+Verification saves context: verify critical findings and every `DOMNĚNKA` by reading the cited place; accept `OVĚŘENO` non-critical findings without reading if the quote matches the plan. When the agents disagree, a fact from the request or the code wins over economy. You write the text into the plan, not the agent.
 
-## 5. Druhé kolo
-Jen když oprava **kritického** nálezu změnila rozhraní, pořadí úkolů nebo rozsah: spusť ještě jednou samotného `honzapowers:kontrola-souladu`, který čte jen `git diff` plánu (nejvýš 5 nálezů). Jinak žádné druhé kolo.
+## 5. Second round
+Only when the fix of a **critical** finding changed an interface, the order of tasks or the scope: run `honzapowers:kontrola-souladu` once more on its own, reading only the `git diff` of the plan (at most 5 findings). Otherwise no second round.
 
-## 6. Poučení pro další plány
-Navrhni jen pravidlo, které bude platit pro aspoň dva budoucí plány. Pořadí:
-1. Dá se vynutit kódem, testem nebo hookem? Pak navrhni úkol, ne text pravidla.
-2. Jinak pravidlo jako **unified diff** proti `.claude/kontrola-planu.md` projektu, ke schválení. Nejdřív slouč nebo nahraď existující bod; má-li soubor víc než 15 bodů, navrhni napřed prořezání.
+## 6. Lesson for future plans
+Propose only a rule that will hold for at least two future plans. Order:
+1. Can code, a test or a hook enforce it? Then propose a task, not a rule text.
+2. Otherwise the rule as a **unified diff** against the project's `.claude/kontrola-planu.md`, for approval. First merge with or replace an existing point; if the file has more than 15 points, first propose pruning.
 
-Dál platí:
-- nic nezapisuj bez souhlasu uživatele;
-- nikdy neupravuj plugin ani `policy/policy.md`;
-- nezapisuj pravidlo, které už hlídá kód, test nebo hook;
-- chybí-li `.claude/kontrola-planu.md`, nabídni jeho založení **vždy**, i když jsi žádné opakovatelné pravidlo nenašel (pak nabídni prázdný soubor s hlavičkou); nezakládej ho sám;
-- nepředepisuj pevný příkaz projektu (např. testovací), jen že plán má ověřovací příkaz uvést.
+Also:
+- write nothing without the user's consent;
+- never edit the plugin or `policy/policy.md`;
+- do not write a rule that code, a test or a hook already enforces;
+- if `.claude/kontrola-planu.md` is missing, offer to create it once per project, even with no repeatable rule (then an empty file with a header); never after the user declined; never create it yourself;
+- do not prescribe a fixed project command (for example a test command), only that the plan names its verification command.
 
-## 7. Uzávěr
-Do plánu přidej řádek `**Stav:** kontrola <datum>: N nálezů, opraveno X, otázky Y, zamítnuto Z.` Pak napiš uživateli nejvýš 6 řádků: počty nálezů po koších, co jsi opravil, na co čekáš (otázky), zda proběhlo druhé kolo, návrh poučení a, chybí-li soubor kritérií, nabídka jeho založení (povinně).
+## 7. Closing
+Add to the plan the line `**Stav:** kontrola <datum>: N nálezů, opraveno X, otázky Y, zamítnuto Z.` Then write the user at most 6 lines in Czech: the number of findings per bin, what you fixed, what you wait for (questions), whether a second round ran, the proposed lesson and, if the criteria file is missing, the offer to create it (once per project, see step 6).

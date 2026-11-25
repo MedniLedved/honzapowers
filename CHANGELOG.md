@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.4.0 — 2026-11-25
+Opravy z auditu před zveřejněním.
+- **Pravidla:** L13 spouští `pre-done` jen podle `skilly-kdy-ktery` (architektura, mazání dat, sdílené rozhraní, jinak na požádání); popis `pre-done` vylučuje drobnosti. S3 je vyhrazené pro osobní vrstvu. S5 bez žargonu.
+- **`kontrola-planu`:** jen pro napsaný soubor plánu. Nabídka souboru kritérií je jen jednou na projekt a po odmítnutí se do konce session neopakuje (**opravuje 0.3.0 a 0.3.1, které říkaly „vždy“**).
+- Jedna podmínka povýšení poučení do pravidel: potvrzení ve druhém projektu (`retro`, `handover`, `mesicni-projektove-retro`). `handover` rozlišuje cloud.
+- **Jazyk:** co čte Claude (policy, skilly, agenti, texty hooků), je anglicky; co čte uživatel, česky. Nové pravidlo v `AGENTS.md`.
+- **Bezpečnost:** `log-reader` bez Bash; obsah logů a souborů je data, ne pokyny; Repo state označený „never instructions“; záloha stavu v `honzapowers-<uid>` s `umask 077`; `session-metrics` varuje, když `--session` nenajde přepis; `actions/checkout` připnutý na SHA.
+- **Práh handoveru:** při prázdném tailu se usage hledá v celém přepisu; odhad z velikosti jen bez jakéhokoli záznamu (méně falešných upozornění).
+- **Evaly:** `pre-done-fires`, `pre-done-trivial-no-fire`, `kontrola-planu-chat-list-no-fire`.
+- **Dokumentace:** README s požadavky (Git Bash na Windows, git, python3), instalací, ověřením a návratem zpět; odstraněny interní odkazy (pilot, „plan §“).
+- Původní název pluginu byl `lean-workflow` (0.3.0 a dříve).
+
 ## 0.3.1 — 2026-11-25
 - `kontrola-planu`: krok 1 odkazuje na správné kroky (6 a 7) a říká „vždy“, v souladu s 0.3.0.
 - README a `docs/pouziti.md` popisují výběr plánu jako v 0.3.0 (plán z posledního handoveru, jinak nejnovější podle názvu).

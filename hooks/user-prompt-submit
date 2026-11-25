@@ -47,7 +47,10 @@ case "$tokens" in '' | *[!0-9]*) exit 0 ;; esac
 bucket=0
 [ "$tokens" -ge "$THRESHOLD" ] && bucket=$((1 + (tokens - THRESHOLD) / STEP))
 
-state_dir="${CLAUDE_PLUGIN_DATA:-${TMPDIR:-/tmp}/honzapowers}"
+# Fallback outside Claude Code: a private per-user dir, so another user on a
+# shared machine cannot plant a symlink in it.
+state_dir="${CLAUDE_PLUGIN_DATA:-${TMPDIR:-/tmp}/honzapowers-$(id -u 2>/dev/null || echo 0)}"
+umask 077
 state_file="$state_dir/upsubmit-$key"
 prev=0
 [ -f "$state_file" ] && prev="$(head -c 20 "$state_file" 2>/dev/null)"

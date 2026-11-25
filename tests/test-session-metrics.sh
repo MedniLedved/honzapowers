@@ -95,6 +95,7 @@ has auto-slug "session-metrics: a.jsonl (30 lines, 38.0k bytes)"
 OUT="$(cd "$TEST_ROOT" && CLAUDE_CONFIG_DIR="$CFG" bash "$SCRIPT" 2>&1)"; CODE=$?; MS=0
 basics auto-newest
 has auto-newest "Responses: 2 (deduplicated by requestId)"
+has auto-newest "WARNING: no transcript for this directory; measured the newest transcript of another project."
 
 echo "--session finds the transcript by id"
 OUT="$(cd "$TEST_ROOT" && CLAUDE_CONFIG_DIR="$CFG" bash "$SCRIPT" --session a 2>&1)"; CODE=$?; MS=0

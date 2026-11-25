@@ -27,6 +27,14 @@ last_context_tokens() { # $1 = transcript path; prints tokens or returns 1
     [ "$USAGE_SUM" -gt 0 ] && last="$USAGE_SUM"
   done < <(tail -c "$USAGE_TAIL_BYTES" "$f" 2>/dev/null | grep '"type":"assistant"' \
     | grep -o '"usage":{[^}]*' | tail -n 20)
+  if [ -z "$last" ]; then
+    # Nothing in the tail (one huge line, e.g. a large tool result): scan the
+    # whole file once before the caller falls back to a size estimate.
+    while IFS= read -r u; do
+      usage_input_sum "$u"
+      [ "$USAGE_SUM" -gt 0 ] && last="$USAGE_SUM"
+    done < <(grep '"type":"assistant"' "$f" 2>/dev/null | grep -o '"usage":{[^}]*' | tail -n 20)
+  fi
   [ -n "$last" ] || return 1
   printf '%s' "$last"
 }

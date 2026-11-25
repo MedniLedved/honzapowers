@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Z uloženého výstupu list_events (kinds=["user"]) vybere jen zprávy napsané člověkem.
+"""Jen cloud (nástroj `list_events` existuje jen v cloudových session). Formát výstupu je nedokumentovaný a může se změnit.
+
+Z uloženého výstupu list_events (kinds=["user"]) vybere jen zprávy napsané člověkem.
 
 Použití:  python3 -I human-messages.py <soubor s výstupem list_events>
 Výstup:   řádky `čas | session | text` (text zkrácený na 400 znaků, tajné hodnoty skryté)
