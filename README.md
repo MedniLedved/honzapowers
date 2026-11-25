@@ -8,7 +8,7 @@ Původně vznikl jako `lean-workflow`; proměnné `LEAN_WORKFLOW_*` dál funguj�
 
 | Komponenta | Co dělá |
 |---|---|
-| Hook `SessionStart` | Vloží krátká stálá pravidla (úsporný provoz `L1`–`L14`, vedení Superpowers `S1`–`S6`, viditelnost skillů `V1`, záložní postup `F1`, brány `G1`) a stručný stav repa: větev, nejnovější plán s počtem otevřených úkolů, poslední handover, navržený další krok. Jen cesty a počty, nikdy obsah souborů. |
+| Hook `SessionStart` | Vloží krátká stálá pravidla (úsporný provoz `L1`–`L14`, vedení Superpowers `S1`–`S6`, viditelnost skillů `V1`, záložní postup `F1`, brány `G1`) a stručný stav repa: větev, rozpracovaný plán s počtem otevřených úkolů (ten, který jmenuje poslední handover, pokud existuje; jinak nejnovější podle názvu, nakonec `docs/plan.md`), poslední handover, navržený další krok. Jen cesty a počty, nikdy obsah souborů. |
 | Hook `UserPromptSubmit` | Přečte velikost kontextu z posledního záznamu `usage` v přepisu. Při 250k tokenech, pak po každých dalších +50k, přidá jednu poznámku: navrhni `pre-done` a potom `handover`, nic nespouštěj, dokud uživatel neodpoví. Přepsání: `HONZAPOWERS_HANDOVER_TOKENS`, `HONZAPOWERS_HANDOVER_STEP` (starší `LEAN_WORKFLOW_*` fungují jako záloha). |
 | Hook `PreCompact` | Řekne kompaktaci, aby zachovala poslední výsledek ověření, otevřené brány souhlasu a stav úkolů. |
 | Skill `handover` | Napíše datovaný handover (konvence projektu, výchozí `docs/handover/RRRR-MM-DD-<téma>.md`) s krátkým retro. Spustí se jen na přání nebo „ano“ uživatele; nejdřív zkontroluje `pre-done`, commit až po souhlasu. |

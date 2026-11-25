@@ -1,7 +1,7 @@
 # Jak se s honzapowers pracuje
 
 ## Běžný průběh
-1. **Začátek session.** Hook vloží krátká stálá pravidla a stav repa (větev, nejnovější plán a počet otevřených úkolů, poslední handover, navržený další krok). Nic dalšího nedělej, jen začni pracovat.
+1. **Začátek session.** Hook vloží krátká stálá pravidla a stav repa (větev, rozpracovaný plán a počet otevřených úkolů – ten, který jmenuje poslední handover, pokud existuje; jinak nejnovější podle názvu, nakonec `docs/plan.md` –, poslední handover, navržený další krok). Nic dalšího nedělej, jen začni pracovat.
 2. **Před větší prací.** U nového plánu spusť skill `kontrola-planu`; plán zkontrolují čtecí agenti dřív, než se začne psát kód.
 3. **Před „hotovo“.** Spusť `pre-done`: revizor v čistém kontextu porovná diff se zadáním a pravidly projektu.
 4. **U velkého kontextu.** Od 250k tokenů (pak po každých +50k) přijde návrh na `pre-done` a `handover`. Je to jen návrh: nic se nespustí, dokud neodpovíš.

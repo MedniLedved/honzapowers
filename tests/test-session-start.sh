@@ -237,4 +237,45 @@ run_hook "$(input_for startup.json "$R")" "$TEST_ROOT"
 check_basics handover-bad
 has handover-bad "Plan: docs/superpowers/plans/2026-11-09-new.md (3 open tasks)"
 
+echo "Handover with a prefix traversal path: outside file is never used"
+R="$(make_full_repo handover-traversal)"
+printf 'SECRET_SENTINEL_OUTSIDE\n- [ ] x\n' >"$TEST_ROOT/outside.md"
+printf 'Plán: docs/superpowers/plans/../../../../outside.md\n' >"$R/docs/handover/2026-11-08-topic.md"
+run_hook "$(input_for startup.json "$R")" "$TEST_ROOT"
+check_basics handover-traversal
+has handover-traversal "Plan: docs/superpowers/plans/2026-11-09-new.md (3 open tasks)"
+lacks handover-traversal "outside.md"
+
+echo "Handover with CRLF line endings"
+R="$(make_full_repo handover-crlf)"
+printf '# h\r\nPlán: docs/superpowers/plans/2026-11-01-old.md\r\n' >"$R/docs/handover/2026-11-08-topic.md"
+run_hook "$(input_for startup.json "$R")" "$TEST_ROOT"
+check_basics handover-crlf
+has handover-crlf "Plan: docs/superpowers/plans/2026-11-01-old.md (1 open tasks)"
+
+echo "Handover only in docs/audit names the plan"
+R="$(make_full_repo handover-audit)"
+rm -r "$R/docs/handover"
+printf 'Plán: docs/superpowers/plans/2026-11-01-old.md\n' >"$R/docs/audit/2026-01-01-audit.md"
+run_hook "$(input_for startup.json "$R")" "$TEST_ROOT"
+check_basics handover-audit
+has handover-audit "Handover: docs/audit/2026-01-01-audit.md"
+has handover-audit "Plan: docs/superpowers/plans/2026-11-01-old.md (1 open tasks)"
+
+echo "Handover names docs/plan.md"
+R="$(make_full_repo handover-planmd)"
+printf '# plan\n- [ ] a\n- [ ] b\n' >"$R/docs/plan.md"
+printf 'Plán: docs/plan.md, §4\n' >"$R/docs/handover/2026-11-08-topic.md"
+run_hook "$(input_for startup.json "$R")" "$TEST_ROOT"
+check_basics handover-planmd
+has handover-planmd "Plan: docs/plan.md (2 open tasks)"
+
+echo "No plans dir: fall back to docs/plan.md"
+R="$(make_full_repo planmd-fallback)"
+rm -r "$R/docs/superpowers"
+printf '# plan\n- [ ] a\n' >"$R/docs/plan.md"
+run_hook "$(input_for startup.json "$R")" "$TEST_ROOT"
+check_basics planmd-fallback
+has planmd-fallback "Plan: docs/plan.md (1 open tasks)"
+
 summary session-start
