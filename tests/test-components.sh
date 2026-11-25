@@ -137,4 +137,17 @@ echo "CI actions pinned to a commit SHA"
 bad="$(grep -nE '^\s*-? *uses: ' "$REPO_ROOT/.github/workflows/"*.yml | grep -vE '@[0-9a-f]{40}( |$)')"
 [ -z "$bad" ] && pass "all actions pinned to a SHA" || fail "unpinned: $bad"
 
+echo "Lesson candidates"
+K="$REPO_ROOT/skills/retro/kandidat.md"
+if [ -f "$K" ]; then
+  pass "kandidat.md exists"
+  for h in "## Test" "## Existing entry" "## Output"; do grep -q "^$h" "$K" && pass "kandidat.md: $h" || fail "kandidat.md: missing $h"; done
+  for w in Reusable Non-trivial Specific Verified "second project" "docs/learnings.md"; do grep -q "$w" "$K" && pass "kandidat.md: mentions $w" || fail "kandidat.md: no $w"; done
+  kw="$(wc -w <"$K" | tr -d ' ')"
+  [ "$kw" -le 250 ] && pass "kandidat.md: $kw <= 250 words" || fail "kandidat.md: $kw words"
+  [ -z "$(czech_prose "$K")" ] && pass "kandidat.md: English prose" || fail "kandidat.md: Czech prose"
+else
+  fail "kandidat.md missing"
+fi
+
 summary components
