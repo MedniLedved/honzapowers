@@ -12,7 +12,7 @@ A lesson is a candidate only if it is all of:
 Also ask: would it help in six months? If not, drop it.
 
 ## Existing entry
-Search the trigger in the findings index of `${CLAUDE_SKILL_DIR}/../../docs/learnings.md` (an empty index means no match) and in the project's `docs/retro/`.
+Search the trigger first in the project's `docs/retro/` and `docs/handover/` (the user's own record), then in the findings index of the plugin's `docs/learnings.md` (read by `retro` step 3; an empty index means no match).
 - No match: new row.
 - Same trigger, same fix: update that row.
 - Same trigger, other cause: new row that links the old one.

@@ -27,7 +27,7 @@ For each finding give:
 - **Proposal**: the exact text or script to add, or the rule to rephrase.
 
 ## 2b. Candidates
-After the findings, apply `${CLAUDE_SKILL_DIR}/kandidat.md` to what the session learned.
+After the findings, Read `${CLAUDE_SKILL_DIR}/kandidat.md` and apply it to what the session learned.
 Report at most 3 candidates or `no candidate`.
 Propose only; never write a skill file, `docs/learnings.md` or rules.
 

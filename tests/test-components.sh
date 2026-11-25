@@ -149,6 +149,14 @@ if [ -f "$K" ]; then
 else
   fail "kandidat.md missing"
 fi
+[ -f "$REPO_ROOT/skills/handover/../retro/kandidat.md" ] && pass "handover: kandidat.md path resolves" || fail "handover: kandidat.md path broken"
+grep -q 'Read `${CLAUDE_SKILL_DIR}/kandidat.md`' "$REPO_ROOT/skills/retro/SKILL.md" && grep -q 'Read `${CLAUDE_SKILL_DIR}/../retro/kandidat.md`' "$REPO_ROOT/skills/handover/SKILL.md" \
+  && pass "retro and handover: told to Read kandidat.md" || fail "retro/handover: no Read instruction for kandidat.md"
+for w in "Same trigger, same fix" "Same trigger, other cause" "At most 3" "no candidate" "docs/retro/"; do
+  grep -q "$w" "$K" && pass "kandidat.md: rule '$w'" || fail "kandidat.md: rule '$w' missing"
+done
+! grep -q 'CLAUDE_SKILL_DIR' "$K" && pass "kandidat.md: no unsubstituted variable" || fail "kandidat.md: CLAUDE_SKILL_DIR is not substituted in non-SKILL files"
+[ -f "$REPO_ROOT/evals/retro-lessons-no-write/graders/skill-fired.md" ] && pass "eval retro-lessons-no-write: skill-fired grader" || fail "eval retro-lessons-no-write: no skill-fired grader"
 grep -q 'kandidat.md' "$REPO_ROOT/skills/retro/SKILL.md" && grep -q 'never write a skill file' "$REPO_ROOT/skills/retro/SKILL.md" \
   && pass "retro: candidates step, never writes a skill" || fail "retro: no candidates step"
 grep -q 'kandidat.md' "$REPO_ROOT/skills/handover/SKILL.md" && grep -q 'Lessons' "$REPO_ROOT/skills/handover/SKILL.md" \
