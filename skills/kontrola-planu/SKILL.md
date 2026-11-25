@@ -1,6 +1,6 @@
 ---
 name: kontrola-planu
-description: Use when a plan has just been written (writing-plans or any multi-step plan) and before it is executed, to check it against the spec and project rules with read-only checker agents, sort the findings into fix, ask or reject, and propose a lesson for the project's own criteria file.
+description: Use when a plan file has just been written (writing-plans, docs/plans) and before it is executed, to check it against the spec and project rules with read-only checker agents, sort the findings into fix, ask or reject, and propose a lesson for the project's own criteria file.
 ---
 
 # Kontrola plánu
@@ -10,7 +10,7 @@ Zkontroluj hotový plán dřív, než se začne provádět. Agenti jen čtou. Pl
 ## 1. Podklady
 - Plán: cesta od uživatele, jinak nejnovější soubor v `docs/superpowers/plans/` nebo `docs/plans/`.
 - Zdroj pravdy: zadání nebo spec, ke kterému plán patří, `AGENTS.md` / `CLAUDE.md` projektu a dotčený kód.
-- Kritéria projektu: `.claude/kontrola-planu.md`. Pokud soubor existuje, načti ho. Pokud ne, kontroluj s obecnými kritérii (níže) a po každém běhu **vždy** nabídni, že soubor založíš (krok 6 a 7).
+- Kritéria projektu: `.claude/kontrola-planu.md`. Pokud soubor existuje, načti ho. Pokud ne, kontroluj s obecnými kritérii (níže). Offer to create the file once per project (steps 6 and 7); if the user declined it in this project, do not offer it again.
 
 Obecná kritéria: každý úkol jmenuje soubory, kroky a ověřovací příkaz; pořadí kroků dává smysl; plán odpovídá zadání (nic navíc, nic nechybí); kroky jsou proveditelné bez dalšího ptaní; výsledek i kód jsou úsporné.
 
@@ -49,8 +49,8 @@ Dál platí:
 - nic nezapisuj bez souhlasu uživatele;
 - nikdy neupravuj plugin ani `policy/policy.md`;
 - nezapisuj pravidlo, které už hlídá kód, test nebo hook;
-- chybí-li `.claude/kontrola-planu.md`, nabídni jeho založení **vždy**, i když jsi žádné opakovatelné pravidlo nenašel (pak nabídni prázdný soubor s hlavičkou); nezakládej ho sám;
+- if `.claude/kontrola-planu.md` is missing, offer to create it once per project, even with no repeatable rule (then an empty file with a header); never after the user declined; never create it yourself;
 - nepředepisuj pevný příkaz projektu (např. testovací), jen že plán má ověřovací příkaz uvést.
 
 ## 7. Uzávěr
-Do plánu přidej řádek `**Stav:** kontrola <datum>: N nálezů, opraveno X, otázky Y, zamítnuto Z.` Pak napiš uživateli nejvýš 6 řádků: počty nálezů po koších, co jsi opravil, na co čekáš (otázky), zda proběhlo druhé kolo, návrh poučení a, chybí-li soubor kritérií, nabídka jeho založení (povinně).
+Do plánu přidej řádek `**Stav:** kontrola <datum>: N nálezů, opraveno X, otázky Y, zamítnuto Z.` Pak napiš uživateli nejvýš 6 řádků: počty nálezů po koších, co jsi opravil, na co čekáš (otázky), zda proběhlo druhé kolo, návrh poučení a, chybí-li soubor kritérií, nabídka jeho založení (once per project, see step 6).

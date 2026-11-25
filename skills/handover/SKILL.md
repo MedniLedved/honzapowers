@@ -34,7 +34,7 @@ bash "${CLAUDE_SKILL_DIR}/../../scripts/session-metrics" --session "${CLAUDE_SES
 ## 3. Sections
 1. **Identity and goal**: project, repo, branch, phase; how the user wants to work (language, phases, approvals) if the project files do not already say it.
 2. **Done this session**: each result with its evidence (command and its result, commit, PR link).
-3. **Decisions**: what the user approved or rejected, and why; Superpowers ledger rulings and open items, carried over before the plan workspace is deleted.
+3. **Decisions**: what the user approved or rejected, and why; decisions and open items from a Superpowers plan's progress log, carried over before it is deleted.
 4. **Open items and gates**: what is unfinished, what waits on the user (credentials, destructive or production steps, pushes to shared or default branches).
 5. **Next step**: the concrete first action and its verification command.
 6. **Files and reading order**: paths to read first (plan, specs, this file), with section numbers.
@@ -42,5 +42,5 @@ bash "${CLAUDE_SKILL_DIR}/../../scripts/session-metrics" --session "${CLAUDE_SES
 
 ## 4. Finish
 - No secrets, tokens or keys; no long pastes from logs or files.
-- Do not commit or push on your own, even if project rules allow it. Report the path in one line and ask once: "Commit and push the handover? Otherwise it is lost when this session's container ends." Commit and push only after an explicit yes; pushing still follows the project's git rules.
+- Do not commit or push on your own, even if project rules allow it. Report the path in one line and ask once: "Commit and push the handover? Otherwise it is lost when this session's container ends." (in a cloud session; locally ask only "Commit the handover?") Commit and push only after an explicit yes; pushing still follows the project's git rules.
 - Then propose a fresh session (or `/clear`).

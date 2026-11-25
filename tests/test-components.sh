@@ -89,4 +89,24 @@ pv="$(grep -o '"version": "[^"]*"' "$REPO_ROOT/.claude-plugin/plugin.json")"
 mv="$(grep -o '"version": "[^"]*"' "$REPO_ROOT/.claude-plugin/marketplace.json")"
 assert_eq "plugin and marketplace version" "$pv" "$mv"
 
+echo "Rules agree with each other (audit phase C)"
+P="$REPO_ROOT/policy/policy.md"; S="$REPO_ROOT/skills"
+grep -q '^L13 .*pre-done.*skilly-kdy-ktery' "$P" && pass "L13 defers to skilly-kdy-ktery" || fail "L13 still runs pre-done unconditionally"
+grep -qi 'not for trivial' <<<"$(frontmatter "$S/pre-done/SKILL.md" description)" && pass "pre-done: description excludes trivial changes" \
+  || fail "pre-done: description does not exclude trivial changes"
+kd="$(frontmatter "$S/kontrola-planu/SKILL.md" description)"
+grep -qi 'plan file' <<<"$kd" && ! grep -qi 'any multi-step plan' <<<"$kd" && pass "kontrola-planu: fires on a written plan file only" \
+  || fail "kontrola-planu: description too broad"
+grep -qi 'once per project' "$S/kontrola-planu/SKILL.md" && ! grep -q '\*\*vždy\*\*' "$S/kontrola-planu/SKILL.md" \
+  && pass "kontrola-planu: criteria file offered once per project" || fail "kontrola-planu: criteria file offered every run"
+! grep -q 'S1`\.\.`S6' "$S/retro/SKILL.md" && pass "retro: no S1..S6 range (S3 is reserved)" || fail "retro: S1..S6 range"
+grep -q 'S3 je vyhrazené' "$REPO_ROOT/docs/pouziti.md" && pass "pouziti: S3 reserved note" || fail "pouziti: no S3 note"
+for f in "$S/retro/SKILL.md" "$S/handover/SKILL.md" "$S/mesicni-projektove-retro/SKILL.md"; do
+  grep -qi 'second project' "$f" && pass "$(basename "$(dirname "$f")"): promotion gate = second project" \
+    || fail "$(basename "$(dirname "$f")"): promotion gate wording"
+done
+! grep -q 'another session or project' "$S/retro/SKILL.md" && pass "retro: no session-or-project gate" || fail "retro: old gate wording"
+! grep -qi 'ledger rulings\|plan workspace' "$P" && pass "policy: no Superpowers jargon in S5" || fail "policy: jargon in S5"
+grep -q 'cloud session' "$S/handover/SKILL.md" && pass "handover: container loss is cloud-only" || fail "handover: assumes cloud"
+
 summary components

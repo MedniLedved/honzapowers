@@ -21,7 +21,7 @@ Liší se od `retro`: to měří jednu session, tento skill hledá opakované ch
 
 ## Kam návrhy patří
 
-- Cíl: `AGENTS.md` / `CLAUDE.md` projektu, hook nebo CI, šablona zadání. Návrh na úrovni uživatele jen po potvrzení ve druhém projektu a se souhlasem: je-li v kontextu blok „Personal rules (honzapowers-osobni)“, jde diff do `pravidla.md` toho pluginu, jinak jako text k vložení do osobních preferencí na claude.ai.
+- Cíl: `AGENTS.md` / `CLAUDE.md` projektu, hook nebo CI, šablona zadání. Návrh na úrovni uživatele only once confirmed in a second project, a se souhlasem: je-li v kontextu blok „Personal rules (honzapowers-osobni)“, jde diff do `pravidla.md` toho pluginu, jinak jako text k vložení do osobních preferencí na claude.ai.
 - **Nikdy** výchozí policy pluginu (`policy/policy.md`) ani `docs/learnings.md`: to je ruční vydání se souhlasem uživatele.
 - Pravidlo, které už hlídá kód, test nebo hook, se nenavrhuje.
 
