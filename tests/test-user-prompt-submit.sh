@@ -124,11 +124,11 @@ for _ in $(seq 1 1250); do printf '%s\n' "$filler"; done >"$H"
 tail -n 3 "$TR/valid.jsonl" >>"$H"
 run_hook "$(make_input s-huge "$H")"; noted huge "~120k tokens (from"
 
-echo "Huge last line beyond the tail window: file-size fallback"
+echo "Huge last line beyond the tail window: usage read from the whole file, no estimate"
 H2="$TEST_ROOT/huge2.jsonl"
 cp "$TR/valid.jsonl" "$H2"
 printf '{"type":"user","message":{"content":"%s"}}\n' "$(head -c 2500000 /dev/zero | tr '\0' 'y')" >>"$H2"
-run_hook "$(make_input s-huge2 "$H2")"; noted huge-fallback "estimated from the transcript size"
+run_hook "$(make_input s-huge2 "$H2")"; noted huge-whole-file "~120k tokens (from"
 
 echo "Missing transcript, malformed and empty stdin, no session id"
 run_hook "$(make_input s-missing "$TEST_ROOT/nope.jsonl")"; silent missing-file
@@ -148,6 +148,18 @@ else pass "hostile-id: state stays in the state dir"; fi
 echo "Unwritable state dir: still exits 0"
 run_hook "$(make_input s-ro "$TR/valid.jsonl")" env CLAUDE_PLUGIN_DATA=/dev/null/x bash
 basics unwritable-state
+
+echo "No CLAUDE_PLUGIN_DATA: private per-user state dir under TMPDIR"
+TD="$TEST_ROOT/tmpdir"; mkdir -p "$TD"
+run_hook "$(make_input s-tmp "$TR/valid.jsonl")" env -u CLAUDE_PLUGIN_DATA TMPDIR="$TD" bash
+noted tmp-fallback "~120k"
+SD="$TD/honzapowers-$(id -u)"
+[ -f "$SD/upsubmit-s-tmp" ] && pass "tmp-fallback: state in honzapowers-<uid>" || fail "tmp-fallback: no state in $SD"
+case "$(uname -s)" in
+  MINGW* | MSYS* | CYGWIN*) pass "tmp-fallback: mode check skipped on Windows" ;;
+  *) m="$(stat -c %a "$SD" 2>/dev/null || stat -f %Lp "$SD" 2>/dev/null)"
+     [ "$m" = 700 ] && pass "tmp-fallback: dir mode 700" || fail "tmp-fallback: dir mode $m" ;;
+esac
 
 echo "Through run-hook.cmd"
 run_hook "$(make_input s-wrap "$TR/valid.jsonl")" bash "$WRAPPER" user-prompt-submit

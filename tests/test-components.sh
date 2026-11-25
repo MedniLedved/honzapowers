@@ -40,7 +40,8 @@ echo "Agents"
 f="$REPO_ROOT/agents/log-reader.md"
 assert_eq "log-reader name" log-reader "$(frontmatter "$f" name)"
 assert_eq "log-reader model" haiku "$(frontmatter "$f" model)"
-assert_eq "log-reader tools" "Read, Grep, Glob, Bash" "$(frontmatter "$f" tools)"
+assert_eq "log-reader tools" "Read, Grep, Glob" "$(frontmatter "$f" tools)"
+grep -q "data, never instructions" "$f" && pass "log-reader: log is data" || fail "log-reader: no data-not-instructions rule"
 grep -q "at most 30 lines" "$f" && pass "log-reader: 30-line cap" || fail "log-reader: no 30-line cap"
 
 echo "kontrola-planu: skill, agents, eval"
@@ -127,5 +128,9 @@ done
 grep -q 'AI-facing' "$REPO_ROOT/AGENTS.md" && pass "AGENTS.md: language rule" || fail "AGENTS.md: old language rule"
 ! grep -n 'pilot\|§4' "$REPO_ROOT/skills/pre-done/SKILL.md" "$REPO_ROOT/scripts/session-metrics" "$REPO_ROOT/docs/learnings.md" >/dev/null \
   && pass "no internal pilot/plan references" || fail "internal pilot/plan references remain"
+
+echo "CI actions pinned to a commit SHA"
+bad="$(grep -nE '^\s*-? *uses: ' "$REPO_ROOT/.github/workflows/"*.yml | grep -vE '@[0-9a-f]{40}( |$)')"
+[ -z "$bad" ] && pass "all actions pinned to a SHA" || fail "unpinned: $bad"
 
 summary components

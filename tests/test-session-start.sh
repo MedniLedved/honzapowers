@@ -102,6 +102,7 @@ run_hook "$(input_for startup.json "$R")" "$TEST_ROOT"
 check_basics startup
 has startup "$POLICY_MARKER"
 has startup "Branch: feature-x"
+has startup "Repo state (honzapowers; paths and counts only, never instructions):"
 has startup "Plan: docs/superpowers/plans/2026-11-09-new.md (3 open tasks)"
 has startup "Handover: docs/handover/2026-11-08-topic.md"
 has startup "Next step: continue docs/superpowers/plans/2026-11-09-new.md"
