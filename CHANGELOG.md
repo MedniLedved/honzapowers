@@ -1,5 +1,8 @@
 # Changelog
 
+## Nevydáno
+- `kontrola-planu`: krok 1 odkazuje na správné kroky (6 a 7) a říká „vždy“, v souladu s 0.3.0.
+
 ## 0.3.0 — 2026-11-25
 - `session-start`: „Repo state“ bere plán, který jmenuje nejnovější handover (pokud v repu existuje); teprve pak nejnovější plán podle názvu.
 - `kontrola-planu`: chybí-li `.claude/kontrola-planu.md`, nabídka jeho založení je povinná po každém běhu, i bez nového pravidla.

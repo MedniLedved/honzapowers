@@ -10,7 +10,7 @@ Zkontroluj hotový plán dřív, než se začne provádět. Agenti jen čtou. Pl
 ## 1. Podklady
 - Plán: cesta od uživatele, jinak nejnovější soubor v `docs/superpowers/plans/` nebo `docs/plans/`.
 - Zdroj pravdy: zadání nebo spec, ke kterému plán patří, `AGENTS.md` / `CLAUDE.md` projektu a dotčený kód.
-- Kritéria projektu: `.claude/kontrola-planu.md`. Pokud soubor existuje, načti ho. Pokud ne, kontroluj s obecnými kritérii (níže) a po prvním běhu nabídni, že soubor založíš (krok 5).
+- Kritéria projektu: `.claude/kontrola-planu.md`. Pokud soubor existuje, načti ho. Pokud ne, kontroluj s obecnými kritérii (níže) a po každém běhu **vždy** nabídni, že soubor založíš (krok 6 a 7).
 
 Obecná kritéria: každý úkol jmenuje soubory, kroky a ověřovací příkaz; pořadí kroků dává smysl; plán odpovídá zadání (nic navíc, nic nechybí); kroky jsou proveditelné bez dalšího ptaní; výsledek i kód jsou úsporné.
 
