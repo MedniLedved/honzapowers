@@ -60,6 +60,9 @@ grep -q "honzapowers:kontrola-souladu" "$f" && grep -q "honzapowers:kontrola-aud
 grep -qi "never edit the plugin" "$f" && pass "kontrola-planu: never edits plugin or policy" || fail "kontrola-planu: no never-edit rule"
 E="$REPO_ROOT/evals/kontrola-planu-fires"
 [ -f "$E/prompt.md" ] && [ "$(ls "$E"/graders/*.md | wc -l)" -ge 3 ] && pass "kontrola-planu eval: prompt and 3+ graders" || fail "kontrola-planu eval incomplete"
+for e in pre-done-fires pre-done-trivial-no-fire kontrola-planu-chat-list-no-fire; do
+  [ -f "$REPO_ROOT/evals/$e/prompt.md" ] && [ "$(ls "$REPO_ROOT/evals/$e"/graders/*.md 2>/dev/null | wc -l)" -ge 1 ] && pass "eval $e: prompt and grader" || fail "eval $e incomplete"
+done
 
 echo "mesicni-projektove-retro"
 M="$REPO_ROOT/skills/mesicni-projektove-retro"
