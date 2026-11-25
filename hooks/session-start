@@ -43,6 +43,15 @@ newest_md() { # $@ = dirs relative to cwd; prints newest *.md by name, first dir
   return 1
 }
 
+plan_from_handover() { # $1 = handover path relative to cwd; prints the first plan path it names that exists
+  local h="$cwd/$1" c
+  [ -f "$h" ] || return 1
+  while IFS= read -r c; do
+    if [ -f "$cwd/$c" ]; then printf '%s' "$c"; return 0; fi
+  done < <(grep -o -E 'docs/(superpowers/plans|plans)/[A-Za-z0-9._-]+\.md|docs/plan\.md' "$h" 2>/dev/null)
+  return 1
+}
+
 # --- repo state ---------------------------------------------------------------
 
 state="Repo state (honzapowers; paths and counts only):"
@@ -64,7 +73,11 @@ if [ -d "$cwd" ]; then
   esac
   state+=$'\n'"- Branch: $branch"
 
-  plan="$(newest_md docs/superpowers/plans docs/plans)"
+  handover="$(newest_md docs/handover docs/audit)"
+  # The plan named in the newest handover wins over the newest plan by file name.
+  plan=""
+  if [ -n "$handover" ]; then plan="$(plan_from_handover "$handover")"; fi
+  if [ -z "$plan" ]; then plan="$(newest_md docs/superpowers/plans docs/plans)"; fi
   if [ -z "$plan" ] && [ -f "$cwd/docs/plan.md" ]; then plan="docs/plan.md"; fi
   open=0
   if [ -n "$plan" ]; then
@@ -76,7 +89,6 @@ if [ -d "$cwd" ]; then
     state+=$'\n'"- Plan: none found"
   fi
 
-  handover="$(newest_md docs/handover docs/audit)"
   if [ -n "$handover" ]; then
     handover_safe="$(sanitize "$handover")"
     state+=$'\n'"- Handover: $handover_safe"

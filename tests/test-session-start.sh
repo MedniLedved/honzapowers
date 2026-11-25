@@ -219,4 +219,22 @@ hline="$(printf '%s\n' "$CTX" | grep '^- Handover: ')"
 [ -n "$hline" ] && [ "${#hline}" -le 132 ] && pass "inject: long handover path capped (${#hline} chars)" \
   || fail "inject: handover line '${hline:0:60}...' (${#hline} chars)"
 
+# --- plan named in the newest handover wins over the newest plan by name ---
+
+echo "Plan named in handover"
+R="$(make_full_repo handover-plan)"
+printf '# h\nPlán: docs/superpowers/plans/2026-11-01-old.md (hotovo 2 z 3)\n' >"$R/docs/handover/2026-11-08-topic.md"
+run_hook "$(input_for startup.json "$R")" "$TEST_ROOT"
+check_basics handover-plan
+has handover-plan "Plan: docs/superpowers/plans/2026-11-01-old.md (1 open tasks)"
+has handover-plan "Next step: continue docs/superpowers/plans/2026-11-01-old.md"
+lacks handover-plan "2026-11-09-new.md"
+
+echo "Handover names a missing or outside path: fall back to newest plan"
+R="$(make_full_repo handover-bad)"
+printf 'Plán: docs/superpowers/plans/neexistuje.md a ../../etc/plans/x.md\n' >"$R/docs/handover/2026-11-08-topic.md"
+run_hook "$(input_for startup.json "$R")" "$TEST_ROOT"
+check_basics handover-bad
+has handover-bad "Plan: docs/superpowers/plans/2026-11-09-new.md (3 open tasks)"
+
 summary session-start

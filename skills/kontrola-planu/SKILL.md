@@ -49,8 +49,8 @@ Dál platí:
 - nic nezapisuj bez souhlasu uživatele;
 - nikdy neupravuj plugin ani `policy/policy.md`;
 - nezapisuj pravidlo, které už hlídá kód, test nebo hook;
-- chybí-li soubor, nabídni jeho založení a nezakládej ho sám;
+- chybí-li `.claude/kontrola-planu.md`, nabídni jeho založení **vždy**, i když jsi žádné opakovatelné pravidlo nenašel (pak nabídni prázdný soubor s hlavičkou); nezakládej ho sám;
 - nepředepisuj pevný příkaz projektu (např. testovací), jen že plán má ověřovací příkaz uvést.
 
 ## 7. Uzávěr
-Do plánu přidej řádek `**Stav:** kontrola <datum>: N nálezů, opraveno X, otázky Y, zamítnuto Z.` Pak napiš uživateli nejvýš 6 řádků: počty nálezů po koších, co jsi opravil, na co čekáš (otázky), zda proběhlo druhé kolo, návrh poučení nebo nabídka založit soubor kritérií.
+Do plánu přidej řádek `**Stav:** kontrola <datum>: N nálezů, opraveno X, otázky Y, zamítnuto Z.` Pak napiš uživateli nejvýš 6 řádků: počty nálezů po koších, co jsi opravil, na co čekáš (otázky), zda proběhlo druhé kolo, návrh poučení a, chybí-li soubor kritérií, nabídka jeho založení (povinně).
