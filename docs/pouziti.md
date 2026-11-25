@@ -3,7 +3,7 @@
 ## Běžný průběh
 1. **Začátek session.** Hook vloží krátká stálá pravidla a stav repa (větev, rozpracovaný plán a počet otevřených úkolů – ten, který jmenuje poslední handover, pokud existuje; jinak nejnovější podle názvu, nakonec `docs/plan.md` –, poslední handover, navržený další krok). Nic dalšího nedělej, jen začni pracovat.
 2. **Před větší prací.** U nového plánu spusť skill `kontrola-planu`; plán zkontrolují čtecí agenti dřív, než se začne psát kód.
-3. **Před „hotovo“.** Spusť `pre-done`: revizor v čistém kontextu porovná diff se zadáním a pravidly projektu.
+3. **Před „hotovo“.** U architektonické práce, mazání dat a změny sdíleného rozhraní spusť `pre-done` (jinak jen na požádání): revizor v čistém kontextu porovná diff se zadáním a pravidly projektu.
 4. **U velkého kontextu.** Od 250k tokenů (pak po každých +50k) přijde návrh na `pre-done` a `handover`. Je to jen návrh: nic se nespustí, dokud neodpovíš.
 5. **Konec nebo pauza.** Řekni „handover“ (nebo odpověz „ano“ na návrh). Vznikne datovaný soubor s tím, co je hotové, co je otevřené a co číst jako první; další session na něj naváže.
 6. **Po delší době.** Skill `retro` změří jednu session, `mesicni-projektove-retro` projde projekt za období. Obojí jen navrhuje, pravidla sám nemění.

@@ -1,5 +1,8 @@
 # Changelog
 
+## Nevydáno
+- Původní název pluginu `lean-workflow` je jen v tomto changelogu (0.3.0 a dříve).
+
 ## 0.3.1 — 2026-11-25
 - `kontrola-planu`: krok 1 odkazuje na správné kroky (6 a 7) a říká „vždy“, v souladu s 0.3.0.
 - README a `docs/pouziti.md` popisují výběr plánu jako v 0.3.0 (plán z posledního handoveru, jinak nejnovější podle názvu).

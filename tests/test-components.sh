@@ -105,6 +105,8 @@ grep -qi 'once per project' "$S/kontrola-planu/SKILL.md" && ! grep -q '\*\*vždy
   && pass "kontrola-planu: criteria file offered once per project" || fail "kontrola-planu: criteria file offered every run"
 ! grep -q 'S1`\.\.`S6' "$S/retro/SKILL.md" && pass "retro: no S1..S6 range (S3 is reserved)" || fail "retro: S1..S6 range"
 grep -q 'S3 je vyhrazené' "$REPO_ROOT/docs/pouziti.md" && pass "pouziti: S3 reserved note" || fail "pouziti: no S3 note"
+for h in "## Požadavky" "## Instalace" "## Ověření" "## Návrat zpět" "## Jak pracovat"; do grep -q "^$h" "$REPO_ROOT/README.md" && pass "README: $h" || fail "README: chybí $h"; done
+grep -q "Git Bash" "$REPO_ROOT/README.md" && pass "README: Git Bash" || fail "README: chybí Git Bash"
 for f in "$S/retro/SKILL.md" "$S/handover/SKILL.md" "$S/mesicni-projektove-retro/SKILL.md"; do
   grep -qi 'second project' "$f" && pass "$(basename "$(dirname "$f")"): promotion gate = second project" \
     || fail "$(basename "$(dirname "$f")"): promotion gate wording"
