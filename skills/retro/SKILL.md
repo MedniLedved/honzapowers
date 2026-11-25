@@ -26,6 +26,11 @@ For each finding give:
 - **Rung**: where the fix goes, cheapest first: `hard` (hook, deny rule or script, 0 context tokens), `skill`, `project` (`AGENTS.md`/`CLAUDE.md` line), `policy`. Say in one clause why it cannot go on a cheaper rung.
 - **Proposal**: the exact text or script to add, or the rule to rephrase.
 
+## 2b. Candidates
+After the findings, apply `${CLAUDE_SKILL_DIR}/kandidat.md` to what the session
+learned. Report at most 3 candidates or `no candidate`. Propose only; never write
+a skill file, `docs/learnings.md` or rules.
+
 ## 3. Promotion gate
 A `general` finding becomes a proposal only if the same finding was already
 confirmed in a second project. Check:
@@ -42,4 +47,4 @@ another one.
   - `project` finding: a diff or PR in the project;
   - `general` finding: if the context has a block "Personal rules (honzapowers-osobni)", propose a diff to `pravidla.md` of that personal plugin; otherwise give the text to paste into the personal preferences on claude.ai. A `general` finding is proposed only after the same finding was confirmed in a second project;
   - never a change of the default policy of honzapowers: that is a manual release with the user's consent.
-- Report in a few lines: the findings and which proposals are ready for a PR. Ask which to open.
+- Report in a few lines: the findings, the lesson candidates and which proposals are ready for a PR. Ask which to open.

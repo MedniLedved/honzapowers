@@ -149,5 +149,9 @@ if [ -f "$K" ]; then
 else
   fail "kandidat.md missing"
 fi
+grep -q 'kandidat.md' "$REPO_ROOT/skills/retro/SKILL.md" && grep -q 'never write a skill file' "$REPO_ROOT/skills/retro/SKILL.md" \
+  && pass "retro: candidates step, never writes a skill" || fail "retro: no candidates step"
+grep -q 'kandidat.md' "$REPO_ROOT/skills/handover/SKILL.md" && grep -q 'Lessons' "$REPO_ROOT/skills/handover/SKILL.md" \
+  && pass "handover: Lessons line" || fail "handover: no Lessons line"
 
 summary components
