@@ -6,7 +6,7 @@
 3. **Před „hotovo“.** U architektonické práce, mazání dat a změny sdíleného rozhraní spusť `pre-done` (jinak jen na požádání): revizor v čistém kontextu porovná diff se zadáním a pravidly projektu.
 4. **U velkého kontextu.** Od 250k tokenů (pak po každých +50k) přijde návrh na `pre-done` a `handover`. Je to jen návrh: nic se nespustí, dokud neodpovíš.
 5. **Konec nebo pauza.** Řekni „handover“ (nebo odpověz „ano“ na návrh). Vznikne datovaný soubor s tím, co je hotové, co je otevřené a co číst jako první; další session na něj naváže.
-6. **Po delší době.** Skill `retro` změří jednu session, `mesicni-projektove-retro` projde projekt za období. Obojí jen navrhuje, pravidla sám nemění.
+6. **Po delší době.** Skill `retro` změří jednu session, `mesicni-projektove-retro` projde projekt za období. Obojí jen navrhuje, pravidla sám nemění. `retro` i `handover` k tomu nabídnou nejvýš 3 kandidáty na poznatek (kritéria jsou v `skills/retro/kandidat.md`): nic se nezapíše a žádný skill nevznikne, dokud to neschválíš.
 
 ## Soubory, které plugin vytváří v projektech
 | Soubor | Kdo ho vytváří | K čemu |

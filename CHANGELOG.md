@@ -1,5 +1,8 @@
 # Changelog
 
+## Nepublikováno
+- **Kandidáti na poznatek:** `retro` a `handover` navrhnou nejvýš 3 poznatky ze session podle kritérií (opakovatelný, netriviální, konkrétní, ověřený) a rozhodovací tabulky (nový řádek, aktualizace, odkaz, zastaralý). Jen návrh: žádný hook, žádný automatický zápis skillů, policy beze změny. Nový eval `retro-lessons-no-write`. Inspirace: projekty Claudeception a continuous-learning-skill.
+
 ## 0.4.0 — 2026-11-25
 Opravy z auditu před zveřejněním.
 - **Pravidla:** L13 spouští `pre-done` jen podle `skilly-kdy-ktery` (architektura, mazání dat, sdílené rozhraní, jinak na požádání); popis `pre-done` vylučuje drobnosti. S3 je vyhrazené pro osobní vrstvu. S5 bez žargonu.
