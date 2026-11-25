@@ -5,9 +5,8 @@ description: Use when about to claim done or open a PR on architectural work, da
 
 # Pre-done check
 
-Green lint, type checks and unit tests are not a review. In the pilot all
-three branches were green and an independent review still found 1 Critical
-and 5 Important defects. Run this once, right before "done".
+Green lint, type checks and unit tests are not a review: an independent
+review of fully green branches still finds Critical and Important defects. Run this once, right before "done".
 
 ## 1. List what the diff is judged against
 - The user's request, in a few bullets (what must be true when done).

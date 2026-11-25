@@ -53,10 +53,10 @@ for a in kontrola-souladu kontrola-auditu; do
   assert_eq "$a tools (read-only)" "Read, Grep, Glob" "$(frontmatter "$f" tools)"
   grep -q "OPRAVIT" "$f" && grep -q "ZEPTAT" "$f" && grep -q "ZAMÍTNOUT" "$f" && pass "$a: three buckets" || fail "$a: buckets missing"
 done
-grep -q "Malý plán (do 3 úkolů)" "$REPO_ROOT/agents/kontrola-souladu.md" && pass "kontrola-souladu: small-plan section" || fail "kontrola-souladu: no small-plan section"
+grep -q "Small plan (up to 3 tasks)" "$REPO_ROOT/agents/kontrola-souladu.md" && pass "kontrola-souladu: small-plan section" || fail "kontrola-souladu: no small-plan section"
 f="$REPO_ROOT/skills/kontrola-planu/SKILL.md"
 grep -q "honzapowers:kontrola-souladu" "$f" && grep -q "honzapowers:kontrola-auditu" "$f" && pass "kontrola-planu: names both agents" || fail "kontrola-planu: agents not named"
-grep -qi "nikdy neupravuj plugin" "$f" && pass "kontrola-planu: never edits plugin or policy" || fail "kontrola-planu: no never-edit rule"
+grep -qi "never edit the plugin" "$f" && pass "kontrola-planu: never edits plugin or policy" || fail "kontrola-planu: no never-edit rule"
 E="$REPO_ROOT/evals/kontrola-planu-fires"
 [ -f "$E/prompt.md" ] && [ "$(ls "$E"/graders/*.md | wc -l)" -ge 3 ] && pass "kontrola-planu eval: prompt and 3+ graders" || fail "kontrola-planu eval incomplete"
 
@@ -65,7 +65,7 @@ M="$REPO_ROOT/skills/mesicni-projektove-retro"
 for x in SKILL.md analyst-prompt.md sablona.md git-signals.sh human-messages.py; do
   [ -f "$M/$x" ] && pass "mesicni-projektove-retro: $x" || fail "mesicni-projektove-retro: chybí $x"
 done
-grep -q "Nikdy" "$M/SKILL.md" && grep -q "policy/policy.md" "$M/SKILL.md" && pass "mesicni-projektove-retro: nikdy nemění výchozí policy" || fail "mesicni-projektove-retro: chybí zákaz změny policy"
+grep -q "Never" "$M/SKILL.md" && grep -q "policy/policy.md" "$M/SKILL.md" && pass "mesicni-projektove-retro: nikdy nemění výchozí policy" || fail "mesicni-projektove-retro: chybí zákaz změny policy"
 [ -f "$REPO_ROOT/evals/mesicni-projektove-retro-fires/prompt.md" ] && pass "mesicni-projektove-retro: eval" || fail "mesicni-projektove-retro: chybí eval"
 
 echo "Skill-visibility rule and S2 pointer"
@@ -108,5 +108,24 @@ done
 ! grep -q 'another session or project' "$S/retro/SKILL.md" && pass "retro: no session-or-project gate" || fail "retro: old gate wording"
 ! grep -qi 'ledger rulings\|plan workspace' "$P" && pass "policy: no Superpowers jargon in S5" || fail "policy: jargon in S5"
 grep -q 'cloud session' "$S/handover/SKILL.md" && pass "handover: container loss is cloud-only" || fail "handover: assumes cloud"
+
+echo "Language: AI-facing files are English, user output Czech (audit phase D)"
+czech_prose() { # prints lines with Czech diacritics outside `code`, „quotes", fenced blocks and the Czech output labels
+  awk '/^```/{f=!f; next} !f { l=$0; gsub(/`[^`]*`/, "", l); gsub(/„[^“]*“/, "", l); gsub(/ZAMÍTNOUT|OVĚŘENO|kritický/, "", l); if (l ~ /[ěščřžýáíéůúťďňĚŠČŘŽÝÁÍÉŮÚŤĎŇ]/) print FILENAME ":" FNR ": " substr($0, 1, 60) }' "$1"
+}
+for f in "$REPO_ROOT"/skills/{kontrola-planu,mesicni-projektove-retro,skilly-kdy-ktery}/SKILL.md \
+  "$REPO_ROOT"/skills/mesicni-projektove-retro/analyst-prompt.md "$REPO_ROOT"/agents/*.md; do
+  n="${f#"$REPO_ROOT"/}"; out="$(czech_prose "$f")"
+  [ -z "$out" ] && pass "$n: English prose" || fail "$n: Czech prose: $(printf '%s' "$out" | head -n 2)"
+done
+for f in "$REPO_ROOT"/agents/*.md; do
+  case "$(frontmatter "$f" description)" in "Use "*) pass "${f##*/}: English description" ;; *) fail "${f##*/}: description not English" ;; esac
+done
+for f in "$REPO_ROOT"/skills/{kontrola-planu,mesicni-projektove-retro,skilly-kdy-ktery}/SKILL.md "$REPO_ROOT"/skills/mesicni-projektove-retro/analyst-prompt.md; do
+  grep -qi 'in Czech' "$f" && pass "${f#"$REPO_ROOT"/}: user output in Czech" || fail "${f#"$REPO_ROOT"/}: no Czech-output rule"
+done
+grep -q 'AI-facing' "$REPO_ROOT/AGENTS.md" && pass "AGENTS.md: language rule" || fail "AGENTS.md: old language rule"
+! grep -n 'pilot\|§4' "$REPO_ROOT/skills/pre-done/SKILL.md" "$REPO_ROOT/scripts/session-metrics" "$REPO_ROOT/docs/learnings.md" >/dev/null \
+  && pass "no internal pilot/plan references" || fail "internal pilot/plan references remain"
 
 summary components

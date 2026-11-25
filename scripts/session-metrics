@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # session-metrics: measurable efficiency facts about one Claude Code session,
 # computed from its transcript JSONL. Used by the handover and retro skills and
-# as the pilot metric (plan §4.2, §4.6).
+# as a measure of session efficiency.
 #
 # Usage: session-metrics [transcript.jsonl | --session <session-id>]
 #   --session: <config>/projects/*/<session-id>.jsonl (skills pass ${CLAUDE_SESSION_ID}).

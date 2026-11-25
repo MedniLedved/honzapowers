@@ -9,7 +9,7 @@ Vývojová pravidla tohoto repa (plugin pro Claude Code).
 
 ## Pravidla obsahu
 - Policy (`policy/policy.md`) je **anglicky** a má max **3 200 znaků** (test rozpočtu v `tests/test-components.sh`).
-- Skilly a agenti jsou **česky**, výstupy uživateli česky. Názvy pluginu, skillů a agentů: ASCII, malá písmena, pomlčky.
+- Jazyk: co čte Claude (AI-facing: policy, těla a popisy skillů a agentů, texty hooků) je **anglicky**; co čte uživatel (README, `docs/`, šablony výstupů, výstupy uživateli, koše a štítky ve výstupu) je **česky**. Názvy pluginu, skillů a agentů: ASCII, malá písmena, pomlčky.
 - Skill nevynucuje pevný příkaz projektu (např. testovací).
 - Žádná pravidla, nálezy ani údaje z konkrétních projektů či uživatelů. Příklady jsou vymyšlené.
 - Žádné tajné hodnoty v souborech ani commit zprávách.

@@ -3,41 +3,41 @@ name: mesicni-projektove-retro
 description: Use when the user asks for a retrospective of AI agent work in a project over a period or topic (monthly retro, after an incident), wants recurring mistakes found, or lessons turned into proposed rule changes. Not for the cost of the current session alone: use the retro skill.
 ---
 
-# Retro projektu za období
+# Project retro over a period
 
-Nezávislý analytik čte objektivní signály a (v cloudu) přepisy session a vrací retrospektivu s důkazy. Změny pravidel jen navrhne jako diff. **Nic neaplikuj bez schválení uživatele.** Odpovídej česky.
+An independent analyst reads objective signals and (in the cloud) session transcripts and returns a retrospective with evidence. Rule changes are only proposed as a diff. **Apply nothing without the user's approval.** Reply to the user in Czech; the retrospective file is written in Czech (`sablona.md`).
 
-Liší se od `retro`: to měří jednu session, tento skill hledá opakované chyby napříč session za období.
+It differs from `retro`: that one measures one session; this skill looks for recurring mistakes across sessions over a period.
 
-## Postup (hlavní session)
+## Steps (main session)
 
-1. **Zadání.** Zjisti období (`<od>` včetně, `<do>` mimo) a téma. Chybí-li, zeptej se jednou otázkou. Mimořádné retro po incidentu (chyba v produkci, revert, ztracená práce): od vzniku chyby (sha z `git log`) do opravy.
-2. **Git signály.** `git fetch -q origin`, pak `bash "${CLAUDE_SKILL_DIR}/git-signals.sh" <od> <do> > <scratchpad>/signaly.md`. Bez třetího argumentu skript zvolí výchozí větev: `origin/HEAD`, jinak `main`, `master`, aktuální větev. Vyvíjí-li se projekt na jiné integrační větvi (např. `dev`), předej ji jako třetí argument (`origin/dev`), jinak se signály vezmou z výchozí větve.
-3. **CI.** Čísla vezmi ze souhrnu, který projekt má (např. měsíční issue). Jinak z GitHubu (`actions_list`, `list_workflow_runs`, `perPage` nejvýš 20), výstup vždy do souboru a zpracuj ho `python3 -I`. Spočítej běhy `success` / `failure` / `cancelled` na výchozí větvi; u červených uveď selhaný krok a dobu do dalšího zeleného. Připiš do `signaly.md`. Nemáš-li přístup k CI, napiš to do „Co nevím“.
-4. **Přepisy session** jen v **cloudu**: subagent nástroj `list_events` nemá, stáhni je sám. `list_events` s `kinds: ["user"]` a `limit` nejvýš 30 (stránka obsahuje i výsledky nástrojů a bývá stovky kB), výstup vždy do souboru, na něj `python3 -I "${CLAUDE_SKILL_DIR}/human-messages.py" <soubor>`, stránkuj `before_id`, dokud `has_more=False`. Cesty ke zpracovaným souborům předej analytikovi. **Lokálně** přepisy nečti: retro je jen z gitu a CI a uveď to v „Co nevím“.
-5. **Analytik.** Spusť jednoho subagenta (`general-purpose`) s textem z `analyst-prompt.md`, kde doplníš cesty a období. Nedávej mu své závěry ani domněnky.
-6. **Kontrola výstupu.** Ověř 3 náhodná tvrzení podle jejich důkazu (`git show`, ID běhu). Škrtni všechno bez důkazu. U každého návrhu ověř pole „Už pokryto?“ vlastním `grep`.
-7. **Uložení.** Retrospektivu ulož podle `sablona.md` do `docs/retro/RRRR-MM-DD-obdobi-<téma>.md` (název se liší od souborů skillu `retro`). Commitni jen ji. Návrhy změn ukaž uživateli jako diff, nic nepushuj bez souhlasu.
+1. **Request.** Find the period (`<od>` inclusive, `<do>` exclusive) and the topic. If missing, ask with one question. An extraordinary retro after an incident (a production bug, a revert, lost work): from the origin of the bug (sha from `git log`) to the fix.
+2. **Git signals.** `git fetch -q origin`, then `bash "${CLAUDE_SKILL_DIR}/git-signals.sh" <od> <do> > <scratchpad>/signaly.md`. Without a third argument the script picks the default branch: `origin/HEAD`, else `main`, `master`, the current branch. If the project develops on another integration branch (for example `dev`), pass it as the third argument (`origin/dev`); otherwise the signals come from the default branch.
+3. **CI.** Take the numbers from the summary the project keeps (for example a monthly issue). Otherwise from GitHub (`actions_list`, `list_workflow_runs`, `perPage` at most 20), always output to a file, processed with `python3 -I`. Count `success` / `failure` / `cancelled` runs on the default branch; for red ones give the failed step and the time to the next green. Append to `signaly.md`. Without CI access, write it under „Co nevím“.
+4. **Session transcripts**, **cloud only**: the subagent has no `list_events` tool, fetch them yourself. `list_events` with `kinds: ["user"]` and `limit` at most 30 (a page also holds tool results and is often hundreds of kB), output always to a file, then `python3 -I "${CLAUDE_SKILL_DIR}/human-messages.py" <file>`, page with `before_id` until `has_more=False`. Pass the paths of the processed files to the analyst. **Locally** do not read transcripts: the retro is from git and CI only; say so under „Co nevím“.
+5. **Analyst.** Run one subagent (`general-purpose`) with the text of `analyst-prompt.md`, filling in the paths and the period. Do not give it your conclusions or guesses.
+6. **Output check.** Verify 3 random claims against their evidence (`git show`, run ID). Strike everything without evidence. For each proposal verify the field „Už pokryto?“ with your own `grep`.
+7. **Saving.** Save the retrospective per `sablona.md` to `docs/retro/RRRR-MM-DD-obdobi-<téma>.md` (the name differs from the files of the `retro` skill). Commit only that file. Show proposed changes to the user as a diff; push nothing without consent.
 
-## Kam návrhy patří
+## Where proposals go
 
-- Cíl: `AGENTS.md` / `CLAUDE.md` projektu, hook nebo CI, šablona zadání. Návrh na úrovni uživatele only once confirmed in a second project, a se souhlasem: je-li v kontextu blok „Personal rules (honzapowers-osobni)“, jde diff do `pravidla.md` toho pluginu, jinak jako text k vložení do osobních preferencí na claude.ai.
-- **Nikdy** výchozí policy pluginu (`policy/policy.md`) ani `docs/learnings.md`: to je ruční vydání se souhlasem uživatele.
-- Pravidlo, které už hlídá kód, test nebo hook, se nenavrhuje.
+- Target: the project's `AGENTS.md` / `CLAUDE.md`, a hook or CI, a request template. A user-level proposal only once confirmed in a second project, and with consent: if the context has the block "Personal rules (honzapowers-osobni)", as a diff to that plugin's `pravidla.md`, otherwise as text to paste into the personal preferences on claude.ai.
+- **Never** the plugin's default policy (`policy/policy.md`) or `docs/learnings.md`: that is a manual release with the user's consent.
+- Do not propose a rule that code, a test or a hook already enforces.
 
-## Pravidla pro analytika (podrobně v `analyst-prompt.md`)
+## Rules for the analyst (details in `analyst-prompt.md`)
 
-- Každé tvrzení má důkaz: sha, ID běhu CI, nebo ID session + čas zprávy. Bez důkazu patří do „Co nevím“.
-- Přepisy: projdi **všechny** session z `signaly.md`, ne vzorek, a jen zprávy člověka (`human-messages.py`).
-- Výstup nástroje se cituje jen k důkazu: nejvýš 3 řádky, bez osobních údajů a tajných hodnot.
-- Nejvýš 3 návrhy, seřazené podle důkazů. Každý má pole „Už pokryto?“ s výsledkem prohledání pravidel projektu, testů, CI a hooků.
-- Poučka je pravidlo s kontextem a měřitelným „Zabral, když“.
+- Every claim has evidence: a sha, a CI run ID, or a session ID plus the message time. Without evidence it goes under „Co nevím“.
+- Transcripts: go through **all** sessions from `signaly.md`, not a sample, and only human messages (`human-messages.py`).
+- Tool output is quoted only as evidence: at most 3 lines, without personal data or secret values.
+- At most 3 proposals, ordered by evidence. Each has the field „Už pokryto?“ with the result of searching the project rules, tests, CI and hooks.
+- A lesson is a rule with context and a measurable „Zabral, když“.
 
-## Časté chyby
+## Common mistakes
 
-| Chyba | Jak se jí vyhnout |
+| Mistake | How to avoid it |
 |---|---|
-| Návrh opakuje existující pravidlo nebo test | Povinné pole „Už pokryto?“ a `grep` před zápisem |
-| „Moje opravy“ spočítané z vzorku přepisů | `human-messages.py` a stránkování, dokud `has_more=False` |
-| Vlastní způsob počítání metrik | Jen čísla z `git-signals.sh` a z CI |
-| Do retro se zkopíruje výstup nástroje s osobními daty | Citovat jen k důkazu, zkráceně, očištěně |
+| A proposal repeats an existing rule or test | Mandatory field „Už pokryto?“ and `grep` before writing |
+| "My corrections" counted from a sample of transcripts | `human-messages.py` and paging until `has_more=False` |
+| Own way of counting metrics | Only numbers from `git-signals.sh` and CI |
+| Tool output with personal data copied into the retro | Quote only as evidence, shortened, cleaned |
