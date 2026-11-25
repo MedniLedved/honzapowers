@@ -37,8 +37,36 @@ if [ -z "$key" ]; then
 fi
 [ -n "$key" ] || exit 0
 
+# Fallback outside Claude Code: a private per-user dir, so another user on a
+# shared machine cannot plant a symlink in it.
+state_dir="${CLAUDE_PLUGIN_DATA:-${TMPDIR:-/tmp}/honzapowers-$(id -u 2>/dev/null || echo 0)}"
+umask 077
+
+# A transcript with no usage record at all would be scanned whole on every
+# prompt. Remember its size after one full scan and rescan only after it has
+# grown by more than the tail window.
+noscan_file="$state_dir/nousage-$key"
+USAGE_FULL_SCAN=1
+if [ -f "$noscan_file" ]; then
+  seen="$(head -c 20 "$noscan_file" 2>/dev/null)"
+  now_size="$(wc -c <"$transcript" 2>/dev/null | tr -d ' ')"
+  case "$seen" in '' | *[!0-9]*) seen="" ;; esac
+  case "$now_size" in '' | *[!0-9]*) now_size="" ;; esac
+  if [ -n "$seen" ] && [ -n "$now_size" ] && [ $((now_size - seen)) -lt "$USAGE_TAIL_BYTES" ]; then
+    USAGE_FULL_SCAN=0
+  fi
+fi
+
 estimated=""
-if ! tokens="$(last_context_tokens "$transcript")"; then
+tokens="$(last_context_tokens "$transcript")"
+rc=$?
+if [ "$rc" -ne 0 ]; then
+  if [ "$rc" -eq 2 ]; then
+    size_now="$(wc -c <"$transcript" 2>/dev/null | tr -d ' ')"
+    case "$size_now" in '' | *[!0-9]*) ;; *)
+      mkdir -p "$state_dir" 2>/dev/null && printf '%s\n' "$size_now" >"$noscan_file" 2>/dev/null ;;
+    esac
+  fi
   tokens="$(file_size_tokens "$transcript")" || exit 0
   estimated=1
 fi
@@ -47,10 +75,6 @@ case "$tokens" in '' | *[!0-9]*) exit 0 ;; esac
 bucket=0
 [ "$tokens" -ge "$THRESHOLD" ] && bucket=$((1 + (tokens - THRESHOLD) / STEP))
 
-# Fallback outside Claude Code: a private per-user dir, so another user on a
-# shared machine cannot plant a symlink in it.
-state_dir="${CLAUDE_PLUGIN_DATA:-${TMPDIR:-/tmp}/honzapowers-$(id -u 2>/dev/null || echo 0)}"
-umask 077
 state_file="$state_dir/upsubmit-$key"
 prev=0
 [ -f "$state_file" ] && prev="$(head -c 20 "$state_file" 2>/dev/null)"

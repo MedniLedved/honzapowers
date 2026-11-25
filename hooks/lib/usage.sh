@@ -17,8 +17,8 @@ usage_input_sum() { # $1 = usage object text; sets USAGE_SUM (no subshells: fork
   done
 }
 
-last_context_tokens() { # $1 = transcript path; prints tokens or returns 1
-  local f="$1" u last=""
+last_context_tokens() { # $1 = transcript path; prints tokens; returns 1 (none), 2 (none, after a full scan)
+  local f="$1" u last="" scanned=""
   [ -f "$f" ] || return 1
   # Each usage object up to its first '}' holds the three input keys
   # (nested objects come after them). The newest non-zero record wins.
@@ -27,7 +27,9 @@ last_context_tokens() { # $1 = transcript path; prints tokens or returns 1
     [ "$USAGE_SUM" -gt 0 ] && last="$USAGE_SUM"
   done < <(tail -c "$USAGE_TAIL_BYTES" "$f" 2>/dev/null | grep '"type":"assistant"' \
     | grep -o '"usage":{[^}]*' | tail -n 20)
-  if [ -z "$last" ]; then
+  scanned=""
+  if [ -z "$last" ] && [ "${USAGE_FULL_SCAN:-1}" = 1 ]; then
+    scanned=1
     # Nothing in the tail (one huge line, e.g. a large tool result): scan the
     # whole file once before the caller falls back to a size estimate.
     while IFS= read -r u; do
@@ -35,7 +37,7 @@ last_context_tokens() { # $1 = transcript path; prints tokens or returns 1
       [ "$USAGE_SUM" -gt 0 ] && last="$USAGE_SUM"
     done < <(grep '"type":"assistant"' "$f" 2>/dev/null | grep -o '"usage":{[^}]*' | tail -n 20)
   fi
-  [ -n "$last" ] || return 1
+  [ -n "$last" ] || { [ -n "$scanned" ] && return 2; return 1; }
   printf '%s' "$last"
 }
 
