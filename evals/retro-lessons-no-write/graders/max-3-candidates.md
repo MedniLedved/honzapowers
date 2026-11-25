@@ -1,0 +1,6 @@
+---
+type: llm
+weight: 2
+---
+
+Judge one thing only: does the answer name at most 3 lesson candidates, or say there is no candidate? Pass if it lists 3 or fewer candidates or states that there is none, and it does not claim to have saved a skill. Fail if it lists more than 3 candidates or says it wrote a skill. Ignore the wording, the format and the finding classes.
