@@ -119,8 +119,7 @@ echo "Language: AI-facing files are English, user output Czech (audit phase D)"
 czech_prose() { # prints lines with Czech diacritics outside `code`, „quotes", fenced blocks and the Czech output labels
   awk '/^```/{f=!f; next} !f { l=$0; gsub(/`[^`]*`/, "", l); gsub(/„[^“]*“/, "", l); gsub(/ZAMÍTNOUT|OVĚŘENO|kritický/, "", l); if (l ~ /[ěščřžýáíéůúťďňĚŠČŘŽÝÁÍÉŮÚŤĎŇ]/) print FILENAME ":" FNR ": " substr($0, 1, 60) }' "$1"
 }
-for f in "$REPO_ROOT"/skills/{kontrola-planu,mesicni-projektove-retro,skilly-kdy-ktery}/SKILL.md \
-  "$REPO_ROOT"/skills/mesicni-projektove-retro/analyst-prompt.md "$REPO_ROOT"/agents/*.md; do
+for f in "$REPO_ROOT"/skills/*/SKILL.md "$REPO_ROOT"/skills/mesicni-projektove-retro/analyst-prompt.md "$REPO_ROOT"/agents/*.md; do
   n="${f#"$REPO_ROOT"/}"; out="$(czech_prose "$f")"
   [ -z "$out" ] && pass "$n: English prose" || fail "$n: Czech prose: $(printf '%s' "$out" | head -n 2)"
 done

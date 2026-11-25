@@ -117,6 +117,22 @@ run_hook "$(make_input s-nousage "$TR/no-usage.jsonl")"; silent no-usage-small
 run_hook "$(make_input s-nousage2 "$TR/no-usage.jsonl")" env HONZAPOWERS_HANDOVER_TOKENS=10 HONZAPOWERS_HANDOVER_STEP=1000 bash
 noted no-usage-fallback "estimated from the transcript size"
 
+echo "No usage record: the whole-file scan is remembered, not repeated on every prompt"
+NS="$TEST_ROOT/nousage-big.jsonl"
+cp "$TR/no-usage.jsonl" "$NS"
+printf '{"type":"user","message":{"content":"%s"}}\n' "$(head -c 3000 /dev/zero | tr '\0' 'z')" >>"$NS"
+run_hook "$(make_input s-noscan "$NS")" env HONZAPOWERS_HANDOVER_TOKENS=10 HONZAPOWERS_HANDOVER_STEP=1000000 USAGE_TAIL_BYTES=100 bash
+noted noscan-first-estimate "estimated from the transcript size"
+[ -f "$CLAUDE_PLUGIN_DATA/nousage-s-noscan" ] && pass "noscan: marker written after the full scan" || fail "noscan: no marker"
+NS2="$TEST_ROOT/nousage-skip.jsonl"
+cp "$TR/valid.jsonl" "$NS2"
+printf '{"type":"user","message":{"content":"%s"}}\n' "$(head -c 3000 /dev/zero | tr '\0' 'z')" >>"$NS2"
+run_hook "$(make_input s-noscan2 "$NS2")" env USAGE_TAIL_BYTES=100 bash
+noted noscan-without-marker-finds-usage "from the transcript usage record"
+mkdir -p "$CLAUDE_PLUGIN_DATA"; wc -c <"$NS2" | tr -d ' ' >"$CLAUDE_PLUGIN_DATA/nousage-s-noscan3"
+run_hook "$(make_input s-noscan3 "$NS2")" env HONZAPOWERS_HANDOVER_TOKENS=10 HONZAPOWERS_HANDOVER_STEP=1000000 USAGE_TAIL_BYTES=100 bash
+noted noscan-with-marker-skips-scan "estimated from the transcript size"
+
 echo "Huge file (~5 MB) with the usage record near the end"
 H="$TEST_ROOT/huge.jsonl"
 filler="$(printf '{"type":"user","message":{"content":"%s"}}' "$(head -c 4000 /dev/zero | tr '\0' 'x')")"
