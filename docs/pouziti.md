@@ -16,7 +16,7 @@
 | `docs/retro/RRRR-MM-DD-obdobi-<téma>.md` | skill `mesicni-projektove-retro` | retrospektiva projektu za období |
 | `.claude/kontrola-planu.md` | skill `kontrola-planu` (po tvém schválení) | kritéria kontroly plánu specifická pro projekt, nejvýš 15 bodů |
 | `.claude/skills/<název>/SKILL.md` | skill `retro` (po tvém výslovném souhlasu) | skill třídy `project`, jen u poznatku, který se v projektu objevil podruhé |
-| `poznatky.md` | osobní plugin (návrh řádku po tvém schválení) | přehled obecných poznatků napříč projekty; vyžaduje aktualizovanou šablonu |
+| `poznatky.md` | osobní plugin (návrh řádku po tvém schválení) | přehled obecných poznatků napříč projekty; vyžaduje šablonu 0.3.0 ([PR](https://github.com/MedniLedved/honzapowers-sablona/pull/8)) |
 
 Skill `handover` se řídí konvencí projektu (cesta `docs/handover/` je jen výchozí). Cesty skillů `retro`, `mesicni-projektove-retro`, `kontrola-planu` a `.claude/skills/` jsou pevné.
 
@@ -31,7 +31,7 @@ Nový poznatek patří tam, kde platí: jednorázové věci nikam, projektové d
 - **Samo:** do `docs/retro/` a `docs/handover/` projektu (sekce `Kandidáti na poznatek`); podle nich se příště hledají duplicity.
 - **Jen po tvém souhlasu:** řádek do `AGENTS.md`, skill třídy `project` do `.claude/skills/` a u obecného poznatku návrh do osobního pluginu.
 - **Nikdy:** `docs/learnings.md` je soubor správce pluginu, uživatel ho nepíše a skilly ho nemění.
-- **Osobní přehled `poznatky.md`:** soubor v osobním pluginu s obecnými poznatky napříč projekty. Hook do kontextu vloží jen jeho cestu, ne obsah. Vyžaduje aktualizovanou šablonu `honzapowers-sablona`; až bude šablona aktualizovaná, popíše postup její README.
+- **Osobní přehled `poznatky.md`:** soubor v osobním pluginu s obecnými poznatky napříč projekty. Hook do kontextu vloží jen jeho cestu, ne obsah. Vyžaduje šablonu `honzapowers-sablona` 0.3.0 ([PR](https://github.com/MedniLedved/honzapowers-sablona/pull/8)); postup aktualizace existující kopie popisuje README šablony.
 
 ## Nastavení
 - `HONZAPOWERS_HANDOVER_TOKENS` – práh prvního návrhu handoveru (výchozí 250000).
