@@ -168,7 +168,7 @@ Rozhodnutí uživatele: (1) při víc než 3 kandidátech vybrat 3 s nejsilněj�
 
 ### Task 8: Osobní plugin (repo `MedniLedved/honzapowers-sablona`)
 
-**Brána:** Task 8 se dělá poslední a je nezávislý na tascích 5–7. Repo je veřejné a připojené jen ke čtení; před pushem se jednou požádá o připojení s právem zápisu (`add_repo` s `access: "push"`, schválení dá uživatel). Při odmítnutí nebo bez odpovědi se změny ověří jen lokálně v klonu `/home/user/honzapowers-sablona`, nic se nepushuje a nic se nepíše do repa `honzapowers` jako náhrada. Změny jdou na novou větev založenou z `origin/main` a draft PR, nikdy přímo do `main`.
+**Brána:** Task 8 se dělá poslední a je nezávislý na tascích 5–7. Repo je veřejné a připojené jen ke čtení; před pushem se jednou požádá o připojení s právem zápisu (`add_repo` s `access: "push"`, schválení dá uživatel). Při odmítnutí nebo bez odpovědi se změny ověří jen lokálně v lokálním klonu šablony, nic se nepushuje a nic se nepíše do repa `honzapowers` jako náhrada. Změny jdou na novou větev založenou z `origin/main` a draft PR, nikdy přímo do `main`.
 
 **Files:**
 - Create: `poznatky.md` (šablona: komentář s popisem a hlavička tabulky `| datum | spouštěč | řešení | třída | projekty (štítky) | stav |`)
