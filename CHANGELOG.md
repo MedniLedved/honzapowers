@@ -2,6 +2,7 @@
 
 ## Nepublikováno
 - **Kandidáti na poznatek:** `retro` a `handover` navrhnou nejvýš 3 poznatky ze session podle kritérií (opakovatelný, netriviální, konkrétní, ověřený) a rozhodovací tabulky (nový řádek, aktualizace, odkaz, zastaralý). Jen návrh: žádný hook, žádný automatický zápis skillů, policy beze změny. Nový eval `retro-lessons-no-write`. Inspirace: projekty Claudeception a continuous-learning-skill.
+- **Cloud:** `handover` a `kontrola-planu` v cloudové session samy commitnou a pushnou svůj soubor na pracovní nebo přidělenou větev a nabídnou vrácení; dřív se `handover` ptal a hook prostředí („commit and push“) se ozval po každém tahu. Push na `main` nebo sdílenou větev zůstává bránou G1. Lokálně beze změny.
 
 ## 0.4.0 — 2026-11-25
 Opravy z auditu před zveřejněním.

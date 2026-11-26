@@ -114,6 +114,9 @@ done
 ! grep -q 'another session or project' "$S/retro/SKILL.md" && pass "retro: no session-or-project gate" || fail "retro: old gate wording"
 ! grep -qi 'ledger rulings\|plan workspace' "$P" && pass "policy: no Superpowers jargon in S5" || fail "policy: jargon in S5"
 grep -q 'cloud session' "$S/handover/SKILL.md" && pass "handover: container loss is cloud-only" || fail "handover: assumes cloud"
+grep -q 'session-assigned branch' "$S/handover/SKILL.md" && grep -q 'session-assigned branch' "$S/kontrola-planu/SKILL.md" \
+  && pass "handover, kontrola-planu: cloud commit to the assigned branch" || fail "handover, kontrola-planu: no cloud commit rule"
+! grep -q 'Commit and push the handover?' "$S/handover/SKILL.md" && pass "handover: no pre-commit question in cloud" || fail "handover: still asks before commit in cloud"
 
 echo "Language: AI-facing files are English, user output Czech (audit phase D)"
 czech_prose() { # prints lines with Czech diacritics outside `code`, „quotes", fenced blocks and the Czech output labels

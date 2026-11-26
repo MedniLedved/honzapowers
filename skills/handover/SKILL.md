@@ -42,5 +42,6 @@ bash "${CLAUDE_SKILL_DIR}/../../scripts/session-metrics" --session "${CLAUDE_SES
 
 ## 4. Finish
 - No secrets, tokens or keys; no long pastes from logs or files.
-- Do not commit or push on your own, even if project rules allow it. Report the path in one line and ask once: "Commit and push the handover? Otherwise it is lost when this session's container ends." (in a cloud session; locally ask only "Commit the handover?") Commit and push only after an explicit yes; pushing still follows the project's git rules.
+- In a cloud session the container is lost when the session ends, and the environment's stop hook asks for a commit after every turn: commit and push the handover file alone, without asking, to the task's working branch or the session-assigned branch. Then report the path, branch and commit in one line and offer to revert it. A push to `main`, a shared branch or another person's branch stays a gate (G1): ask first.
+- Locally, do not commit on your own, even if project rules allow it. Report the path in one line and ask once: "Commit the handover?" Commit only after an explicit yes.
 - Then propose a fresh session (or `/clear`).
