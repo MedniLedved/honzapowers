@@ -144,7 +144,7 @@ if [ -f "$K" ]; then
   for h in "## Test" "## Existing entry" "## Output"; do grep -q "^$h" "$K" && pass "kandidat.md: $h" || fail "kandidat.md: missing $h"; done
   for w in Reusable Non-trivial Specific Verified "second project" "docs/learnings.md"; do grep -q "$w" "$K" && pass "kandidat.md: mentions $w" || fail "kandidat.md: no $w"; done
   kw="$(wc -w <"$K" | tr -d ' ')"
-  [ "$kw" -le 250 ] && pass "kandidat.md: $kw <= 250 words" || fail "kandidat.md: $kw words"
+  [ "$kw" -le 400 ] && pass "kandidat.md: $kw <= 400 words" || fail "kandidat.md: $kw words"
   [ -z "$(czech_prose "$K")" ] && pass "kandidat.md: English prose" || fail "kandidat.md: Czech prose"
 else
   fail "kandidat.md missing"
@@ -152,9 +152,17 @@ fi
 [ -f "$REPO_ROOT/skills/handover/../retro/kandidat.md" ] && pass "handover: kandidat.md path resolves" || fail "handover: kandidat.md path broken"
 grep -q 'Read `${CLAUDE_SKILL_DIR}/kandidat.md`' "$REPO_ROOT/skills/retro/SKILL.md" && grep -q 'Read `${CLAUDE_SKILL_DIR}/../retro/kandidat.md`' "$REPO_ROOT/skills/handover/SKILL.md" \
   && pass "retro and handover: told to Read kandidat.md" || fail "retro/handover: no Read instruction for kandidat.md"
-for w in "Same trigger, same fix" "Same trigger, other cause" "At most 3" "no candidate" "docs/retro/"; do
+for w in "Same trigger, same fix" "Same trigger, other cause" "At most 3" "žádný kandidát" "docs/retro/"; do
   grep -q "$w" "$K" && pass "kandidat.md: rule '$w'" || fail "kandidat.md: rule '$w' missing"
 done
+for w in "## Skill" "strongest evidence" "one line with the count" "Personal lessons file" "second occurrence" ".claude/skills/" "explicit yes"; do
+  grep -qF -- "$w" "$K" && pass "kandidat.md: mentions '$w'" || fail "kandidat.md: no '$w'"
+done
+for w in "Same trigger, same fix: update that row" "never write a skill file"; do
+  grep -qF -- "$w" "$K" && fail "kandidat.md: old wording '$w'" || pass "kandidat.md: no old wording '$w'"
+done
+sed -n '/^## Existing entry/,/^## [^E]/p' "$K" | grep -q 'second occurrence' && pass "kandidat.md: Existing entry leads to second occurrence" || fail "kandidat.md: Existing entry lacks second occurrence"
+grep -qw 'diff' "$K" && pass "kandidat.md: diff proposal for the personal file" || fail "kandidat.md: no diff proposal"
 ! grep -q 'CLAUDE_SKILL_DIR' "$K" && pass "kandidat.md: no unsubstituted variable" || fail "kandidat.md: CLAUDE_SKILL_DIR is not substituted in non-SKILL files"
 [ -f "$REPO_ROOT/evals/retro-lessons-no-write/graders/skill-fired.md" ] && pass "eval retro-lessons-no-write: skill-fired grader" || fail "eval retro-lessons-no-write: no skill-fired grader"
 grep -q 'kandidat.md' "$REPO_ROOT/skills/retro/SKILL.md" && grep -q 'never write a skill file' "$REPO_ROOT/skills/retro/SKILL.md" \
