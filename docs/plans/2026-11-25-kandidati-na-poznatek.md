@@ -23,7 +23,7 @@
 - Poznatek bez důkazu (příkaz a výstup): zamítnout, nenavrhovat.
 - Poznatek, který už je v `docs/learnings.md`: aktualizace řádku, ne duplicita.
 - Poznatek se jménem projektu nebo údaji uživatele: do návrhu nepatří (AGENTS.md).
-- Více než 3 kandidáti: ponechat 3 nejlepší, ostatní zahodit bez zmínky.
+- Více než 3 kandidáti: ponechat 3 s nejsilnějším důkazem, o zbytku jedna věta s počtem (dodatek, rozhodnutí 1).
 
 ---
 
@@ -98,6 +98,7 @@
 Rozhodnutí uživatele: (1) při víc než 3 kandidátech vybrat 3 s nejsilnějším důkazem a o zbytku napsat jednu větu s počtem; (2) znění tabulky „existující záznam" navázat na opakování; (3) varianta b): po schválení smí vzniknout skill, hranice je jasně definovaná; (4) varianta B: soukromý přehled poznatků napříč projekty v osobním pluginu (`honzapowers-osobni`, šablona `honzapowers-sablona`).
 
 **Stav dodatku:** kontrola 2026-11-26: 8 nálezů, opraveno 7, otázky 1 (brána Task 8, rozhodnuto výchozí odpovědí), zamítnuto 0.
+**Stav:** kontrola 2026-11-26 (2. kolo): 9 nálezů, opraveno 7, otázky 1, zamítnuto 1.
 
 **Architektura B.** Osobní plugin dostane soubor `poznatky.md` (tabulka poznatků napříč projekty, soukromé repo). Jeho hook při startu session nevkládá obsah, jen jednu řádku `Personal lessons file (read on demand): <absolutní cesta>`. `retro` a `handover` ji při ověřování duplicit a brány „druhý projekt" přečtou. Pokud řádek v kontextu není, `retro` a `handover` fungují beze změny jen s `docs/retro/` a `docs/handover/` projektu. Tasky 5–7 tedy nezávisí na tasku 8.
 
@@ -122,12 +123,12 @@ Rozhodnutí uživatele: (1) při víc než 3 kandidátech vybrat 3 s nejsilněj�
 **Interfaces:**
 - Produces: sekce `## Test`, `## Existing entry`, `## Skill`, `## Output`. Task 6 a 7 na ně odkazují.
 
-- [ ] **Step 1: Napsat testy (RED).** V sekci „Lesson candidates" změnit limit na 400 a přidat kontroly, že `kandidat.md` obsahuje: `## Skill`; `strongest evidence`; `one line with the count` (výběr 3 z N); `Personal lessons file` (osobní přehled); `second occurrence` (opakování); `.claude/skills/`; `explicit yes`; `žádný kandidát`; že nesmí obsahovat `Same trigger, same fix: update that row` (staré znění) ani `never write a skill file` (úvodní věta se přepisuje); že v sekci `## Existing entry` je `second occurrence` (opakování vede do `## Skill`, jinak by skill nikdy nevznikl); a že je tam slovo `diff` (návrh řádku do osobního přehledu). V existující kontrole `for w in …` (řádek 155) nahradit `no candidate` za `žádný kandidát`; ostatní fráze `Same trigger, same fix`, `Same trigger, other cause`, `At most 3`, `docs/retro/` v textu zachovat. Kontrola `czech_prose` musí dál procházet (čeština jen v zpětných apostrofech).
+- [ ] **Step 1: Napsat testy (RED).** V sekci „Lesson candidates" změnit limit na 400 a přidat kontroly, že `kandidat.md` obsahuje: `## Skill`; `strongest evidence`; `one line with the count` (výběr 3 z N); `Personal lessons file` (osobní přehled); `second occurrence` (opakování); `.claude/skills/`; `explicit yes`; `žádný kandidát`; že nesmí obsahovat `Same trigger, same fix: update that row` (staré znění) ani `never write a skill file` (úvodní věta se přepisuje); že v sekci `## Existing entry` je `second occurrence` (opakování vede do `## Skill`, jinak by skill nikdy nevznikl); a že je tam slovo `diff` (návrh řádku do osobního přehledu). Kontrolu sekce omezit na její text: `sed -n '/^## Existing entry/,/^## [^E]/p' "$K" | grep -q 'second occurrence'`. V existující kontrole `for w in …` (řádek 155) nahradit `no candidate` za `žádný kandidát`; ostatní fráze `Same trigger, same fix`, `Same trigger, other cause`, `At most 3`, `docs/retro/` v textu zachovat. Kontrola `czech_prose` musí dál procházet (čeština jen v zpětných apostrofech).
 - [ ] **Step 2: Spustit** `bash tests/test-components.sh` ⇒ nové kontroly FAIL.
 - [ ] **Step 3: Přepsat `kandidat.md`.**
   - Úvodní věta (řádek 3): „Propose; a project skill file only after the user's explicit yes (see § Skill); never write `docs/learnings.md` or rules."
   - `## Test`: beze změny kritérií; `Verified` = příkaz a jeho výstup vždy, `line:N` jen jako doplněk.
-  - `## Existing entry`: hledat spouštěč v řádku `Personal lessons file (read on demand): <path>` z kontextu (pokud je, soubor přečíst), dále v `docs/retro/` a `docs/handover/` projektu, nakonec v indexu pluginu (`docs/learnings.md`, prázdný = žádná shoda). Tabulka: žádná shoda ⇒ nový kandidát; Same trigger, same fix (už zapsáno) ⇒ nenavrhovat jako nový záznam, napsat „už je v <soubor, datum>" a předat do `## Skill` jako second occurrence (u `project` ve stejném projektu, u `general` v jiném projektu); Same trigger, other cause ⇒ nový kandidát s odkazem na starý; zastaralý ⇒ navrhnout označit starý záznam za zastaralý.
+  - `## Existing entry`: hledat spouštěč v řádku `Personal lessons file (read on demand): <path>` z kontextu (pokud je, soubor přečíst), dále v `docs/retro/` a `docs/handover/` projektu, nakonec v indexu pluginu (`docs/learnings.md`, prázdný = žádná shoda). Tabulka: žádná shoda ⇒ nový kandidát; Same trigger, same fix (už zapsáno) ⇒ nenavrhovat jako nový záznam, napsat `už je v <soubor, datum>` (v zpětných apostrofech kvůli `czech_prose`) a předat do `## Skill` jako second occurrence (u `project` ve stejném projektu, u `general` v jiném projektu); Same trigger, other cause ⇒ nový kandidát s odkazem na starý; zastaralý ⇒ navrhnout označit starý záznam za zastaralý.
   - `## Skill` (hranice b): kandidát se smí navrhnout jako skill jen když platí vše: postup o 3 a více krocích nebo diagnostika, kterou Claude sám neudělá; spouštěč je poznat na začátku úkolu; je to second occurrence (třída `project`: v témže projektu podruhé; `general`: potvrzeno ve druhém projektu); nejde vynutit levněji (skript, test, zákaz); text do 300 slov. Jinak jde poznatek jen do záznamu. Skill soubor se vytvoří jen po výslovném yes uživatele (explicit yes) a jen třídy `project` do `.claude/skills/<název>/SKILL.md`; třída `general` jen jako navržený text pro osobní plugin.
   - `## Output`: nejvýš 3 kandidáti; při větším počtu vybrat 3 se strongest evidence a o zbytku napsat one line with the count (např. `+2 další vynechány`); každý: spouštěč, řešení v jedné větě, důkaz (příkaz a výstup), třída; zpráva pro uživatele česky, prázdný výsledek zapsat jako `žádný kandidát`; do `poznatky.md` (osobní přehled) nikdo nezapisuje automaticky: u třídy `general` skill navrhne řádek jako diff souboru z řádku `Personal lessons file` a uživatel ho schválí; `general` bez potvrzení ve druhém projektu je `candidate`, ne pravidlo; žádná jména projektů ani údaje uživatele.
 - [ ] **Step 4: Změřit** `wc -w skills/retro/kandidat.md` ⇒ nejvýš 400; při překročení zkrátit sekci `## Skill`, limit nezvyšovat. Spustit `bash tests/test-components.sh` ⇒ PASS.
@@ -140,7 +141,8 @@ Rozhodnutí uživatele: (1) při víc než 3 kandidátech vybrat 3 s nejsilněj�
 - Modify: `skills/handover/SKILL.md` (řádek `Lessons`)
 - Modify: `tests/test-components.sh` (nahradit kontrolu řetězce `never write a skill file`)
 - Modify: `evals/retro-lessons-no-write/prompt.md`
-- Create: `evals/retro-lessons-no-write/graders/candidates-saved.md`
+- Create: `evals/retro-lessons-no-write/graders/retro-file-saved.md`, `evals/retro-lessons-no-write/graders/candidates-section.md`
+- Modify: `evals/retro-lessons-no-write/graders/max-3-candidates.md`
 
 **Interfaces:**
 - Consumes: sekce `## Skill` a `## Output` z Task 5.
@@ -166,20 +168,20 @@ Rozhodnutí uživatele: (1) při víc než 3 kandidátech vybrat 3 s nejsilněj�
 
 ### Task 8: Osobní plugin (repo `MedniLedved/honzapowers-sablona`)
 
-**Brána:** Task 8 se dělá poslední a je nezávislý na tascích 5–7. Repo je veřejné a připojené jen ke čtení; před pushem se jednou požádá o připojení s právem zápisu (`add_repo` s `access: "push"`, schválení dá uživatel). Při odmítnutí nebo bez odpovědi se změny ověří jen lokálně v klonu `/home/user/medniledved/honzapowers-sablona`, nic se nepushuje a nic se nepíše do repa `honzapowers` jako náhrada. Změny jdou na novou větev a draft PR, nikdy přímo do `main`.
+**Brána:** Task 8 se dělá poslední a je nezávislý na tascích 5–7. Repo je veřejné a připojené jen ke čtení; před pushem se jednou požádá o připojení s právem zápisu (`add_repo` s `access: "push"`, schválení dá uživatel). Při odmítnutí nebo bez odpovědi se změny ověří jen lokálně v klonu `/home/user/honzapowers-sablona`, nic se nepushuje a nic se nepíše do repa `honzapowers` jako náhrada. Změny jdou na novou větev založenou z `origin/main` a draft PR, nikdy přímo do `main`.
 
 **Files:**
 - Create: `poznatky.md` (šablona: komentář s popisem a hlavička tabulky `| datum | spouštěč | řešení | třída | projekty (štítky) | stav |`)
 - Modify: `hooks/session-start` (nová logika níže)
 - Modify: `tests/test-osobni.sh`
-- Modify: `README.md` (sekce „Přehled poznatků" a „Aktualizace existující kopie")
+- Modify: `README.md` (nové sekce „Přehled poznatků" a „Aktualizace existující kopie", v tomto pořadí před sekci „Vývoj")
 - Modify: `.claude-plugin/plugin.json` (verze 0.3.0; `description` upravit, protože hook vkládá i cestu k poznatkům)
 - Modify: `.claude-plugin/marketplace.json` (verze 0.3.0; test shody verzí `tests/test-osobni.sh:95-98` jinak selže)
 
 **Interfaces:**
 - Produces: řádek `Personal lessons file (read on demand): <absolutní cesta k poznatky.md>` v `additionalContext`, který čtou `retro` a `handover` (Task 6).
 
-- [ ] **Step 1: Napsat testy (RED)** v `tests/test-osobni.sh`: (a) `poznatky.md` s řádkem tabulky ⇒ výstup obsahuje `Personal lessons file (read on demand):` a cestu končící `/poznatky.md`; (b) jen komentář nebo hlavička tabulky bez řádku nebo soubor chybí ⇒ řádek není ve výstupu; (c) obsah `poznatky.md` se do výstupu nikdy nevloží; (d) `pravidla.md` prázdné a `poznatky.md` s řádkem ⇒ výstup je platný JSON jen s řádkem o souboru; (e) chybí `pravidla.md`, ale `poznatky.md` s řádkem existuje ⇒ platný JSON jen s řádkem o souboru; (f) existující testy dál procházejí. Pomocnou funkci `run_hook` (řádky 9–16) rozšířit o volitelný druhý argument, který se zkopíruje jako `poznatky.md`.
+- [ ] **Step 1: Napsat testy (RED)** v `tests/test-osobni.sh`: (a) `poznatky.md` s řádkem tabulky ⇒ výstup obsahuje `Personal lessons file (read on demand):` a cestu končící `/poznatky.md`; (b) jen komentář nebo hlavička tabulky bez řádku nebo soubor chybí ⇒ řádek není ve výstupu; (c) obsah `poznatky.md` se do výstupu nikdy nevloží; (d) `pravidla.md` prázdné a `poznatky.md` s řádkem ⇒ výstup je platný JSON jen s řádkem o souboru; (e) chybí `pravidla.md`, ale `poznatky.md` s řádkem existuje ⇒ platný JSON jen s řádkem o souboru; (f) existující testy dál procházejí. Pomocnou funkci `run_hook` (řádky 9–16) rozšířit o volitelný druhý argument, který se zkopíruje jako `poznatky.md`; oba argumenty volitelné (`[ -n "$1" ] && cp "$1" "$d/pravidla.md"`, totéž pro `$2`), aby test (e) běžel bez souboru pravidel.
 - [ ] **Step 2: Spustit** `bash tests/run-tests.sh` ⇒ nové FAIL.
 - [ ] **Step 3: Upravit `hooks/session-start`:** oba předčasné `exit 0` (řádek 14 `[ -f "$FILE" ] || exit 0` a řádek 51 `[ -n "$body" ] || exit 0`) změnit na „bez bloku pravidel" (`body=""`), rozhodnutí o výstupu udělat až na konci; stripování komentářů z existující smyčky vytáhnout do funkce, aby šla použít pro oba soubory bez kopie. Řádek o souboru přidat až za ořez a limit 800 znaků (limit se na něj nevztahuje). `LESSONS="${SCRIPT_DIR%/*}/poznatky.md"`; řádek se přidá, jen když soubor existuje a po odstranění komentářů a hlavičky tabulky (řádky začínající `|` s pomlčkami nebo `| datum`) zbyde aspoň jeden řádek tabulky. Kontext = blok pravidel (je-li) + řádek (je-li); když není nic, výstup prázdný a kód 0. Hook zůstává jen pro čtení, bez sítě, vždy končí kódem 0.
 - [ ] **Step 4: Spustit** `bash tests/run-tests.sh` ⇒ `ALL PASS`; `claude plugin validate --strict .` ⇒ passed.
