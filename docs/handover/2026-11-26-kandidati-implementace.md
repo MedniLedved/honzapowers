@@ -1,11 +1,11 @@
 # Handover 2026-11-26: kandidáti na poznatek, implementace tasků 5–8
 
 ## 1. Identita a cíl
-Repo `MedniLedved/honzapowers`, větev `claude/funny-ritchie-lcr9eq`, [draft PR #6](https://github.com/MedniLedved/honzapowers/pull/6). Fáze: plán dodatku (tasky 5–8) je zkontrolovaný a připravený k provedení. Cíl a pracovní pravidla (česky, tykat, po fázích, nedoporučovat spouštění `claude` v terminálu, bez anglicismů s českou koncovkou) viz předchozí handover `docs/handover/2026-11-26-kandidati-na-poznatek.md`, sekce 1 a 3.
+Repo `MedniLedved/honzapowers`, větev `claude/funny-ritchie-lcr9eq`, [draft PR #6](https://github.com/MedniLedved/honzapowers/pull/6). Fáze: plán dodatku (tasky 5–8) je zkontrolovaný a připravený k provedení. Cíl viz předchozí handover `docs/handover/2026-11-26-kandidati-na-poznatek.md`, sekce 1.
 
 ## 2. Hotovo v této session
 - Druhá kontrola plánu (`kontrola-planu`, agenti `kontrola-souladu` + `kontrola-auditu` na Opusu, medium): 9 nálezů, opraveno 7, otázky 1, zamítnuto 1. Commity `4a6d129`, `23c2352`, pushnuto na `claude/funny-ritchie-lcr9eq`.
-- Hlavní opravy: cesta ke klonu šablony (`/home/user/honzapowers-sablona`), seznam souborů v Tasku 6, starý bod Review Focus proti rozhodnutí 1, test sekce `## Existing entry` přes `sed`, fráze `už je v …` ve zpětných apostrofech (`czech_prose`), volitelné argumenty `run_hook`, nové sekce README šablony před „Vývoj“, větev šablony z `origin/main`.
+- Hlavní opravy: cesta ke klonu šablony, seznam souborů v Tasku 6, starý bod Review Focus proti rozhodnutí 1, test sekce `## Existing entry` přes `sed`, fráze `už je v …` ve zpětných apostrofech (`czech_prose`), volitelné argumenty `run_hook`, nové sekce README šablony před „Vývoj“, větev šablony z `origin/main`.
 - Založen `.claude/kontrola-planu.md` (1 bod: cesty v plánu ověřit před uložením).
 - Důkaz: `bash tests/run-tests.sh` ⇒ `ALL PASS` po obou commitech.
 

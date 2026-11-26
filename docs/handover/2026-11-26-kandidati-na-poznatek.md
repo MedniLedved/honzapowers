@@ -1,7 +1,7 @@
 # Handover 2026-11-26: kandidáti na poznatek
 
 ## 1. Identita a cíl
-Repo `MedniLedved/honzapowers`, větev `claude/funny-ritchie-lcr9eq`, [draft PR #6](https://github.com/MedniLedved/honzapowers/pull/6). Cíl: `retro` a `handover` navrhují nejvýš 3 poznatky ze session (inspirace Claudeception a continuous-learning-skill; bez hooku při každém promptu, bez automatického zápisu). Komunikace česky, tykat, velké úkoly po fázích. Uživatel nechce, aby se mu doporučovalo spouštět `claude` v terminálu (živý eval proto neběží, viz bod 4). Bez anglicismů s českou koncovkou.
+Repo `MedniLedved/honzapowers`, větev `claude/funny-ritchie-lcr9eq`, [draft PR #6](https://github.com/MedniLedved/honzapowers/pull/6). Cíl: `retro` a `handover` navrhují nejvýš 3 poznatky ze session (inspirace Claudeception a continuous-learning-skill; bez hooku při každém promptu, bez automatického zápisu). Živý eval proto neběží, viz bod 4.
 
 ## 2. Hotovo (s důkazem)
 - Tasky 1–4 (kritéria `skills/retro/kandidat.md`, odkazy z `retro`/`handover`, eval `retro-lessons-no-write`, docs a CHANGELOG): `bash tests/run-tests.sh` ⇒ `ALL PASS`, `claude plugin validate --strict .` ⇒ passed, 141 kontrol v `tests/test-components.sh`.

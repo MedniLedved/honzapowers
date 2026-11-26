@@ -1,7 +1,7 @@
 # Handover 2026-11-26: kandidáti na poznatek, hotovo a mergnuto
 
 ## 1. Identita a cíl
-Repo `MedniLedved/honzapowers` (plugin) a `MedniLedved/honzapowers-sablona` (osobní plugin, šablona). Větev této session `claude/eloquent-pascal-p9jk4i`, fáze: plán `docs/plans/2026-11-25-kandidati-na-poznatek.md` (tasky 1–8) je dokončený, zkontrolovaný (`pre-done`) a mergnutý. Pracovní pravidla (česky, tykat, po fázích, nedoporučovat spouštění `claude` v terminálu) viz `docs/handover/2026-11-26-kandidati-na-poznatek.md`, sekce 1 a 3.
+Repo `MedniLedved/honzapowers` (plugin) a `MedniLedved/honzapowers-sablona` (osobní plugin, šablona). Větev této session `claude/eloquent-pascal-p9jk4i`, fáze: plán `docs/plans/2026-11-25-kandidati-na-poznatek.md` (tasky 1–8) je dokončený, zkontrolovaný (`pre-done`) a mergnutý. Cíl viz `docs/handover/2026-11-26-kandidati-na-poznatek.md`, sekce 1.
 
 ## 2. Hotovo v této session
 - Tasky 5–7 a úprava handoveru, mergnuto: PR #7 (`b87a828`), oprava po `pre-done` PR #9 (`da80ca5`). Důkaz: `bash tests/run-tests.sh` ⇒ `ALL PASS`, CI zelené (`validate`, `hooks (ubuntu-latest)`, `hooks (windows-latest)`) na posledním commitu.
