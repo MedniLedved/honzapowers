@@ -168,8 +168,16 @@ sed -n '/^## Existing entry/,/^## [^E]/p' "$K" | grep -q 'second occurrence' && 
 grep -qw 'diff' "$K" && pass "kandidat.md: diff proposal for the personal file" || fail "kandidat.md: no diff proposal"
 ! grep -q 'CLAUDE_SKILL_DIR' "$K" && pass "kandidat.md: no unsubstituted variable" || fail "kandidat.md: CLAUDE_SKILL_DIR is not substituted in non-SKILL files"
 [ -f "$REPO_ROOT/evals/retro-lessons-no-write/graders/skill-fired.md" ] && pass "eval retro-lessons-no-write: skill-fired grader" || fail "eval retro-lessons-no-write: no skill-fired grader"
-grep -q 'kandidat.md' "$REPO_ROOT/skills/retro/SKILL.md" && grep -q 'never write a skill file' "$REPO_ROOT/skills/retro/SKILL.md" \
-  && pass "retro: candidates step, never writes a skill" || fail "retro: no candidates step"
+RS="$REPO_ROOT/skills/retro/SKILL.md"; HS="$REPO_ROOT/skills/handover/SKILL.md"
+grep -q 'kandidat.md' "$RS" && pass "retro: candidates step" || fail "retro: no candidates step"
+for w in "explicit yes" "Kandidáti na poznatek" "Personal lessons file" "žádný kandidát"; do
+  grep -qF -- "$w" "$RS" && pass "retro: mentions '$w'" || fail "retro: no '$w'"
+done
+grep -qF 'never write a skill file' "$RS" && fail "retro: old wording 'never write a skill file'" || pass "retro: no old wording 'never write a skill file'"
+sed -n '/^## 3\. Promotion gate/,/^## 4/p' "$RS" | grep -qF 'Personal lessons file' && pass "retro: Promotion gate reads the personal file" || fail "retro: Promotion gate lacks the personal file"
+for w in "Personal lessons file" "žádný kandidát"; do
+  grep -qF -- "$w" "$HS" && pass "handover: mentions '$w'" || fail "handover: no '$w'"
+done
 grep -q 'kandidat.md' "$REPO_ROOT/skills/handover/SKILL.md" && grep -q 'Lessons' "$REPO_ROOT/skills/handover/SKILL.md" \
   && pass "handover: Lessons line" || fail "handover: no Lessons line"
 
