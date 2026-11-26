@@ -12,7 +12,7 @@ A lesson is a candidate only if it is all of:
 Drop it if it would not help in six months.
 
 ## Existing entry
-Search the trigger in this order: the file from the context line `Personal lessons file (read on demand): <path>` the project's `docs/retro/` and `docs/handover/`, then the findings index of the plugin's `docs/learnings.md` (empty means no match).
+Search the trigger in this order: the file from the context line `Personal lessons file (read on demand): <path>`, the project's `docs/retro/` and `docs/handover/`, then the findings index of the plugin's `docs/learnings.md` (empty means no match).
 - No match: new candidate.
 - Same trigger, same fix (recorded in an earlier session, never one this session wrote): not a new entry. Say `už je v osobním přehledu, <date>` (never the path of the personal file); pass it to § Skill as a second occurrence (class `project`: second time in the same project; class `general`: confirmed in a second project).
 - Same trigger, other cause: new candidate that links the old one.
