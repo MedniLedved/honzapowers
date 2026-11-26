@@ -175,6 +175,8 @@ for w in "explicit yes" "Kandidáti na poznatek" "Personal lessons file" "žádn
 done
 grep -qF 'never write a skill file' "$RS" && fail "retro: old wording 'never write a skill file'" || pass "retro: no old wording 'never write a skill file'"
 sed -n '/^## 3\. Promotion gate/,/^## 4/p' "$RS" | grep -qF 'Personal lessons file' && pass "retro: Promotion gate reads the personal file" || fail "retro: Promotion gate lacks the personal file"
+grep -qF 'line:N' "$REPO_ROOT/evals/retro-lessons-no-write/graders/candidate-evidence.md" && grep -qF 'alone' "$REPO_ROOT/evals/retro-lessons-no-write/graders/candidate-evidence.md" \
+  && pass "eval candidate-evidence: line:N alone is not evidence" || fail "eval candidate-evidence: accepts line:N alone"
 grep -qF 'earlier session' "$K" && pass "kandidat.md: a record from this session is not a second occurrence" || fail "kandidat.md: no 'earlier session'"
 grep -qF 'osobním přehledu, <date>' "$K" && ! grep -qF '<file, date>' "$K" && pass "kandidat.md: no path of the personal file in the saved text" || fail "kandidat.md: path of the personal file may leak"
 grep -qF 'without the push clause' "$HS" && grep -qF 'Pracuj na větvi <branch>.' "$HS" && pass "handover: push clause only for a cloud working branch" || fail "handover: push clause is unconditional"
