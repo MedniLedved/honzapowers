@@ -1,6 +1,7 @@
 # Changelog
 
 ## Nepublikováno
+- **Kandidáti na poznatek:** `retro` a `handover` navrhnou nejvýš 3 poznatky ze session podle kritérií (opakovatelný, netriviální, konkrétní, ověřený) a rozhodovací tabulky (nový řádek, odkaz na starý, zastaralý). Kandidáti se ukládají i do `docs/retro/` projektu. Skill třídy `project` vznikne jen po výslovném souhlasu a až u opakovaného poznatku; obecné poznatky míří do přehledu `poznatky.md` v osobním pluginu (vyžaduje šablonu `honzapowers-sablona` 0.3.0, [PR šablony](https://github.com/MedniLedved/honzapowers-sablona/pull/8)). Policy beze změny, žádný automatický zápis. Nový eval `retro-lessons-no-write`. Inspirace: projekty Claudeception a continuous-learning-skill.
 - **Cloud:** `handover` a `kontrola-planu` v cloudové session samy commitnou a pushnou svůj soubor na pracovní nebo přidělenou větev a nabídnou vrácení; dřív se `handover` ptal a hook prostředí („commit and push“) se ozval po každém tahu. Push na `main` nebo sdílenou větev zůstává bránou G1. Lokálně beze změny.
 
 ## 0.4.0 — 2026-11-25

@@ -60,7 +60,7 @@ grep -q "honzapowers:kontrola-souladu" "$f" && grep -q "honzapowers:kontrola-aud
 grep -qi "never edit the plugin" "$f" && pass "kontrola-planu: never edits plugin or policy" || fail "kontrola-planu: no never-edit rule"
 E="$REPO_ROOT/evals/kontrola-planu-fires"
 [ -f "$E/prompt.md" ] && [ "$(ls "$E"/graders/*.md | wc -l)" -ge 3 ] && pass "kontrola-planu eval: prompt and 3+ graders" || fail "kontrola-planu eval incomplete"
-for e in pre-done-fires pre-done-trivial-no-fire kontrola-planu-chat-list-no-fire; do
+for e in pre-done-fires pre-done-trivial-no-fire kontrola-planu-chat-list-no-fire retro-lessons-no-write; do
   [ -f "$REPO_ROOT/evals/$e/prompt.md" ] && [ "$(ls "$REPO_ROOT/evals/$e"/graders/*.md 2>/dev/null | wc -l)" -ge 1 ] && pass "eval $e: prompt and grader" || fail "eval $e incomplete"
 done
 
@@ -139,5 +139,53 @@ grep -q 'AI-facing' "$REPO_ROOT/AGENTS.md" && pass "AGENTS.md: language rule" ||
 echo "CI actions pinned to a commit SHA"
 bad="$(grep -nE '^\s*-? *uses: ' "$REPO_ROOT/.github/workflows/"*.yml | grep -vE '@[0-9a-f]{40}( |$)')"
 [ -z "$bad" ] && pass "all actions pinned to a SHA" || fail "unpinned: $bad"
+
+echo "Lesson candidates"
+K="$REPO_ROOT/skills/retro/kandidat.md"
+if [ -f "$K" ]; then
+  pass "kandidat.md exists"
+  for h in "## Test" "## Existing entry" "## Output"; do grep -q "^$h" "$K" && pass "kandidat.md: $h" || fail "kandidat.md: missing $h"; done
+  for w in Reusable Non-trivial Specific Verified "second project" "docs/learnings.md"; do grep -q "$w" "$K" && pass "kandidat.md: mentions $w" || fail "kandidat.md: no $w"; done
+  kw="$(wc -w <"$K" | tr -d ' ')"
+  [ "$kw" -le 400 ] && pass "kandidat.md: $kw <= 400 words" || fail "kandidat.md: $kw words"
+  [ -z "$(czech_prose "$K")" ] && pass "kandidat.md: English prose" || fail "kandidat.md: Czech prose"
+else
+  fail "kandidat.md missing"
+fi
+[ -f "$REPO_ROOT/skills/handover/../retro/kandidat.md" ] && pass "handover: kandidat.md path resolves" || fail "handover: kandidat.md path broken"
+grep -q 'Read `${CLAUDE_SKILL_DIR}/kandidat.md`' "$REPO_ROOT/skills/retro/SKILL.md" && grep -q 'Read `${CLAUDE_SKILL_DIR}/../retro/kandidat.md`' "$REPO_ROOT/skills/handover/SKILL.md" \
+  && pass "retro and handover: told to Read kandidat.md" || fail "retro/handover: no Read instruction for kandidat.md"
+for w in "Same trigger, same fix" "Same trigger, other cause" "At most 3" "žádný kandidát" "docs/retro/"; do
+  grep -q "$w" "$K" && pass "kandidat.md: rule '$w'" || fail "kandidat.md: rule '$w' missing"
+done
+for w in "## Skill" "strongest evidence" "one line with the count" "Personal lessons file" "second occurrence" ".claude/skills/" "explicit yes"; do
+  grep -qF -- "$w" "$K" && pass "kandidat.md: mentions '$w'" || fail "kandidat.md: no '$w'"
+done
+for w in "Same trigger, same fix: update that row" "never write a skill file"; do
+  grep -qF -- "$w" "$K" && fail "kandidat.md: old wording '$w'" || pass "kandidat.md: no old wording '$w'"
+done
+sed -n '/^## Existing entry/,/^## [^E]/p' "$K" | grep -q 'second occurrence' && pass "kandidat.md: Existing entry leads to second occurrence" || fail "kandidat.md: Existing entry lacks second occurrence"
+grep -qw 'diff' "$K" && pass "kandidat.md: diff proposal for the personal file" || fail "kandidat.md: no diff proposal"
+! grep -q 'CLAUDE_SKILL_DIR' "$K" && pass "kandidat.md: no unsubstituted variable" || fail "kandidat.md: CLAUDE_SKILL_DIR is not substituted in non-SKILL files"
+[ -f "$REPO_ROOT/evals/retro-lessons-no-write/graders/skill-fired.md" ] && pass "eval retro-lessons-no-write: skill-fired grader" || fail "eval retro-lessons-no-write: no skill-fired grader"
+RS="$REPO_ROOT/skills/retro/SKILL.md"; HS="$REPO_ROOT/skills/handover/SKILL.md"
+grep -q 'kandidat.md' "$RS" && pass "retro: candidates step" || fail "retro: no candidates step"
+for w in "explicit yes" "Kandidáti na poznatek" "Personal lessons file" "žádný kandidát"; do
+  grep -qF -- "$w" "$RS" && pass "retro: mentions '$w'" || fail "retro: no '$w'"
+done
+grep -qF 'never write a skill file' "$RS" && fail "retro: old wording 'never write a skill file'" || pass "retro: no old wording 'never write a skill file'"
+sed -n '/^## 3\. Promotion gate/,/^## 4/p' "$RS" | grep -qF 'Personal lessons file' && pass "retro: Promotion gate reads the personal file" || fail "retro: Promotion gate lacks the personal file"
+grep -qF 'line:N' "$REPO_ROOT/evals/retro-lessons-no-write/graders/candidate-evidence.md" && grep -qF 'alone' "$REPO_ROOT/evals/retro-lessons-no-write/graders/candidate-evidence.md" \
+  && pass "eval candidate-evidence: line:N alone is not evidence" || fail "eval candidate-evidence: accepts line:N alone"
+grep -qF 'earlier session' "$K" && pass "kandidat.md: a record from this session is not a second occurrence" || fail "kandidat.md: no 'earlier session'"
+grep -qF 'osobním přehledu, <date>' "$K" && ! grep -qF '<file, date>' "$K" && pass "kandidat.md: no path of the personal file in the saved text" || fail "kandidat.md: path of the personal file may leak"
+grep -qF 'without the push clause' "$HS" && grep -qF 'Pracuj na větvi <branch>.' "$HS" && pass "handover: push clause only for a cloud working branch" || fail "handover: push clause is unconditional"
+grep -qF 'git branch --show-current' "$HS" && grep -qF 'push tam máš povolený' "$HS" \
+  && pass "handover: ready sentence with the branch for the next session" || fail "handover: no ready sentence with the branch"
+for w in "Personal lessons file" "žádný kandidát"; do
+  grep -qF -- "$w" "$HS" && pass "handover: mentions '$w'" || fail "handover: no '$w'"
+done
+grep -q 'kandidat.md' "$REPO_ROOT/skills/handover/SKILL.md" && grep -q 'Lessons' "$REPO_ROOT/skills/handover/SKILL.md" \
+  && pass "handover: Lessons line" || fail "handover: no Lessons line"
 
 summary components
