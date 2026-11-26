@@ -98,7 +98,7 @@
 Rozhodnutí uživatele: (1) při víc než 3 kandidátech vybrat 3 s nejsilnějším důkazem a o zbytku napsat jednu větu s počtem; (2) znění tabulky „existující záznam" navázat na opakování; (3) varianta b): po schválení smí vzniknout skill, hranice je jasně definovaná; (4) varianta B: soukromý přehled poznatků napříč projekty v osobním pluginu (`honzapowers-osobni`, šablona `honzapowers-sablona`).
 
 **Stav dodatku:** kontrola 2026-11-26: 8 nálezů, opraveno 7, otázky 1 (brána Task 8, rozhodnuto výchozí odpovědí), zamítnuto 0.
-**Stav:** kontrola 2026-11-26 (2. kolo): 9 nálezů, opraveno 7, otázky 1, zamítnuto 1.
+**Stav:** kontrola 2026-11-26 (2. kolo): 9 nálezů, opraveno 7, otázky 1 (šablona 0.3.0: uživatel zvolil podmíněné znění, zapracováno), zamítnuto 1.
 
 **Architektura B.** Osobní plugin dostane soubor `poznatky.md` (tabulka poznatků napříč projekty, soukromé repo). Jeho hook při startu session nevkládá obsah, jen jednu řádku `Personal lessons file (read on demand): <absolutní cesta>`. `retro` a `handover` ji při ověřování duplicit a brány „druhý projekt" přečtou. Pokud řádek v kontextu není, `retro` a `handover` fungují beze změny jen s `docs/retro/` a `docs/handover/` projektu. Tasky 5–7 tedy nezávisí na tasku 8.
 
@@ -161,8 +161,8 @@ Rozhodnutí uživatele: (1) při víc než 3 kandidátech vybrat 3 s nejsilněj�
 - Modify: `docs/pouziti.md` (bod 6 a nová krátká sekce „Kam se poznatky ukládají")
 - Modify: `CHANGELOG.md` (sekce Nepublikováno)
 
-- [ ] **Step 1: Doplnit `docs/pouziti.md`** česky: co se zapíše samo (`docs/retro/`, `docs/handover/` v projektu); co jen po souhlasu (řádek do `AGENTS.md`, skill třídy `project` v `.claude/skills/`, u obecného návrh do osobního pluginu); že `docs/learnings.md` je soubor správce pluginu a uživatel ho nepíše; co je osobní přehled `poznatky.md` a že vyžaduje aktualizovanou šablonu (Task 8). Opravit větu „dokud to neschválíš" tak, aby sedělala na Task 6. Opravit řádek 26 („obecné jako návrh na další vydání pluginu") na „obecné jako návrh do osobního pluginu; výchozí pravidla se mění jen ručně vydanou verzí"; do tabulky souborů (řádky 12–17) přidat `.claude/skills/<název>/SKILL.md` (skill třídy `project`, po tvém výslovném souhlasu) a `poznatky.md` (osobní plugin, návrh řádku po schválení) a upravit poznámku pod tabulkou o pevných cestách.
-- [ ] **Step 2: Upravit `CHANGELOG.md`:** vyhodit slib „aktualizace řádku", doplnit: poznatky se ukládají i do retra, skill třídy `project` po výslovném souhlasu, přehled `poznatky.md` v osobním pluginu (od verze šablony 0.3.0).
+- [ ] **Step 1: Doplnit `docs/pouziti.md`** česky: co se zapíše samo (`docs/retro/`, `docs/handover/` v projektu); co jen po souhlasu (řádek do `AGENTS.md`, skill třídy `project` v `.claude/skills/`, u obecného návrh do osobního pluginu); že `docs/learnings.md` je soubor správce pluginu a uživatel ho nepíše; co je osobní přehled `poznatky.md` a že vyžaduje aktualizovanou šablonu; podmíněně, bez čísla verze („až bude šablona aktualizovaná“), protože Task 8 může skončit bez pushe. Opravit větu „dokud to neschválíš" tak, aby sedělala na Task 6. Opravit řádek 26 („obecné jako návrh na další vydání pluginu") na „obecné jako návrh do osobního pluginu; výchozí pravidla se mění jen ručně vydanou verzí"; do tabulky souborů (řádky 12–17) přidat `.claude/skills/<název>/SKILL.md` (skill třídy `project`, po tvém výslovném souhlasu) a `poznatky.md` (osobní plugin, návrh řádku po schválení) a upravit poznámku pod tabulkou o pevných cestách.
+- [ ] **Step 2: Upravit `CHANGELOG.md`:** vyhodit slib „aktualizace řádku", doplnit: poznatky se ukládají i do retra, skill třídy `project` po výslovném souhlasu, přehled `poznatky.md` v osobním pluginu, podmíněně bez čísla verze („vyžaduje aktualizovanou šablonu“). Verzi 0.3.0 a odkaz na PR šablony doplnit až v Tasku 8 po vzniku draft PR (nový krok 7 tam).
 - [ ] **Step 3: Spustit** `bash tests/run-tests.sh` ⇒ `ALL PASS`; `claude plugin validate --strict .` ⇒ `Validation passed`.
 - [ ] **Step 4: Commit** `docs: kam se poznatky ukládají`; push na `claude/funny-ritchie-lcr9eq`.
 
@@ -187,5 +187,6 @@ Rozhodnutí uživatele: (1) při víc než 3 kandidátech vybrat 3 s nejsilněj�
 - [ ] **Step 4: Spustit** `bash tests/run-tests.sh` ⇒ `ALL PASS`; `claude plugin validate --strict .` ⇒ passed.
 - [ ] **Step 5: README:** česky popsat soubor `poznatky.md`, formát řádku a postup aktualizace existující kopie šablony: zkopírovat `hooks/session-start`, `poznatky.md` a verze z `plugin.json` i `marketplace.json` do vlastního soukromého repa (šablona se do už vytvořených kopií sama nepropisuje).
 - [ ] **Step 6: Commit** `feat: přehled poznatků napříč projekty`; push na novou větev, draft PR; **neměnit** soukromé repo uživatele.
+- [ ] **Step 7: Jen po vzniku draft PR šablony:** v `CHANGELOG.md` a `docs/pouziti.md` repa `honzapowers` nahradit podmíněnou formulaci verzí `0.3.0` a odkazem na PR; `bash tests/run-tests.sh` ⇒ `ALL PASS`; commit `docs: verze šablony s přehledem poznatků`, push na pracovní větev. Bez PR šablony krok vynechat a zapsat do stavu dodatku.
 
 **Mimo plán dodatku:** aktualizace vlastní soukromé kopie osobního pluginu uživatele (úkol pro uživatele, návod v README šablony), živý běh evalu, popisy skillů psané pro vyhledání.
