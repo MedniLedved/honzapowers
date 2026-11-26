@@ -11,7 +11,7 @@
 ## Soubory, které plugin vytváří v projektech
 | Soubor | Kdo ho vytváří | K čemu |
 |---|---|---|
-| `docs/handover/RRRR-MM-DD-<téma>.md` | skill `handover` | předání práce další session, včetně krátkého retro; až po tvém souhlasu se commituje |
+| `docs/handover/RRRR-MM-DD-<téma>.md` | skill `handover` | předání práce další session, včetně krátkého retro; lokálně se commituje až po tvém souhlasu, v cloudu se hned commitne na pracovní větev (kontejner by zmizel) a nabídne se vrácení |
 | `docs/retro/RRRR-MM-DD-<téma>.md` | skill `retro` | změřená session s nálezy |
 | `docs/retro/RRRR-MM-DD-obdobi-<téma>.md` | skill `mesicni-projektove-retro` | retrospektiva projektu za období |
 | `.claude/kontrola-planu.md` | skill `kontrola-planu` (po tvém schválení) | kritéria kontroly plánu specifická pro projekt, nejvýš 15 bodů |

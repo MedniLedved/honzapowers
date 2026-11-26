@@ -1,5 +1,8 @@
 # Changelog
 
+## Nepublikováno
+- **Cloud:** `handover` a `kontrola-planu` v cloudové session samy commitnou a pushnou svůj soubor na pracovní nebo přidělenou větev a nabídnou vrácení; dřív se `handover` ptal a hook prostředí („commit and push“) se ozval po každém tahu. Push na `main` nebo sdílenou větev zůstává bránou G1. Lokálně beze změny.
+
 ## 0.4.0 — 2026-11-25
 Opravy z auditu před zveřejněním.
 - **Pravidla:** L13 spouští `pre-done` jen podle `skilly-kdy-ktery` (architektura, mazání dat, sdílené rozhraní, jinak na požádání); popis `pre-done` vylučuje drobnosti. S3 je vyhrazené pro osobní vrstvu. S5 bez žargonu.

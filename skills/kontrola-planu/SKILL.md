@@ -53,4 +53,4 @@ Also:
 - do not prescribe a fixed project command (for example a test command), only that the plan names its verification command.
 
 ## 7. Closing
-Add to the plan the line `**Stav:** kontrola <datum>: N nálezů, opraveno X, otázky Y, zamítnuto Z.` Then write the user at most 6 lines in Czech: the number of findings per bin, what you fixed, what you wait for (questions), whether a second round ran, the proposed lesson and, if the criteria file is missing, the offer to create it (once per project, see step 6).
+Add to the plan the line `**Stav:** kontrola <datum>: N nálezů, opraveno X, otázky Y, zamítnuto Z.` In a cloud session commit the plan file alone and push it to the task's working branch or the session-assigned branch (the container is lost when the session ends); `main`, a shared or another person's branch stays a gate (G1). Locally do not commit; say the plan is changed. Then write the user at most 6 lines in Czech: the number of findings per bin, what you fixed, what you wait for (questions), whether a second round ran, the proposed lesson and, if the criteria file is missing, the offer to create it (once per project, see step 6).
