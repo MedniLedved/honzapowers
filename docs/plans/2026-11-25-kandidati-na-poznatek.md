@@ -97,7 +97,7 @@
 
 Rozhodnutí uživatele: (1) při víc než 3 kandidátech vybrat 3 s nejsilnějším důkazem a o zbytku napsat jednu větu s počtem; (2) znění tabulky „existující záznam" navázat na opakování; (3) varianta b): po schválení smí vzniknout skill, hranice je jasně definovaná; (4) varianta B: soukromý přehled poznatků napříč projekty v osobním pluginu (`honzapowers-osobni`, šablona `honzapowers-sablona`).
 
-**Stav dodatku:** kontrola 2026-11-26: 9 nálezů, opraveno 8, otázky 1 (brána Task 8, rozhodnuto výchozí odpovědí), zamítnuto 0.
+**Stav dodatku:** kontrola 2026-11-26: 8 nálezů, opraveno 7, otázky 1 (brána Task 8, rozhodnuto výchozí odpovědí), zamítnuto 0.
 
 **Architektura B.** Osobní plugin dostane soubor `poznatky.md` (tabulka poznatků napříč projekty, soukromé repo). Jeho hook při startu session nevkládá obsah, jen jednu řádku `Personal lessons file (read on demand): <absolutní cesta>`. `retro` a `handover` ji při ověřování duplicit a brány „druhý projekt" přečtou. Pokud řádek v kontextu není, `retro` a `handover` fungují beze změny jen s `docs/retro/` a `docs/handover/` projektu. Tasky 5–7 tedy nezávisí na tasku 8.
 
