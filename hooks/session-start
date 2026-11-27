@@ -84,7 +84,13 @@ if [ -d "$cwd" ]; then
     open="$(grep -c '^[[:space:]]*- \[ \]' "$cwd/$plan" 2>/dev/null)"
     case "$open" in '' | *[!0-9]*) open=0 ;; esac
     plan_safe="$(sanitize "$plan")"
-    state+=$'\n'"- Plan: $plan_safe ($open open tasks)"
+    # A plan whose header says "**Stav provedení:** hotovo" is finished even if its boxes are unchecked.
+    if grep -q -E '^\*\*Stav provedení:\*\*[[:space:]]*hotovo' "$cwd/$plan" 2>/dev/null; then
+      open=0
+      state+=$'\n'"- Plan: $plan_safe (done)"
+    else
+      state+=$'\n'"- Plan: $plan_safe ($open open tasks)"
+    fi
   else
     state+=$'\n'"- Plan: none found"
   fi

@@ -120,6 +120,7 @@ grep -q 'honzapowers--v' "$REPO_ROOT/README.md" && grep -q 'Releases' "$REPO_ROO
   && pass "README/vydani: tag honzapowers--vX.Y.Z, web path" || fail "README/vydani: tag name or web path"
 grep -q 'fails because of the finding' "$S/pre-done/SKILL.md" && grep -qi 'at most one re-review' "$S/pre-done/SKILL.md" \
   && pass "pre-done: test-first fixes, one re-review" || fail "pre-done: no test-first fix rule"
+grep -qF '**Stav provedení:** hotovo' "$S/handover/SKILL.md" && pass "handover: proposes marking a finished plan" || fail "handover: no finished-plan marker"
 grep -q 'cloud session' "$S/handover/SKILL.md" && pass "handover: container loss is cloud-only" || fail "handover: assumes cloud"
 grep -q 'session-assigned branch' "$S/handover/SKILL.md" && grep -q 'session-assigned branch' "$S/kontrola-planu/SKILL.md" \
   && pass "handover, kontrola-planu: cloud commit to the assigned branch" || fail "handover, kontrola-planu: no cloud commit rule"

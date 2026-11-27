@@ -1,5 +1,7 @@
 # Přednost pravidel, připnutá instalace a opravy přes test – plán
 
+**Stav provedení:** hotovo, vydáno ve verzi 0.6.0 (PR #13 a #14, tag `honzapowers--v0.6.0`).
+
 **Stav:** kontrola 2026-11-27: 8 nálezů, opraveno 7, otázky 0, zamítnuto 1.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans (inline, S1) to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.

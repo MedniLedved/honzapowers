@@ -8,6 +8,8 @@
 
 **Stav:** kontrola 2026-11-25: 7 nálezů, opraveno 7, otázky 0, zamítnuto 0.
 
+**Stav provedení:** hotovo, vydáno ve verzi 0.5.0 (2026-11-26, tag `honzapowers--v0.5.0`). Nezaškrtnuté kroky dodatků se provedly (podle CHANGELOGu 0.5.0), ale zaškrtávání se nevedlo; plán se už neprovádí.
+
 **Zdroj:** rešerše Claudeception a continuous-learning-skill v této konverzaci (body 1, 2 a 4 z doporučení). Bod 3 (popisy psané pro vyhledání) a bod 5 (verzování) do tohoto plánu nepatří.
 
 ## Globální omezení
