@@ -6,6 +6,7 @@ Vývojová pravidla tohoto repa (plugin pro Claude Code).
 - Před každým pushem: `bash tests/run-tests.sh` ⇒ `ALL PASS`.
 - Při změně pluginu nebo marketplace: `claude plugin validate --strict .` (dělá to i CI).
 - Verze v `plugin.json` a v záznamu marketplace se shodují (test).
+- Hotový task odškrtni v plánu (`- [x]`) ve stejném commitu: hook `SessionStart` počítá každé `- [ ]` jako otevřený úkol.
 
 ## Pravidla obsahu
 - Policy (`policy/policy.md`) je **anglicky** a má max **3 200 znaků** (test rozpočtu v `tests/test-components.sh`).

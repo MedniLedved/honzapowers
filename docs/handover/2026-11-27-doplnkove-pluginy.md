@@ -42,5 +42,5 @@ Nálezy:
 2. Úpravy jednoho souboru 7× za sebou (`line:213`): opravy z kontroly plánu v jedné odpovědi, `L4` dodrženo. Třída `one-off`.
 3. Kontext na začátku 82.6k, ještě před prací: systémový prompt a seznam nástrojů prostředí. Pravidlo `new`, třída `one-off`. Jen změřit znovu, až budou výsledky fáze 2.
 
-Lessons:
-- **Kandidát:** hook `SessionStart` hlásí hotový plán jako rozpracovaný („23 open tasks“), když v něm zůstanou neodškrtnuté kroky. Oprava: při dokončení tasku odškrtnout jeho kroky ve stejném commitu. Důkaz: `grep -c -- '- \[ \]' docs/plans/2026-11-25-kandidati-na-poznatek.md` ⇒ 23 u plánu vydaného v 0.5.0, po odškrtnutí 0. Třída `project`. V `docs/handover/`, `docs/retro/` ani `docs/learnings.md` zatím nic takového není, je to první výskyt.
+## Kandidáti na poznatek
+- **Kandidát (zapsán do `AGENTS.md` se souhlasem uživatele):** hook `SessionStart` hlásí hotový plán jako rozpracovaný („23 open tasks“), když v něm zůstanou neodškrtnuté kroky. Oprava: při dokončení tasku odškrtnout jeho kroky ve stejném commitu. Důkaz: `grep -c -- '- \[ \]' docs/plans/2026-11-25-kandidati-na-poznatek.md` ⇒ 23 u plánu vydaného v 0.5.0, po odškrtnutí 0. Třída `project`. V `docs/handover/`, `docs/retro/` ani `docs/learnings.md` zatím nic takového není, je to první výskyt.
