@@ -8,7 +8,7 @@
 
 **Zdroj:** výsledky plánu `docs/plans/2026-11-27-doplnkove-pluginy.md` (sekce `## Výsledky pokusu`, ř. 110–129) a nové zjištění: v cloudové session se hookify nabízí jako skilly `hookify:hookify`, `hookify:list`, `hookify:configure`, `hookify:help`, `hookify:writing-rules` a agent `hookify:conversation-analyzer`. Hypotéza: plugin se načítá, volá se jako skill / `/hookify:hookify` (ne `/hookify`) a vyhodnocení pravidla hookem je samostatná otázka. Příčina minulého neúspěchu nebyla změřena (L9).
 
-**Stav:** čeká na kontrolu plánu.
+**Stav:** kontrola 2026-11-27: 4 nálezy (po sloučení), opraveno 4, otázky 0, zamítnuto 0.
 
 ## Globální omezení
 - `policy/policy.md` se nemění; verze se nevydává (postup `docs/vydani.md`, ručně).
@@ -18,7 +18,7 @@
 - Žádná data z konkrétních projektů ani uživatelů; testovací vzory jsou vymyšlené (`hookify-test`, `hook-rule-test`, `deny-rule-test`).
 - Pokusné session nic necommitují a neotevírají PR: na otázku agenta o commitu, pushi nebo PR odpovědět **ne**. Commit výsledků dělá až prováděcí session (`git add` jen tohoto plánu).
 - Nic z pokusu neskončí v `main`: pokusné větve `pokus/*` se po zkoušce smažou, bez PR.
-- `bash tests/run-tests.sh` ⇒ `ALL PASS` a `claude plugin validate --strict .` před pushem (validaci spouští i CI). Hotový krok se odškrtne ve stejném commitu.
+- `bash tests/run-tests.sh` ⇒ `ALL PASS` a `claude plugin validate --strict .` před pushem (validaci spouští i CI). Hotový krok se odškrtne ve stejném commitu; commity výsledků (Task 1 Step 8, Task 2 Step 5, Task 3 Step 5) odškrtnou kroky, které už proběhly, a koncový commit tasku zbylé. Přeskočený krok (Task 3 při „ne“) se odškrtne s poznámkou „přeskočeno (bez souhlasu)“.
 
 ## Review Focus
 - Pokus nesmí spustit nic destruktivního: vzory jsou jen neškodné `echo`, hook nic nemaže a nesahá na síť.
@@ -32,7 +32,7 @@
 - Vlastní engine pravidel v HP (náhrada hookify): příčka `hard` už má hook, deny pravidlo nebo skript.
 - Pokus s `episodic-memory` a `claude-hud`: fungují jen lokálně; jen upřesnění věty (Task 3).
 - Změna `hooks/hooks.json` HP: plán zkouší hook projektu v `.claude/settings.json`, ne hook pluginu.
-- Úprava `.gitignore` v `main`: doporučení `.claude/*.local.md` zůstává jen v docs (`docs/pouziti.md:56`).
+- Úprava `.gitignore` v `main`: doporučení `.claude/*.local.md` zůstává jen v docs (věta o `.gitignore` v `docs/pouziti.md`).
 
 ---
 
@@ -70,7 +70,7 @@ Prostředí: nová cloudová session v repu HP na `main`, hookify zapnutý (clau
 
 **Files:**
 - Modify: tento plán (`## Výsledky pokusu`, tabulka `prostředek | spuštěno | důkaz`)
-- Modify: `docs/pouziti.md` (odstavec za tabulkou v `## Doplňkové pluginy`, za ř. 56), `CHANGELOG.md`
+- Modify: `docs/pouziti.md` (nový odstavec v `## Doplňkové pluginy` za odstavcem začínajícím `Pokud pravidla hookify zkoušíš lokálně`), `CHANGELOG.md`
 - Modify (jen pokud aspoň jeden prostředek v cloudu funguje): `skills/retro/SKILL.md:26` (odrážka **Rung**)
 - Test: `tests/test-components.sh` (za test z Task 1)
 
@@ -80,7 +80,7 @@ Prostředí: nová cloudová session v repu HP na `main`, hookify zapnutý (clau
 
 Pokusná větev: `.claude/` v repu má dnes jen `kontrola-planu.md`; `.claude/settings.json` neexistuje. Soubor se proto zkouší na větvi `pokus/hard-rule-test`, ne v `main`.
 
-- [ ] **Step 1: Pokusná větev (prováděcí session).** Z `main` vytvořit `pokus/hard-rule-test` s jediným novým souborem `.claude/settings.json` a pushnout ji, **bez PR**:
+- [ ] **Step 1: Pokusná větev (prováděcí session, jen po výslovném souhlasu uživatele s pushem mimo pracovní větev).** Z `main` vytvořit `pokus/hard-rule-test` s jediným novým souborem `.claude/settings.json` a pushnout ji, **bez PR**:
 
 ```json
 {
@@ -101,7 +101,7 @@ Pokusná větev: `.claude/` v repu má dnes jen `kontrola-planu.md`; `.claude/se
 - [ ] **Step 5: Verdikt a commit výsledků:** `docs(plans): výsledky pokusu s nativním hard pravidlem` (`git add` jen tohoto plánu). **Brána:** Step 6 až po tomto commitu.
 - [ ] **Step 6: Test.** Za test z Task 1: `grep -q '\.claude/settings.json' "$REPO_ROOT/docs/pouziti.md" && grep -q 'permissions.deny' "$REPO_ROOT/docs/pouziti.md" && pass "pouziti: native hard rule" || fail "pouziti: no native hard rule"`. Pokud se mění `retro`, přidat i `grep -q 'cloud session.*settings.json' "$REPO_ROOT/skills/retro/SKILL.md" && pass "retro: native hard rule in cloud" || fail "retro: no native hard rule note"`.
 - [ ] **Step 7:** `bash tests/test-components.sh` ⇒ nové testy `FAIL`.
-- [ ] **Step 8: Text docs (česky).** Za `docs/pouziti.md:56` odstavec „Tvrdé pravidlo bez pluginu“: hook a `permissions.deny` v `.claude/settings.json` repa, u každého naměřený výsledek z cloudu (Step 2–3; neměřené „nevyzkoušeno“), jedna věta srovnání s hookify podle Task 1. Bez pevného příkazu projektu.
+- [ ] **Step 8: Text docs (česky).** V `docs/pouziti.md` za odstavcem začínajícím `Pokud pravidla hookify zkoušíš lokálně` odstavec „Tvrdé pravidlo bez pluginu“: hook a `permissions.deny` v `.claude/settings.json` repa, u každého naměřený výsledek z cloudu (Step 2–3; neměřené „nevyzkoušeno“), jedna věta srovnání s hookify podle Task 1. Bez pevného příkazu projektu.
 - [ ] **Step 9: Text retro (anglicky, jen při `ano` v Step 2 nebo 3).** V odrážce **Rung** za `a hookify rule only if the hookify plugin is installed` doplnit `; in a cloud session, a hook or deny rule in the repo's .claude/settings.json` jen pro prostředek, který fungoval. Fráze `only if the hookify plugin is installed` zůstává (test ř. 34).
 - [ ] **Step 10:** `bash tests/run-tests.sh` ⇒ `ALL PASS` (včetně 900 slov) a `claude plugin validate --strict .` bez chyby (nebo zelené CI na pracovní větvi).
 - [ ] **Step 11: Commit** `docs(pouziti): tvrdé pravidlo přes .claude/settings.json podle pokusu` (při změně `retro`: `feat(retro): nativní tvrdé pravidlo v cloudu`) + řádek do `CHANGELOG.md` → `## Nepublikováno`.
@@ -112,18 +112,18 @@ Pokusná větev: `.claude/` v repu má dnes jen `kontrola-planu.md`; `.claude/se
 
 **Files:**
 - Modify: tento plán (`## Výsledky pokusu`, jen při souhlasu)
-- Modify: `docs/pouziti.md:50-52` (řádky `pr-review-toolkit`, `episodic-memory`, `claude-hud`), `CHANGELOG.md`
+- Modify: `docs/pouziti.md` (řádky `pr-review-toolkit`, `episodic-memory`, `claude-hud` v tabulce `## Doplňkové pluginy`), `CHANGELOG.md`
 - Test: `tests/test-components.sh` (za test z Task 2)
 
 **Interfaces:**
 - Produces: tabulka `revize | nálezy (Critical/Important/Minor) | zachycená vložená chyba | Context tokens: first / max` (jen při souhlasu).
 
 - [ ] **Step 1: Brána (uživatel).** Zeptat se: „Chcete souběžný test `pre-done` proti `pr-review-toolkit`?“ Při **ne** přeskočit na Step 6; řádek `pr-review-toolkit` zůstane „nevyzkoušeno“.
-- [ ] **Step 2: Diff.** Větev `pokus/review-test` z `main` s jedním vymyšleným souborem `pokus/review.sh` (~10 řádků) s vloženou tichou chybou (`cmd || true` spolkne selhání) a bez testu; push, **bez PR**.
+- [ ] **Step 2: Diff.** Větev `pokus/review-test` z `main` (push mimo pracovní větev jen po výslovném souhlasu uživatele) s jedním vymyšleným souborem `pokus/review.sh` (~10 řádků) s vloženou tichou chybou (`cmd || true` spolkne selhání) a bez testu; push, **bez PR**.
 - [ ] **Step 3: Dvě session (uživatel).** Dvě nové cloudové session na `pokus/review-test`, `pr-review-toolkit` zapnutý jen pro druhou. V první `Run pre-done on the diff against main.`, ve druhé `/pr-review-toolkit:review-pr`; v obou pak `retro` ⇒ zapsat počty nálezů, zda chytila `|| true`, a řádek `Context tokens` (`scripts/session-metrics:167`). Žádný nález neopravovat; otázky o commitu/PR: **ne**. Tokeny podagentů, které `retro` nevypíše: „nezměřeno“.
 - [ ] **Step 4: Úklid.** Smazat větev `pokus/review-test` na GitHubu; `main` nemá `pokus/`.
 - [ ] **Step 5: Commit výsledků** `docs(plans): výsledky souběžné revize` (jen tento plán). **Brána:** Step 6 až po tomto commitu.
-- [ ] **Step 6: Test.** `grep -q 'zaplnění kontextu' "$REPO_ROOT/docs/pouziti.md" && pass "pouziti: claude-hud context fill" || fail "pouziti: no claude-hud context fill"`.
+- [ ] **Step 6: Test.** `grep -q 'zaplnění kontextu' "$REPO_ROOT/docs/pouziti.md" && grep -q 'překrývá se s `handover`' "$REPO_ROOT/docs/pouziti.md" && pass "pouziti: claude-hud context fill" || fail "pouziti: no claude-hud context fill"`.
 - [ ] **Step 7:** `bash tests/test-components.sh` ⇒ `FAIL pouziti: no claude-hud context fill`.
 - [ ] **Step 8: Text (česky).** Řádek `claude-hud`: „ukazuje zaplnění kontextu; hodí se jen při lokální práci“. Řádek `episodic-memory`: doplnit „překrývá se s `handover`“. Řádek `pr-review-toolkit`: při testu naměřené výsledky ze Step 3 místo odhadu „víc agentů znamená víc tokenů“, jinak beze změny.
 - [ ] **Step 9:** `bash tests/run-tests.sh` ⇒ `ALL PASS`.
