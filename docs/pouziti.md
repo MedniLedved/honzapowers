@@ -39,5 +39,25 @@ Nový poznatek patří tam, kde platí: jednorázové věci nikam, projektové d
 - `HONZAPOWERS_RESUME_TOKENS` – po `resume` nebo `fork` s vypršenou cache promptu a kontextem aspoň tolik tokenů hook navrhne handover a novou session (výchozí 50000).
 - Starší proměnné `LEAN_WORKFLOW_*` fungují jako záloha.
 
+## Doplňkové pluginy
+
+Vedle HP můžeš zapnout další pluginy. Tabulka uvádí jen to, co ověřil pokus v cloudové session (Sonnet medium, 2 session bez pluginů a 2 s nimi); co se nezkoušelo, je označeno „nevyzkoušeno“. Měřilo se `Context tokens: first` přes `retro`: průměr bez pluginů 84,1k, s `claude-md-management` a `hookify` 84,05k, tedy bez znatelného nárůstu.
+
+| Plugin | K čemu vedle HP | Kde funguje | Verdikt |
+|---|---|---|---|
+| `claude-md-management` | audit `CLAUDE.md` / `AGENTS.md` (`claude-md-improver`) a návrhy zápisu poznatků do souboru s pravidly (`/revise-claude-md`) | cloud: ano; terminál: nevyzkoušeno | doporučeno |
+| `hookify` | pravidla jako soubor `.claude/hookify.*.local.md`, např. varování před příkazem | cloud: ne (`/hookify` tam neexistuje, pravidlo se nespustilo); terminál: nevyzkoušeno | jen lokálně |
+| `pr-review-toolkit` | revize změn více agenty; alternativa k revizoru z `pre-done`, víc agentů znamená víc tokenů | nevyzkoušeno | nevyzkoušeno |
+| `episodic-memory` | paměť napříč session | jen lokálně | nevyzkoušeno |
+| `claude-hud` | stavový panel | jen lokálně | nevyzkoušeno |
+
+`/revise-claude-md` navrhuje zápisy do `AGENTS.md`, `CLAUDE.md` nezakládá. S `handover` se potkává jen u poznatků ze session; `handover` píše do `docs/handover/`. Navržené změny posuzuj sám, plugin je nepřijímá za tebe.
+
+Pokud pravidla `hookify` zkoušíš lokálně, přidej do `.gitignore` řádek `.claude/*.local.md`, ať se testovací pravidlo omylem nedostane do commitu.
+
+**Nedoporučujeme:**
+- `claude-mem` a `context-mode`: vkládají kontext na startu session a při PreCompact podruhé, takže zdvojují to, co už dělá HP.
+- Samoučící pluginy (claude-smart a podobné): mění pravidla bez tvého souhlasu, což odporuje bráně G1.
+
 ## Co plugin nedělá
 Nečte obsah souborů při startu (jen cesty a počty), nepoužívá síť, nic nepushuje a nic nemaže bez tvého souhlasu.

@@ -9,6 +9,7 @@
 **Zdroj:** rešerše doplňkových pluginů v této konverzaci (části A a B).
 
 **Stav:** kontrola 2026-11-27: 7 nálezů (po sloučení), opraveno 6, otázky 0, zamítnuto 1; druhé kolo: 3 nálezy, opraveno 3.
+**Stav provedení:** hotovo
 
 ## Globální omezení
 - `policy/policy.md` se nemění (max 3 200 znaků, výchozí policy mění jen ručně vydaná verze).
@@ -100,11 +101,11 @@ Prostředí: povinně cloudová session (claude.ai/code) v repu HP; terminál vo
 **Interfaces:**
 - Consumes: tabulka z Task 3.
 
-- [ ] **Step 1: Test.** `grep -q '^## Doplňkové pluginy' "$REPO_ROOT/docs/pouziti.md" && grep -q 'claude-md-management' "$REPO_ROOT/docs/pouziti.md" && pass "pouziti: companion plugins" || fail "pouziti: no companion plugins"`.
-- [ ] **Step 2:** `bash tests/test-components.sh` ⇒ `FAIL pouziti: no companion plugins`.
-- [ ] **Step 3: Text (česky).** Tabulka `Plugin | K čemu vedle HP | Kde funguje | Verdikt` s řádky `claude-md-management`, `hookify`, `pr-review-toolkit` (nevyzkoušeno; alternativa revizora `pre-done`, víc agentů = víc tokenů), `episodic-memory` a `claude-hud` (jen lokálně, nevyzkoušeno). Pod ní odstavec „Nedoporučujeme“ (claude-mem, context-mode, samoučící pluginy) s důvody ze sekce „Co do plánu nepatří“. U `claude-md-management` jedna věta o vztahu `/revise-claude-md` a `handover` podle Task 3 Step 5 (bez výsledku věta odpadá).
-- [ ] **Step 4:** `bash tests/run-tests.sh` ⇒ `ALL PASS`.
-- [ ] **Step 5: Commit** `docs(pouziti): doplňkové pluginy podle pokusu` (+ řádek do `CHANGELOG.md` → `## Nepublikováno`, sekci vytvořit, pokud chybí), push na pracovní větev.
+- [x] **Step 1: Test.** `grep -q '^## Doplňkové pluginy' "$REPO_ROOT/docs/pouziti.md" && grep -q 'claude-md-management' "$REPO_ROOT/docs/pouziti.md" && pass "pouziti: companion plugins" || fail "pouziti: no companion plugins"`.
+- [x] **Step 2:** `bash tests/test-components.sh` ⇒ `FAIL pouziti: no companion plugins`.
+- [x] **Step 3: Text (česky).** Tabulka `Plugin | K čemu vedle HP | Kde funguje | Verdikt` s řádky `claude-md-management`, `hookify`, `pr-review-toolkit` (nevyzkoušeno; alternativa revizora `pre-done`, víc agentů = víc tokenů), `episodic-memory` a `claude-hud` (jen lokálně, nevyzkoušeno). Pod ní odstavec „Nedoporučujeme“ (claude-mem, context-mode, samoučící pluginy) s důvody ze sekce „Co do plánu nepatří“. U `claude-md-management` jedna věta o vztahu `/revise-claude-md` a `handover` podle Task 3 Step 5 (bez výsledku věta odpadá).
+- [x] **Step 4:** `bash tests/run-tests.sh` ⇒ `ALL PASS`.
+- [x] **Step 5: Commit** `docs(pouziti): doplňkové pluginy podle pokusu` (+ řádek do `CHANGELOG.md` → `## Nepublikováno`, sekci vytvořit, pokud chybí), push na pracovní větev.
 
 ## Výsledky pokusu
 
