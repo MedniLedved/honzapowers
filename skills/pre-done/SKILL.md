@@ -6,7 +6,7 @@ description: Use when about to claim done, open a PR or take an irreversible ste
 # Pre-done check
 
 Green lint, type checks and unit tests are not a review: an independent
-review of fully green branches still finds Critical and Important defects. Run this once, right before "done", a PR or an irreversible step.
+review of fully green branches still finds Critical and Important defects. Run this once, right before "done", a PR or an irreversible step. Before an irreversible step after an earlier `pre-done`, review only the diff since the last `pre-done` (`<base>` = the commit it reviewed).
 
 ## 1. List what the diff is judged against
 - The user's request, in a few bullets (what must be true when done).
