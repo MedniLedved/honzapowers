@@ -1,6 +1,7 @@
 # Changelog
 
 ## Nepublikováno
+- **`docs/pouziti.md`:** `pr-review-toolkit` podle souběžného testu s `pre-done` (jeden běh, obě zachytily vloženou tichou chybu); `episodic-memory` se překrývá s `handover`, `claude-hud` ukazuje zaplnění kontextu.
 - **`docs/pouziti.md`, `retro`:** tvrdé pravidlo bez pluginu: hook a `permissions.deny` v `.claude/settings.json` repa fungují v cloudové session (změřeno); `retro` je u příčky `hard` zmiňuje.
 - **`docs/pouziti.md`:** řádek `hookify` podle měření v cloudu: volá se `/hookify:hookify`, hooky jsou registrované a pravidlo vznikne, varování se ale neukázalo (příčina nezměřena).
 - **`docs/pouziti.md`:** nová sekce „Doplňkové pluginy“ s doporučením podle pokusu (`claude-md-management` doporučeno, `hookify` jen lokálně, ostatní nevyzkoušeno) a seznamem toho, co nedoporučujeme.

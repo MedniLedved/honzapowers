@@ -111,6 +111,7 @@ grep -q '^## Doplňkové pluginy' "$REPO_ROOT/docs/pouziti.md" && grep -q 'claud
 grep -q '^| `hookify` .*\(funguje v cloudu\|v cloudu nefunguje\)' "$REPO_ROOT/docs/pouziti.md" && ! grep -q '^| `hookify` .*| jen lokálně |' "$REPO_ROOT/docs/pouziti.md" && pass "pouziti: hookify verdict measured" || fail "pouziti: hookify verdict not measured"
 grep -q '\.claude/settings.json' "$REPO_ROOT/docs/pouziti.md" && grep -q 'permissions.deny' "$REPO_ROOT/docs/pouziti.md" && pass "pouziti: native hard rule" || fail "pouziti: no native hard rule"
 grep -q 'cloud session.*settings.json' "$S/retro/SKILL.md" && pass "retro: native hard rule in cloud" || fail "retro: no native hard rule note"
+grep -q 'zaplnění kontextu' "$REPO_ROOT/docs/pouziti.md" && grep -q 'překrývá se s `handover`' "$REPO_ROOT/docs/pouziti.md" && pass "pouziti: claude-hud context fill" || fail "pouziti: no claude-hud context fill"
 for h in "## Požadavky" "## Instalace" "## Ověření" "## Návrat zpět" "## Jak pracovat"; do grep -q "^$h" "$REPO_ROOT/README.md" && pass "README: $h" || fail "README: chybí $h"; done
 grep -q "Git Bash" "$REPO_ROOT/README.md" && pass "README: Git Bash" || fail "README: chybí Git Bash"
 for f in "$S/retro/SKILL.md" "$S/handover/SKILL.md" "$S/mesicni-projektove-retro/SKILL.md"; do

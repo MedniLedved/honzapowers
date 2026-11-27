@@ -47,9 +47,9 @@ Vedle HP můžeš zapnout další pluginy. Tabulka uvádí jen to, co ověřil p
 |---|---|---|---|
 | `claude-md-management` | audit `CLAUDE.md` / `AGENTS.md` (`claude-md-improver`) a návrhy zápisu poznatků do souboru s pravidly (`/revise-claude-md`) | cloud: ano; terminál: nevyzkoušeno | doporučeno |
 | `hookify` | pravidla jako soubor `.claude/hookify.*.local.md`, např. varování před příkazem | cloud: volá se jako skill `/hookify:hookify`, pravidlo vznikne a je `enabled`, varování se ale při `echo` neukázalo; terminál: nevyzkoušeno | v cloudu nefunguje (příčina nezměřena), lokálně nevyzkoušeno |
-| `pr-review-toolkit` | revize změn více agenty; alternativa k revizoru z `pre-done`, víc agentů znamená víc tokenů | nevyzkoušeno | nevyzkoušeno |
-| `episodic-memory` | paměť napříč session | jen lokálně | nevyzkoušeno |
-| `claude-hud` | stavový panel | jen lokálně | nevyzkoušeno |
+| `pr-review-toolkit` | revize změn více agenty; alternativa k revizoru z `pre-done` | cloud: v jednom běhu na 10řádkovém diffu zachytil vloženou tichou chybu (`\|\| true`) jako `pre-done`, ale nenašel chybějící test; podagenty nespustil; plugin zvedl kontext na startu o ~4k (84,4k → 88,4k) | jeden běh, nerozhoduje; `pre-done` stačí |
+| `episodic-memory` | paměť napříč session; překrývá se s `handover` | jen lokálně | nevyzkoušeno |
+| `claude-hud` | stavový panel, ukazuje zaplnění kontextu; hodí se jen při lokální práci | jen lokálně | nevyzkoušeno |
 
 `/revise-claude-md` navrhuje zápisy do `AGENTS.md`, `CLAUDE.md` nezakládá. S `handover` se potkává jen u poznatků ze session; `handover` píše do `docs/handover/`. Navržené změny posuzuj sám, plugin je nepřijímá za tebe.
 

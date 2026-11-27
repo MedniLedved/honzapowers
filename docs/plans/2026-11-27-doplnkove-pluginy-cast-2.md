@@ -8,6 +8,8 @@
 
 **Zdroj:** výsledky plánu `docs/plans/2026-11-27-doplnkove-pluginy.md` (sekce `## Výsledky pokusu`, ř. 110–129) a nové zjištění: v cloudové session se hookify nabízí jako skilly `hookify:hookify`, `hookify:list`, `hookify:configure`, `hookify:help`, `hookify:writing-rules` a agent `hookify:conversation-analyzer`. Hypotéza: plugin se načítá, volá se jako skill / `/hookify:hookify` (ne `/hookify`) a vyhodnocení pravidla hookem je samostatná otázka. Příčina minulého neúspěchu nebyla změřena (L9).
 
+**Stav provedení:** hotovo
+
 **Stav:** kontrola 2026-11-27: 4 nálezy (po sloučení), opraveno 4, otázky 0, zamítnuto 0.
 
 ## Globální omezení
@@ -97,7 +99,7 @@ Pokusná větev: `.claude/` v repu má dnes jen `kontrola-planu.md`; `.claude/se
 
 - [x] **Step 2: Hook (uživatel).** Nová cloudová session na větvi `pokus/hard-rule-test`. Zadat `Run: echo hook-rule-test` ⇒ zapsat, zda byl příkaz zablokován s textem `blocked by project hook`. Na otázky o commitu nebo PR: **ne**.
 - [x] **Step 3: Deny (uživatel).** V téže session `Run: echo deny-rule-test` ⇒ zapsat, zda byl příkaz odmítnut pravidlem oprávnění (citovat hlášku). Kontrola: `Run: echo neutral-test` proběhne.
-- [ ] **Step 4: Úklid.** Session zavřít; větev `pokus/hard-rule-test` smazat na GitHubu (Branches → Delete) ⇒ v seznamu větví není a `main` nemá `.claude/settings.json` (`git ls-tree main .claude/` ukáže jen `kontrola-planu.md`). *(session zavřena, větev na GitHubu zatím nesmazána: čeká na uživatele)*
+- [x] **Step 4: Úklid.** Session zavřít; větev `pokus/hard-rule-test` smazat na GitHubu (Branches → Delete) ⇒ v seznamu větví není a `main` nemá `.claude/settings.json` (`git ls-tree main .claude/` ukáže jen `kontrola-planu.md`). *(větev smazána, `git ls-remote --heads origin 'pokus/*'` je prázdné)*
 - [x] **Step 5: Verdikt a commit výsledků:** `docs(plans): výsledky pokusu s nativním hard pravidlem` (`git add` jen tohoto plánu). **Brána:** Step 6 až po tomto commitu.
 - [x] **Step 6: Test.** Za test z Task 1: `grep -q '\.claude/settings.json' "$REPO_ROOT/docs/pouziti.md" && grep -q 'permissions.deny' "$REPO_ROOT/docs/pouziti.md" && pass "pouziti: native hard rule" || fail "pouziti: no native hard rule"`. Pokud se mění `retro`, přidat i `grep -q 'cloud session.*settings.json' "$REPO_ROOT/skills/retro/SKILL.md" && pass "retro: native hard rule in cloud" || fail "retro: no native hard rule note"`.
 - [x] **Step 7:** `bash tests/test-components.sh` ⇒ nové testy `FAIL`.
@@ -123,11 +125,11 @@ Pokusná větev: `.claude/` v repu má dnes jen `kontrola-planu.md`; `.claude/se
 - [x] **Step 3: Dvě session (uživatel).** Dvě nové cloudové session na `pokus/review-test`, `pr-review-toolkit` zapnutý jen pro druhou. V první `Run pre-done on the diff against main.`, ve druhé `/pr-review-toolkit:review-pr`; v obou pak `retro` ⇒ zapsat počty nálezů, zda chytila `|| true`, a řádek `Context tokens` (`scripts/session-metrics:167`). Žádný nález neopravovat; otázky o commitu/PR: **ne**. Tokeny podagentů, které `retro` nevypíše: „nezměřeno“.
 - [x] **Step 4: Úklid.** Smazat větev `pokus/review-test` na GitHubu; `main` nemá `pokus/`.
 - [x] **Step 5: Commit výsledků** `docs(plans): výsledky souběžné revize` (jen tento plán). **Brána:** Step 6 až po tomto commitu.
-- [ ] **Step 6: Test.** `grep -q 'zaplnění kontextu' "$REPO_ROOT/docs/pouziti.md" && grep -q 'překrývá se s `handover`' "$REPO_ROOT/docs/pouziti.md" && pass "pouziti: claude-hud context fill" || fail "pouziti: no claude-hud context fill"`.
-- [ ] **Step 7:** `bash tests/test-components.sh` ⇒ `FAIL pouziti: no claude-hud context fill`.
-- [ ] **Step 8: Text (česky).** Řádek `claude-hud`: „ukazuje zaplnění kontextu; hodí se jen při lokální práci“. Řádek `episodic-memory`: doplnit „překrývá se s `handover`“. Řádek `pr-review-toolkit`: při testu naměřené výsledky ze Step 3 místo odhadu „víc agentů znamená víc tokenů“, jinak beze změny.
-- [ ] **Step 9:** `bash tests/run-tests.sh` ⇒ `ALL PASS`.
-- [ ] **Step 10: Commit** `docs(pouziti): upřesnění lokálních pluginů a revize` (+ řádek do `CHANGELOG.md` → `## Nepublikováno`), push na pracovní větev. Plán označit `**Stav provedení:** hotovo` v tomto commitu.
+- [x] **Step 6: Test.** `grep -q 'zaplnění kontextu' "$REPO_ROOT/docs/pouziti.md" && grep -q 'překrývá se s `handover`' "$REPO_ROOT/docs/pouziti.md" && pass "pouziti: claude-hud context fill" || fail "pouziti: no claude-hud context fill"`.
+- [x] **Step 7:** `bash tests/test-components.sh` ⇒ `FAIL pouziti: no claude-hud context fill`.
+- [x] **Step 8: Text (česky).** Řádek `claude-hud`: „ukazuje zaplnění kontextu; hodí se jen při lokální práci“. Řádek `episodic-memory`: doplnit „překrývá se s `handover`“. Řádek `pr-review-toolkit`: při testu naměřené výsledky ze Step 3 místo odhadu „víc agentů znamená víc tokenů“, jinak beze změny.
+- [x] **Step 9:** `bash tests/run-tests.sh` ⇒ `ALL PASS`.
+- [x] **Step 10: Commit** `docs(pouziti): upřesnění lokálních pluginů a revize` (+ řádek do `CHANGELOG.md` → `## Nepublikováno`), push na pracovní větev. Plán označit `**Stav provedení:** hotovo` v tomto commitu.
 
 ## Výsledky pokusu
 
@@ -156,7 +158,7 @@ Vedlejší zjištění: stop hook prostředí opakovaně žádal commit a push a
 | `permissions.deny` (`Bash(echo deny-rule-test:*)`) | ano, příkaz odmítnut | „oprávnění pro něj bylo zamítnuto“ (zamítací pravidlo oprávnění, ne hook) |
 | kontrola (`echo neutral-test`) | proběhl | „vypsal neutral-test“ |
 
-Větev `pokus/hard-rule-test` se z cloudové session na větvi jiné než `main` načetla (soubor `.claude/settings.json` zabral). Úklid: větev na GitHubu zatím existuje (`git ls-remote`), smaže ji uživatel; `origin/main` nemá `.claude/settings.json`.
+Větev `pokus/hard-rule-test` se z cloudové session na větvi jiné než `main` načetla (soubor `.claude/settings.json` zabral). Úklid: větev smazána; `origin/main` nemá `.claude/settings.json`.
 
 **Výsledek:** `hook: ano`, `deny: ano`.
 
