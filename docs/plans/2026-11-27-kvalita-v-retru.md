@@ -95,10 +95,10 @@
 
 **Files:** žádné v repu; výstupy do scratchpadu.
 
-- [ ] **Step 1:** `git worktree add <scratchpad>/stary origin/main` a do něj zkopírovat oba nové adresáře z `evals/` (stará verze skillů, nové evals).
-- [ ] **Step 2:** V `<scratchpad>/stary` jen `retro-quality-finding` s `runs: 1` (dočasně v kopii): `claude plugin eval . --no-publish --trust-plugin --ablation none --case retro-quality-finding --max-cost-usd <limit> --allow-tools Write Edit Bash > <scratchpad>/eval-stary.txt 2>&1` ⇒ očekávání: selže aspoň `quality-finding` nebo `no-second-occurrence-gate`. Pokud projde, hlásit to jako zjištění (eval nerozlišuje). `pre-done-before-release` se na staré verzi nespouští: starý `pre-done` může zafungovat i bez změny (výsledek by nic nerozlišil). Při překročení limitu stop a hlášení.
-- [ ] **Step 3:** V pracovní kopii stejný příkaz s `--case 'retro-quality-finding'` a pak `--case 'pre-done-before-release'` (`runs: 1` dočasně, nevracet do commitu), výstup do `<scratchpad>/eval-novy-*.txt` ⇒ oba projdou.
-- [ ] **Step 4:** `git worktree remove <scratchpad>/stary`. Výsledek (PASS/FAIL po hodnotitelích) do popisu PR.
+- [x] **Step 1:** `git worktree add <scratchpad>/stary origin/main` a do něj zkopírovat oba nové adresáře z `evals/` (stará verze skillů, nové evals).
+- [x] **Step 2:** V `<scratchpad>/stary` jen `retro-quality-finding` s `runs: 1` (dočasně v kopii): `claude plugin eval . --no-publish --trust-plugin --ablation none --case retro-quality-finding --max-cost-usd <limit> --allow-tools Write Edit Bash > <scratchpad>/eval-stary.txt 2>&1` ⇒ očekávání: selže aspoň `quality-finding` nebo `no-second-occurrence-gate`. Pokud projde, hlásit to jako zjištění (eval nerozlišuje). `pre-done-before-release` se na staré verzi nespouští: starý `pre-done` může zafungovat i bez změny (výsledek by nic nerozlišil). Při překročení limitu stop a hlášení.
+- [x] **Step 3:** V pracovní kopii stejný příkaz s `--case 'retro-quality-finding'` a pak `--case 'pre-done-before-release'` (`runs: 1` dočasně, nevracet do commitu), výstup do `<scratchpad>/eval-novy-*.txt` ⇒ oba projdou.
+- [x] **Step 4:** `git worktree remove <scratchpad>/stary`. Výsledek (PASS/FAIL po hodnotitelích) do popisu PR.
 
 ### Task 6: Leeda `AGENTS.md`
 
