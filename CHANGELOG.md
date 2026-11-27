@@ -1,6 +1,10 @@
 # Changelog
 
 ## Nepublikováno
+- **Přednost pravidel:** při střetu vyhrává projekt (`CLAUDE.md` / `AGENTS.md`), pak uživatelův `~/.claude/CLAUDE.md` a osobní pravidla, nakonec výchozí policy. Dřív první řádka policy jmenovala jen projekt.
+- **Připnutá instalace:** README nabízí připnutí na tag vydání (`#honzapowers--vX.Y.Z`) místo automatické synchronizace; `docs/vydani.md` vytváří tag i přes web GitHubu, bez `claude` CLI.
+- **`pre-done`:** každý nález Critical a Important se opravuje přes test, který kvůli němu nejdřív selže, s vlastním commitem opravy; potom nejvýš jedna opakovaná revize jen nad opravami.
+- `.claude/kontrola-planu.md`: nové kritérium o doslovných frázích v krocích plánu.
 
 ## 0.5.0 — 2026-11-26
 - **Kandidáti na poznatek:** `retro` a `handover` navrhnou nejvýš 3 poznatky ze session podle kritérií (opakovatelný, netriviální, konkrétní, ověřený) a rozhodovací tabulky (nový řádek, odkaz na starý, zastaralý). Kandidáti se ukládají i do `docs/retro/` projektu. Skill třídy `project` vznikne jen po výslovném souhlasu a až u opakovaného poznatku; obecné poznatky míří do přehledu `poznatky.md` v osobním pluginu (vyžaduje šablonu `honzapowers-sablona` 0.3.0, [PR šablony](https://github.com/MedniLedved/honzapowers-sablona/pull/8)). Policy beze změny, žádný automatický zápis. Nový eval `retro-lessons-no-write`. Inspirace: projekty Claudeception a continuous-learning-skill.
