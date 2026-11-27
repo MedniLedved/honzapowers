@@ -72,10 +72,10 @@
 - Modify: `docs/pouziti.md:6` (bod 3 „Před „hotovo““), `docs/pouziti.md:9` (bod 6)
 - Modify: `CHANGELOG.md` (sekce `## Nepublikováno`)
 
-- [ ] **Step 1:** README `pre-done`: „… dá před „hotovo“, PR nebo nevratným krokem (vydání, migrace do produkce) diff zkontrolovat …“. README `retro`: doplnit „Kromě ceny session zapíše i vadu, kterou nechytily testy (kdo ji chytil, zda ji chytil test, riziko).“
-- [ ] **Step 2:** `docs/pouziti.md` bod 3: doplnit „a také před vydáním nebo migrací do produkce, pokud se od poslední revize něco změnilo“. Bod 6: „`retro` změří jednu session (i vadu, kterou nechytily testy)…“.
-- [ ] **Step 3:** CHANGELOG pod `## Nepublikováno` tři odrážky (`retro`, `pre-done` + `skilly-kdy-ktery`, evals), bez jmen projektů.
-- [ ] **Step 4:** testy ⇒ `ALL PASS`. Commit `docs: retro s kvalitou, pre-done před nevratným krokem`.
+- [x] **Step 1:** README `pre-done`: „… dá před „hotovo“, PR nebo nevratným krokem (vydání, migrace do produkce) diff zkontrolovat …“. README `retro`: doplnit „Kromě ceny session zapíše i vadu, kterou nechytily testy (kdo ji chytil, zda ji chytil test, riziko).“
+- [x] **Step 2:** `docs/pouziti.md` bod 3: doplnit „a také před vydáním nebo migrací do produkce, pokud se od poslední revize něco změnilo“. Bod 6: „`retro` změří jednu session (i vadu, kterou nechytily testy)…“.
+- [x] **Step 3:** CHANGELOG pod `## Nepublikováno` tři odrážky (`retro`, `pre-done` + `skilly-kdy-ktery`, evals), bez jmen projektů.
+- [x] **Step 4:** testy ⇒ `ALL PASS`. Commit `docs: retro s kvalitou, pre-done před nevratným krokem`.
 
 ### Task 4: Evals
 
