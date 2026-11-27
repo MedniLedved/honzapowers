@@ -20,8 +20,8 @@ When unsure about the class, pick the higher one.
 ## 3. When each step is mandatory
 - **`kontrola-planu`:** after every `writing-plans`, before the first line of code. Not for trivial work.
 - **`verification-before-completion`:** always before claiming "done", before a commit and a PR: show the command and its output. Do not re-run passed tests without a new change.
-- **`pre-done`:** for architectural work and for a change that deletes or overwrites data or changes a shared interface. For other changes only on request or when the project requires it. It comes before a handover if code changed.
-- **`retro`:** only when the session was slow, expensive or went in circles, or on request. Always before a handover that mentions it.
+- **`pre-done`:** for architectural work and for a change that deletes or overwrites data or changes a shared interface. For other changes only on request or when the project requires it. It comes before a handover if code changed. Also before an irreversible step (a production release or a migration run against production) if the diff since the last `pre-done` contains such a change, even when the plan marks the step as no code.
+- **`retro`:** when the session was slow, expensive or went in circles, when a review or the user caught a defect the tests missed, or on request. Always before a handover that mentions it.
 - **`handover`:** end of the session, before `/clear`, with a large context or after a break of over an hour. **Never start it yourself**: propose it in one sentence ("`pre-done` and then a handover" if code changed) and wait for an explicit "yes". Commit and push the handover only after another yes.
 
 ## 4. Error or unexpected result

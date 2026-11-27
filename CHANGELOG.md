@@ -1,6 +1,9 @@
 # Changelog
 
 ## Nepublikováno
+- **`retro`:** vedle nálezů ceny umí nález typu *kvalita*: vadu, kterou nechytily testy a zachytila revize, uživatel nebo produkce. Doklad je `soubor:řádek` nebo commit, kdo vadu chytil, zda ji chytil test a zda mohla projít nevratným krokem; metrika není potřeba. Nález třídy `project` stačí s jedním výskytem (brána druhého projektu platí jen pro `general`).
+- **`pre-done`, `skilly-kdy-ktery`:** `pre-done` také před nevratným krokem (vydání, migrace do produkce), pokud diff od posledního `pre-done` obsahuje architektonickou změnu, mazání či přepis dat nebo změnu sdíleného rozhraní, i když plán krok označuje „žádný kód“. `retro` se navrhuje i po vadě, kterou nechytily testy. Policy beze změny.
+- **Evals:** `retro-quality-finding` (retro zapíše vadu zachycenou revizí) a `pre-done-before-release` (`pre-done` před vydáním).
 
 ## 0.7.0 — 2026-11-27
 - **`docs/pouziti.md`:** `pr-review-toolkit` podle souběžného testu s `pre-done` (jeden běh, obě zachytily vloženou tichou chybu); `episodic-memory` se překrývá s `handover`, `claude-hud` ukazuje zaplnění kontextu.
