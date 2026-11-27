@@ -30,6 +30,7 @@ grep -q "Never create a project \`CLAUDE.md\`" "$REPO_ROOT/skills/handover/SKILL
   || fail "handover: CLAUDE.md guardrail missing"
 grep -q "Never edit" "$REPO_ROOT/skills/retro/SKILL.md" && pass "retro: never edits rules" || fail "retro: no never-edit rule"
 grep -q "Never edit\|must not edit" "$REPO_ROOT/skills/pre-done/SKILL.md" && pass "pre-done: reviewer must not edit" || fail "pre-done: no must-not-edit rule"
+grep -qi 'silent failure' "$REPO_ROOT/skills/pre-done/SKILL.md" && grep -qi 'no test exercises' "$REPO_ROOT/skills/pre-done/SKILL.md" && pass "pre-done: reviewer focus" || fail "pre-done: no reviewer focus"
 grep -q "^L13 .*pre-done" "$REPO_ROOT/policy/policy.md" && pass "policy L13 points to pre-done" || fail "policy L13 does not mention pre-done"
 # paths the skills reference relative to their own directory
 for rel in scripts/session-metrics policy/policy.md docs/learnings.md; do
