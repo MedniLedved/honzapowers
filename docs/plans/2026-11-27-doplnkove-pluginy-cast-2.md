@@ -58,11 +58,11 @@ Prostředí: nová cloudová session v repu HP na `main`, hookify zapnutý (clau
 - [x] **Step 6: Úklid (uživatel).** Smazat soubor pravidla, `git status --short --ignored` ⇒ soubor tam není, pracovní strom čistý. Session zavřít bez commitu. *(nepotvrzeno, viz výsledky)*
 - [x] **Step 7: Verdikt** do `## Výsledky pokusu`: `funguje v cloudu` (varování v Step 5), jinak `v cloudu nefunguje` s příčinou podle Step 1–4 (plugin nezapnutý / hook neregistrovaný / chybí `python3` / pravidlo nevzniklo nebo je `disabled`), nebo `příčina nezměřena`.
 - [x] **Step 8: Commit výsledků** (prováděcí session): `git add docs/plans/2026-11-27-doplnkove-pluginy-cast-2.md`, `docs(plans): výsledky pokusu hookify v cloudu`. **Brána:** Step 9 až po tomto commitu.
-- [ ] **Step 9: Test.** Za řádek 110 přidat: ``grep -q '^| `hookify` .*\(funguje v cloudu\|v cloudu nefunguje\)' "$REPO_ROOT/docs/pouziti.md" && ! grep -q '^| `hookify` .*| jen lokálně |' "$REPO_ROOT/docs/pouziti.md" && pass "pouziti: hookify verdict measured" || fail "pouziti: hookify verdict not measured"``.
-- [ ] **Step 10:** `bash tests/test-components.sh` ⇒ `FAIL pouziti: hookify verdict not measured`.
-- [ ] **Step 11: Text (česky).** Řádek `hookify` v `docs/pouziti.md:49`: sloupec „Kde funguje“ podle Step 7 (v cloudu se volá `/hookify:hookify`, pokud to Step 3 ukázal; terminál: nevyzkoušeno), sloupec „Verdikt“ = verdikt ze Step 7 (bez důkazu „v cloudu nefunguje (příčina nezměřena), lokálně nevyzkoušeno“).
-- [ ] **Step 12:** `bash tests/run-tests.sh` ⇒ `ALL PASS`.
-- [ ] **Step 13: Commit** `docs(pouziti): verdikt hookify v cloudu podle měření` (+ řádek do `CHANGELOG.md` → `## Nepublikováno`).
+- [x] **Step 9: Test.** Za řádek 110 přidat: ``grep -q '^| `hookify` .*\(funguje v cloudu\|v cloudu nefunguje\)' "$REPO_ROOT/docs/pouziti.md" && ! grep -q '^| `hookify` .*| jen lokálně |' "$REPO_ROOT/docs/pouziti.md" && pass "pouziti: hookify verdict measured" || fail "pouziti: hookify verdict not measured"``.
+- [x] **Step 10:** `bash tests/test-components.sh` ⇒ `FAIL pouziti: hookify verdict not measured`.
+- [x] **Step 11: Text (česky).** Řádek `hookify` v `docs/pouziti.md:49`: sloupec „Kde funguje“ podle Step 7 (v cloudu se volá `/hookify:hookify`, pokud to Step 3 ukázal; terminál: nevyzkoušeno), sloupec „Verdikt“ = verdikt ze Step 7 (bez důkazu „v cloudu nefunguje (příčina nezměřena), lokálně nevyzkoušeno“).
+- [x] **Step 12:** `bash tests/run-tests.sh` ⇒ `ALL PASS`.
+- [x] **Step 13: Commit** `docs(pouziti): verdikt hookify v cloudu podle měření` (+ řádek do `CHANGELOG.md` → `## Nepublikováno`).
 
 ## Fáze 2 – příčka `hard` bez pluginu
 
@@ -102,9 +102,9 @@ Pokusná větev: `.claude/` v repu má dnes jen `kontrola-planu.md`; `.claude/se
 - [x] **Step 6: Test.** Za test z Task 1: `grep -q '\.claude/settings.json' "$REPO_ROOT/docs/pouziti.md" && grep -q 'permissions.deny' "$REPO_ROOT/docs/pouziti.md" && pass "pouziti: native hard rule" || fail "pouziti: no native hard rule"`. Pokud se mění `retro`, přidat i `grep -q 'cloud session.*settings.json' "$REPO_ROOT/skills/retro/SKILL.md" && pass "retro: native hard rule in cloud" || fail "retro: no native hard rule note"`.
 - [x] **Step 7:** `bash tests/test-components.sh` ⇒ nové testy `FAIL`.
 - [x] **Step 8: Text docs (česky).** V `docs/pouziti.md` za odstavcem začínajícím `Pokud pravidla hookify zkoušíš lokálně` odstavec „Tvrdé pravidlo bez pluginu“: hook a `permissions.deny` v `.claude/settings.json` repa, u každého naměřený výsledek z cloudu (Step 2–3; neměřené „nevyzkoušeno“), jedna věta srovnání s hookify podle Task 1. Bez pevného příkazu projektu.
-- [ ] **Step 9: Text retro (anglicky, jen při `ano` v Step 2 nebo 3).** V odrážce **Rung** za `a hookify rule only if the hookify plugin is installed` doplnit `; in a cloud session, a hook or deny rule in the repo's .claude/settings.json` jen pro prostředek, který fungoval. Fráze `only if the hookify plugin is installed` zůstává (test ř. 34).
-- [ ] **Step 10:** `bash tests/run-tests.sh` ⇒ `ALL PASS` (včetně 900 slov) a `claude plugin validate --strict .` bez chyby (nebo zelené CI na pracovní větvi).
-- [ ] **Step 11: Commit** `docs(pouziti): tvrdé pravidlo přes .claude/settings.json podle pokusu` (při změně `retro`: `feat(retro): nativní tvrdé pravidlo v cloudu`) + řádek do `CHANGELOG.md` → `## Nepublikováno`.
+- [x] **Step 9: Text retro (anglicky, jen při `ano` v Step 2 nebo 3).** V odrážce **Rung** za `a hookify rule only if the hookify plugin is installed` doplnit `; in a cloud session, a hook or deny rule in the repo's .claude/settings.json` jen pro prostředek, který fungoval. Fráze `only if the hookify plugin is installed` zůstává (test ř. 34).
+- [x] **Step 10:** `bash tests/run-tests.sh` ⇒ `ALL PASS` (včetně 900 slov) a `claude plugin validate --strict .` bez chyby (nebo zelené CI na pracovní větvi).
+- [x] **Step 11: Commit** `docs(pouziti): tvrdé pravidlo přes .claude/settings.json podle pokusu` (při změně `retro`: `feat(retro): nativní tvrdé pravidlo v cloudu`) + řádek do `CHANGELOG.md` → `## Nepublikováno`.
 
 ## Fáze 3 – revize a lokální pluginy
 
@@ -126,8 +126,8 @@ Pokusná větev: `.claude/` v repu má dnes jen `kontrola-planu.md`; `.claude/se
 - [x] **Step 6: Test.** `grep -q 'zaplnění kontextu' "$REPO_ROOT/docs/pouziti.md" && grep -q 'překrývá se s `handover`' "$REPO_ROOT/docs/pouziti.md" && pass "pouziti: claude-hud context fill" || fail "pouziti: no claude-hud context fill"`.
 - [x] **Step 7:** `bash tests/test-components.sh` ⇒ `FAIL pouziti: no claude-hud context fill`.
 - [x] **Step 8: Text (česky).** Řádek `claude-hud`: „ukazuje zaplnění kontextu; hodí se jen při lokální práci“. Řádek `episodic-memory`: doplnit „překrývá se s `handover`“. Řádek `pr-review-toolkit`: při testu naměřené výsledky ze Step 3 místo odhadu „víc agentů znamená víc tokenů“, jinak beze změny.
-- [ ] **Step 9:** `bash tests/run-tests.sh` ⇒ `ALL PASS`.
-- [ ] **Step 10: Commit** `docs(pouziti): upřesnění lokálních pluginů a revize` (+ řádek do `CHANGELOG.md` → `## Nepublikováno`), push na pracovní větev. Plán označit `**Stav provedení:** hotovo` v tomto commitu.
+- [x] **Step 9:** `bash tests/run-tests.sh` ⇒ `ALL PASS`.
+- [x] **Step 10: Commit** `docs(pouziti): upřesnění lokálních pluginů a revize` (+ řádek do `CHANGELOG.md` → `## Nepublikováno`), push na pracovní větev. Plán označit `**Stav provedení:** hotovo` v tomto commitu.
 
 ## Výsledky pokusu
 

@@ -46,7 +46,7 @@ Vedle HP můžeš zapnout další pluginy. Tabulka uvádí jen to, co ověřil p
 | Plugin | K čemu vedle HP | Kde funguje | Verdikt |
 |---|---|---|---|
 | `claude-md-management` | audit `CLAUDE.md` / `AGENTS.md` (`claude-md-improver`) a návrhy zápisu poznatků do souboru s pravidly (`/revise-claude-md`) | cloud: ano; terminál: nevyzkoušeno | doporučeno |
-| `hookify` | pravidla jako soubor `.claude/hookify.*.local.md`, např. varování před příkazem | cloud: ne (`/hookify` tam neexistuje, pravidlo se nespustilo); terminál: nevyzkoušeno | jen lokálně |
+| `hookify` | pravidla jako soubor `.claude/hookify.*.local.md`, např. varování před příkazem | cloud: volá se jako skill `/hookify:hookify`, pravidlo vznikne a je `enabled`, varování se ale při `echo` neukázalo; terminál: nevyzkoušeno | v cloudu nefunguje (příčina nezměřena), lokálně nevyzkoušeno |
 | `pr-review-toolkit` | revize změn více agenty; alternativa k revizoru z `pre-done`, víc agentů znamená víc tokenů | nevyzkoušeno | nevyzkoušeno |
 | `episodic-memory` | paměť napříč session | jen lokálně | nevyzkoušeno |
 | `claude-hud` | stavový panel | jen lokálně | nevyzkoušeno |

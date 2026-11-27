@@ -1,6 +1,7 @@
 # Changelog
 
 ## Nepublikováno
+- **`docs/pouziti.md`:** řádek `hookify` podle měření v cloudu: volá se `/hookify:hookify`, hooky jsou registrované a pravidlo vznikne, varování se ale neukázalo (příčina nezměřena).
 - **`docs/pouziti.md`:** nová sekce „Doplňkové pluginy“ s doporučením podle pokusu (`claude-md-management` doporučeno, `hookify` jen lokálně, ostatní nevyzkoušeno) a seznamem toho, co nedoporučujeme.
 - **`retro`:** příčka `hard` může mít podobu pravidla pluginu hookify, ale jen když je plugin nainstalovaný; jinak zůstává hook, deny pravidlo nebo skript.
 - **`pre-done`:** revizor hledá nejdřív tiché chyby (spolknutá chyba, široký catch, záloha skrývající selhání) a změněné chování, které žádný test nepokrývá; odpověď zůstává nejvýš 20 řádků.
