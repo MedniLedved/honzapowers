@@ -8,7 +8,7 @@
 
 **Zdroj:** rešerše doplňkových pluginů v této konverzaci (části A a B).
 
-**Stav:** nezkontrolováno.
+**Stav:** kontrola 2026-11-27: 7 nálezů (po sloučení), opraveno 6, otázky 0, zamítnuto 1; druhé kolo: 3 nálezy, opraveno 3.
 
 ## Globální omezení
 - `policy/policy.md` se nemění (max 3 200 znaků, výchozí policy mění jen ručně vydaná verze).
@@ -23,7 +23,7 @@
 ## Review Focus
 - `pre-done` s novým zaměřením: odpověď revizora zůstává nejvýš 20 řádků.
 - `retro` bez nainstalovaného hookify: návrh na příčce `hard` zůstává hook nebo skript, hookify se nenabízí.
-- Plugin se v cloudové session nenačte: verdikt „nefunguje v cloudu“, ne chyba plánu.
+- Plugin se v cloudové session nenačte: verdikt `jen lokálně`, ne chyba plánu.
 - Pokus s hookify nesmí spustit nic destruktivního: testovací vzor je neškodný `echo`.
 - Docs uvádějí jen to, co pokus ověřil; neověřené zůstává „nevyzkoušeno“.
 
@@ -34,6 +34,8 @@
 - Samoučící pluginy (claude-smart a podobné): mění pravidla bez souhlasu.
 - Revize plánu druhým modelem (Codex, Gemini): potřebuje další účet nebo klíč (G1, L6).
 - `episodic-memory`, `claude-hud`: fungují jen lokálně; ve fázi 3 jen zmínka, bez pokusu.
+- `plugin-dev`, `skill-creator`: HP už má `claude plugin eval` a případy v `evals/`; nic nepřidávají.
+- `code-review`, `pr-review-toolkit`: z nich je převzaté jen zaměření revizora (Task 1); ve fázi 3 zmínka „nevyzkoušeno“.
 
 ---
 
@@ -65,7 +67,7 @@
 - [ ] **Step 2:** `bash tests/test-components.sh` ⇒ `FAIL retro: no optional hookify`.
 - [ ] **Step 3: Text.** V odrážce **Rung** nahradit `` `hard` (hook, deny rule or script, 0 context tokens) `` za `` `hard` (hook, deny rule or script, 0 context tokens; a hookify rule only if the hookify plugin is installed) ``.
 - [ ] **Step 4:** `bash tests/run-tests.sh` ⇒ `ALL PASS` (včetně rozpočtu 900 slov) a `claude plugin validate --strict .` bez chyby.
-- [ ] **Step 5: Commit** `feat(retro): hookify jako volitelná podoba tvrdého pravidla` (+ řádek do CHANGELOG). Push na pracovní větev a draft PR.
+- [ ] **Step 5: Commit** `feat(retro): hookify jako volitelná podoba tvrdého pravidla` (+ řádek do CHANGELOG). Push na pracovní větev (draft PR #12 už existuje).
 
 ## Fáze 2 – pokus (uživatel; brána: pokračovat až po výsledcích)
 
@@ -77,12 +79,15 @@
 **Interfaces:**
 - Produces: tabulka `plugin | funguje v cloudu | funguje v terminálu | Context tokens: first (bez / s) | verdikt`, kterou čte Task 4.
 
-- [ ] **Step 1: Základ (uživatel).** Nová session v repu HP bez obou pluginů, první zpráva `Jaká pravidla máš na začátku session?`, pak `retro` ⇒ zapsat hodnotu `Context tokens: first`.
-- [ ] **Step 2: Instalace (uživatel).** claude.ai → Customize → Plugins → oficiální marketplace → zapnout `claude-md-management` a `hookify`.
-- [ ] **Step 3: Stejná session s pluginy**, stejná první zpráva, `retro` ⇒ zapsat `Context tokens: first`.
+Prostředí: povinně cloudová session (claude.ai/code) v repu HP; terminál volitelně. Co se nezměří, má v tabulce `nevyzkoušeno`; to platí i pro `retro`, které hodnotu `Context tokens: first` nevypíše.
+
+- [ ] **Step 1: Základ (uživatel).** Dvě nové session bez obou pluginů, v každé první zpráva `Jaká pravidla máš na začátku session?`, pak `retro` ⇒ zapsat obě hodnoty `Context tokens: first` a jejich průměr.
+- [ ] **Step 2: Instalace (uživatel).** claude.ai → Customize → Plugins → oficiální marketplace → zapnout `claude-md-management` a `hookify`. Pluginy se načtou až v nové session.
+- [ ] **Step 3: S pluginy.** Dvě **nové** session, stejná první zpráva, `retro` ⇒ zapsat obě hodnoty a průměr.
 - [ ] **Step 4: claude-md-improver.** Zadat `audit my CLAUDE.md files` ⇒ zapsat, zda najde a ohodnotí `AGENTS.md` (HP nemá CLAUDE.md). Žádnou navrženou změnu nepřijímat.
-- [ ] **Step 5: hookify.** Zadat `/hookify warn when a Bash command contains echo hookify-test`, pak spustit `echo hookify-test` ⇒ zapsat, zda se varování objevilo. Pravidlo pak odstranit (`/hookify:list`, smazat jeho soubor).
-- [ ] **Step 6: Verdikt** pro každý plugin: `doporučeno` (funguje a `Context tokens: first` vzroste nejvýš o 2k), `jen lokálně`, nebo `nedoporučeno` (s důvodem). Commit výsledků do plánu.
+- [ ] **Step 5: `/revise-claude-md`.** Spustit jednou na konci session ⇒ zapsat, kam navrhuje zapisovat a jestli se překrývá s `handover`. Žádnou změnu nepřijímat.
+- [ ] **Step 6: hookify.** Zadat `/hookify warn when a Bash command contains echo hookify-test`, pak spustit `echo hookify-test` ⇒ zapsat, zda se varování objevilo a jakou cestu má soubor pravidla (`git status --short`). Pravidlo odstranit (`/hookify:list`, smazat soubor) a `git status --short --ignored` ⇒ soubor pravidla tam není.
+- [ ] **Step 7: Verdikt** pro každý plugin: `doporučeno` (funguje a průměr `Context tokens: first` vzroste nejvýš o 2k), `jen lokálně`, nebo `nedoporučeno` (s důvodem). Commit jen tohoto plánu (`git add docs/plans/2026-11-27-doplnkove-pluginy.md`).
 
 ## Fáze 3 – doporučení v docs
 
@@ -90,13 +95,13 @@
 
 **Files:**
 - Modify: `docs/pouziti.md` (nová sekce před `## Co plugin nedělá`), `CHANGELOG.md`
-- Test: `tests/test-components.sh` (vedle řádku 107)
+- Test: `tests/test-components.sh` (za test `pouziti: S3 reserved note`)
 
 **Interfaces:**
 - Consumes: tabulka z Task 3.
 
 - [ ] **Step 1: Test.** `grep -q '^## Doplňkové pluginy' "$REPO_ROOT/docs/pouziti.md" && grep -q 'claude-md-management' "$REPO_ROOT/docs/pouziti.md" && pass "pouziti: companion plugins" || fail "pouziti: no companion plugins"`.
 - [ ] **Step 2:** `bash tests/test-components.sh` ⇒ `FAIL pouziti: no companion plugins`.
-- [ ] **Step 3: Text (česky).** Tabulka `Plugin | K čemu vedle HP | Kde funguje | Verdikt` s řádky `claude-md-management`, `hookify`, `pr-review-toolkit` (nevyzkoušeno; alternativa revizora `pre-done`, víc agentů = víc tokenů), `episodic-memory` a `claude-hud` (jen lokálně, nevyzkoušeno). Pod ní odstavec „Nedoporučujeme“ (claude-mem, context-mode, samoučící pluginy) s důvody ze sekce „Co do plánu nepatří“. U `claude-md-management` jedna věta o pořadí: `/revise-claude-md` před `handover`, protože handover nese stav práce a ne pravidla.
+- [ ] **Step 3: Text (česky).** Tabulka `Plugin | K čemu vedle HP | Kde funguje | Verdikt` s řádky `claude-md-management`, `hookify`, `pr-review-toolkit` (nevyzkoušeno; alternativa revizora `pre-done`, víc agentů = víc tokenů), `episodic-memory` a `claude-hud` (jen lokálně, nevyzkoušeno). Pod ní odstavec „Nedoporučujeme“ (claude-mem, context-mode, samoučící pluginy) s důvody ze sekce „Co do plánu nepatří“. U `claude-md-management` jedna věta o vztahu `/revise-claude-md` a `handover` podle Task 3 Step 5 (bez výsledku věta odpadá).
 - [ ] **Step 4:** `bash tests/run-tests.sh` ⇒ `ALL PASS`.
 - [ ] **Step 5: Commit** `docs(pouziti): doplňkové pluginy podle pokusu` (+ řádek do CHANGELOG), push na pracovní větev.
