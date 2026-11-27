@@ -118,8 +118,8 @@ Pokusná větev: `.claude/` v repu má dnes jen `kontrola-planu.md`; `.claude/se
 **Interfaces:**
 - Produces: tabulka `revize | nálezy (Critical/Important/Minor) | zachycená vložená chyba | Context tokens: first / max` (jen při souhlasu).
 
-- [ ] **Step 1: Brána (uživatel).** Zeptat se: „Chcete souběžný test `pre-done` proti `pr-review-toolkit`?“ Při **ne** přeskočit na Step 6; řádek `pr-review-toolkit` zůstane „nevyzkoušeno“.
-- [ ] **Step 2: Diff.** Větev `pokus/review-test` z `main` (push mimo pracovní větev jen po výslovném souhlasu uživatele) s jedním vymyšleným souborem `pokus/review.sh` (~10 řádků) s vloženou tichou chybou (`cmd || true` spolkne selhání) a bez testu; push, **bez PR**.
+- [x] **Step 1: Brána (uživatel).** Zeptat se: „Chcete souběžný test `pre-done` proti `pr-review-toolkit`?“ Při **ne** přeskočit na Step 6; řádek `pr-review-toolkit` zůstane „nevyzkoušeno“.
+- [x] **Step 2: Diff.** Větev `pokus/review-test` z `main` (push mimo pracovní větev jen po výslovném souhlasu uživatele) s jedním vymyšleným souborem `pokus/review.sh` (~10 řádků) s vloženou tichou chybou (`cmd || true` spolkne selhání) a bez testu; push, **bez PR**.
 - [ ] **Step 3: Dvě session (uživatel).** Dvě nové cloudové session na `pokus/review-test`, `pr-review-toolkit` zapnutý jen pro druhou. V první `Run pre-done on the diff against main.`, ve druhé `/pr-review-toolkit:review-pr`; v obou pak `retro` ⇒ zapsat počty nálezů, zda chytila `|| true`, a řádek `Context tokens` (`scripts/session-metrics:167`). Žádný nález neopravovat; otázky o commitu/PR: **ne**. Tokeny podagentů, které `retro` nevypíše: „nezměřeno“.
 - [ ] **Step 4: Úklid.** Smazat větev `pokus/review-test` na GitHubu; `main` nemá `pokus/`.
 - [ ] **Step 5: Commit výsledků** `docs(plans): výsledky souběžné revize` (jen tento plán). **Brána:** Step 6 až po tomto commitu.
