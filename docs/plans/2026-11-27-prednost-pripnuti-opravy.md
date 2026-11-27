@@ -1,5 +1,7 @@
 # Přednost pravidel, připnutá instalace a opravy přes test – plán
 
+**Stav:** kontrola 2026-11-27: 8 nálezů, opraveno 7, otázky 0, zamítnuto 1.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans (inline, S1) to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Tři úpravy z porovnání s jiným nastavením: uživatelův vlastní CLAUDE.md má přednost před výchozí policy, README nabízí připnutou instalaci a vydání dostávají tag, `pre-done` opravuje nálezy přes test.
@@ -18,7 +20,7 @@
 - Před pushem `bash tests/run-tests.sh` ⇒ `ALL PASS`.
 
 ## Review Focus
-1. Pořadí přednosti musí v policy, `docs/pouziti.md` a README říkat totéž (projekt > uživatel > výchozí policy).
+1. Pořadí přednosti musí v policy a `docs/pouziti.md` říkat totéž (projekt > uživatel > výchozí policy); README o přednosti nemluví a nemění se.
 2. Připnutá instalace nesmí slibovat syntaxi, kterou Claude Code nepodporuje – jen ověřený zápis z dokumentace.
 3. Opravy přes test v `pre-done` nesmí vynutit pevný testovací příkaz projektu (pravidlo AGENTS.md) ani commit tam, kde ho projekt nebo lokální session nedovoluje.
 4. Druhé kolo revize je nejvýš jedno (úspornost); `pre-done` nesmí sklouznout k smyčce.
@@ -39,7 +41,7 @@
   grep -q '~/.claude/CLAUDE.md' "$REPO_ROOT/docs/pouziti.md" && pass "pouziti: user CLAUDE.md layer" || fail "pouziti: no user CLAUDE.md layer"
   ```
 - [ ] **Step 2:** `bash tests/run-tests.sh 2>&1 | grep -E 'FAIL|ALL PASS'` ⇒ obě nové řádky FAIL.
-- [ ] **Step 3:** První řádek policy přesně:
+- [ ] **Step 3:** První řádek policy přesně (fráze `standing rules` musí zůstat, hledá ji `tests/test-session-start.sh:9`):
   `The user's standing rules (honzapowers policy; on a clash the project's CLAUDE.md/AGENTS.md win, then the user's own ~/.claude/CLAUDE.md and personal rules):`
 - [ ] **Step 4:** `docs/pouziti.md` bod 2: doplnit, že do uživatelské vrstvy patří i `~/.claude/CLAUDE.md` a že obojí vyhrává nad výchozí policy. Bod 3: „vyhrává projekt, pak uživatel; stojí to v první řádce policy“.
 - [ ] **Step 5:** `bash tests/run-tests.sh 2>&1 | grep -E 'FAIL|ALL PASS'` ⇒ `ALL PASS`; `wc -c policy/policy.md` ≤ 3200.
@@ -59,8 +61,8 @@
     && pass "README/vydani: tag honzapowers--vX.Y.Z, web path" || fail "README/vydani: tag name or web path"
   ```
 - [ ] **Step 2:** testy ⇒ obě FAIL.
-- [ ] **Step 3:** README, za odstavec o Sync automatically: podsekce `### Připnutá verze` – kdy ji chtít (chceš aktualizace nejdřív vidět; hooky běží bez dotazu). Zápis v Claude Code: `/plugin marketplace add MedniLedved/honzapowers#honzapowers--v0.6.0` (dokumentace: „Add `#ref` to pin a branch or tag“). Na novou verzi přejdeš přidáním nového tagu. Automatické aktualizace marketplace jdou vypnout v `/plugin` → záložka Marketplaces. Na claude.ai není připnutí ověřené: tam místo toho fork a synchronizace z něj.
-- [ ] **Step 4:** `docs/vydani.md` bod 4: po merge a zeleném CI tag `honzapowers--vX.Y.Z` (stejný tvar jako `claude plugin tag`) na commitu v `main`, přes GitHub web (Releases → Draft a new release → nový tag, cíl `main`) nebo `git tag -a honzapowers--vX.Y.Z -m "honzapowers X.Y.Z" <sha> && git push origin honzapowers--vX.Y.Z`; `claude plugin tag --push` jen jako alternativa pro terminál. Test kroku 1 hledá `honzapowers--v` v README i ve `vydani.md` a `Releases` ve `vydani.md`.
+- [ ] **Step 3:** README, za odstavec o Sync automatically: podsekce `### Připnutá verze` – kdy ji chtít (chceš aktualizace nejdřív vidět; hooky běží bez dotazu). Zápis v Claude Code: `/plugin marketplace add MedniLedved/honzapowers#honzapowers--vX.Y.Z`, kde `X.Y.Z` je existující tag ze stránky https://github.com/MedniLedved/honzapowers/tags (dokumentace: „Add `#ref` to pin a branch or tag“). Na novou verzi: `/plugin marketplace remove honzapowers` a znovu `add` s novým tagem. Automatické aktualizace marketplace jdou vypnout v `/plugin` → záložka Marketplaces. Na claude.ai není připnutí ověřené: tam místo toho fork a synchronizace z něj.
+- [ ] **Step 4:** `docs/vydani.md` bod 4: zachovat „nevratné“ (push tagu nejde vzít zpět). Před tagem ověřit, že verze v `plugin.json` a `marketplace.json` je `X.Y.Z` a že `<sha>` je commit v `main` se zeleným CI. Pak tag `honzapowers--vX.Y.Z` (stejný tvar jako `claude plugin tag`) na commitu v `main`, přes GitHub web (Releases → Draft a new release → nový tag, cíl `main`) nebo `git tag -a honzapowers--vX.Y.Z -m "honzapowers X.Y.Z" <sha> && git push origin honzapowers--vX.Y.Z`; `claude plugin tag --push` jen jako alternativa pro terminál. Test kroku 1 hledá `honzapowers--v` v README i ve `vydani.md` a `Releases` ve `vydani.md`.
 - [ ] **Step 5:** testy ⇒ `ALL PASS`.
 - [ ] **Step 6:** Commit `docs: připnutá instalace a tag vydání přes web`.
 
@@ -78,7 +80,15 @@
     && pass "pre-done: test-first fixes, one re-review" || fail "pre-done: no test-first fix rule"
   ```
 - [ ] **Step 2:** testy ⇒ FAIL.
-- [ ] **Step 3:** Řádek 21 nahradit (anglicky, ≤ 6 řádků): pro každý nález Critical/Important nejdřív test, který kvůli nálezu selže, a to projektovým způsobem testování (bez pevného příkazu); když nález testem ukázat nejde (text, konfigurace), řekni to. Pak oprava, ten test projde, oprava v samostatném commitu, pokud session commituje (pravidla gitu projektu mají přednost). Potom nejvýš jedna opakovaná revize jen nad commity oprav; co zbude, jde do reportu, třetí kolo ne. Řádek 22 („Do not re-run unrelated passed tests.“) zůstává.
+- [ ] **Step 3:** Řádek 21 nahradit doslova (řádek 22 „Do not re-run unrelated passed tests.“ zůstává):
+  ```text
+  For each Critical or Important finding: first add a test that fails because of the finding,
+  in the project's own way of testing (if no test can show it, e.g. wording or config, say so).
+  Then fix it, see that test pass, and commit the fix on its own if the session commits
+  (the project's git rules win). Then run at most one re-review, on the fix changes only
+  (their commits, or `git diff` of the files the fixes touched); report what is left and
+  never start a third round.
+  ```
 - [ ] **Step 4:** testy ⇒ `ALL PASS`; jazykový test (`czech_prose`) bez nálezu.
 - [ ] **Step 5:** Commit `feat(pre-done): opravy nálezů přes test, nejvýš jedno opakování`.
 
