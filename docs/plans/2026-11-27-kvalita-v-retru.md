@@ -6,6 +6,8 @@
 
 **Architecture:** Jen text skillů `retro`, `skilly-kdy-ktery`, `pre-done`, uživatelské popisy v `README.md` a `docs/pouziti.md`, dva nové evals. Každou změnu skillu hlídá statický test v `tests/test-components.sh` (blok „Rules agree with each other“). Projektový řádek do `AGENTS.md` repa Leeda je samostatný úkol v jiném repu. Vydání verze je samostatná fáze po merge (není v tomto plánu).
 
+**Stav:** kontrola 2026-11-27: 10 nálezů (po sloučení 8), opraveno 5, otázky 2, zamítnuto 1.
+
 **Tech Stack:** Markdown, bash testy (`tests/run-tests.sh`), `claude plugin eval` / `claude plugin validate`.
 
 **Spec:** zadání v chatu 2026-11-27 („B (1,2,3), do agents leedy ten z handoveru“) a diff, který mu předcházel.
@@ -41,7 +43,7 @@
 - [ ] **Step 3:** `description` přesně: `Use when the user asks for a retro, a session review, or an analysis of why a session was slow, expensive or token-heavy or let a defect slip past the tests, to measure it with session-metrics and propose classified, evidence-backed improvements without changing any rules.` (273 znaků).
 - [ ] **Step 4:** Úvod: `Turn measured session numbers, and defects that slipped past the tests, into at most 5 improvement proposals.` (zbytek odstavce beze změny).
 - [ ] **Step 5:** V `## 2. Findings (at most 5)` před „For each finding give:“ vložit: `Two kinds. A **cost** finding comes from the metrics. A **quality** finding is a defect that the tests missed and a review, the user or production caught in this session: list each one first; it needs no metric.` Odrážku Evidence nahradit: `- **Evidence**: cost: the metric with its number and `line:N`; quality: `file:line` or the commit of the defect, who caught it, whether a test caught it, and whether it could have reached an irreversible step (a release, a migration, a data change) before it was caught.`
-- [ ] **Step 6:** V `## 3. Promotion gate` za odstavec končící „…shorten another one.“ přidat řádek: `A `project` finding needs one occurrence: propose it in this retro.`
+- [ ] **Step 6:** V `## 3. Promotion gate` za odstavec končící „…shorten another one.“ přidat řádek: `A `project` finding needs one occurrence (unlike `general`, no second project is needed): propose it in this retro.`
 - [ ] **Step 7:** `bash tests/run-tests.sh 2>&1 | grep -E 'FAIL|ALL PASS'` ⇒ `ALL PASS`.
 - [ ] **Step 8:** Commit `feat(retro): nález typu kvalita, u project stačí jeden výskyt`.
 
@@ -58,7 +60,7 @@
   grep -qi 'irreversible step' <<<"$(frontmatter "$S/pre-done/SKILL.md" description)" && pass "pre-done: description names irreversible step" || fail "pre-done: description lacks irreversible step"
   ```
 - [ ] **Step 2:** testy ⇒ dvě nové řádky FAIL.
-- [ ] **Step 3:** `skilly-kdy-ktery`, odrážka `pre-done`: na konec doplnit `Also before an irreversible step (a production release, a migration run or handed over for production) if the diff since the last `pre-done` is not empty, even when the plan marks the step as no code.` Odrážka `retro` přesně: `- **`retro`:** when the session was slow, expensive or went in circles, when a review or the user caught a defect the tests missed, or on request. Always before a handover that mentions it.`
+- [ ] **Step 3:** `skilly-kdy-ktery`, odrážka `pre-done`: na konec doplnit `Also before an irreversible step (a production release or a migration run against production) if the diff since the last `pre-done` is not empty, even when the plan marks the step as no code.` Odrážka `retro` přesně: `- **`retro`:** when the session was slow, expensive or went in circles, when a review or the user caught a defect the tests missed, or on request. Always before a handover that mentions it.`
 - [ ] **Step 4:** `pre-done` `description` přesně: `Use when about to claim done, open a PR or take an irreversible step (production release, migration) on architectural work, data deletion or a shared interface change (see skilly-kdy-ktery), to have a fresh-context reviewer check the diff and walk UI flows. Not for trivial or docs-only changes.` (295 znaků). V úvodu `Run this once, right before "done".` → `Run this once, right before "done", a PR or an irreversible step.`
 - [ ] **Step 5:** testy ⇒ `ALL PASS`.
 - [ ] **Step 6:** Commit `feat(pre-done): také před vydáním a migrací do produkce; retro po vadě, kterou testy nechytily`.
@@ -94,8 +96,8 @@
 **Files:** žádné v repu; výstupy do scratchpadu.
 
 - [ ] **Step 1:** `git worktree add <scratchpad>/stary origin/main` a do něj zkopírovat oba nové adresáře z `evals/` (stará verze skillů, nové evals).
-- [ ] **Step 2:** V `<scratchpad>/stary`: oba evals s `runs: 1` (dočasně v kopii), výstup do souboru ⇒ očekávání: `retro-quality-finding` selže aspoň v `quality-finding` nebo `no-second-occurrence-gate`. Výsledek zapsat; pokud projde, hlásit to uživateli jako zjištění (eval nerozlišuje).
-- [ ] **Step 3:** Totéž v pracovní kopii (nová verze) ⇒ oba evals projdou.
+- [ ] **Step 2:** V `<scratchpad>/stary` jen `retro-quality-finding` s `runs: 1` (dočasně v kopii): `claude plugin eval . --no-publish --trust-plugin --ablation none --case retro-quality-finding --max-cost-usd <limit> --allow-tools Write Edit Bash > <scratchpad>/eval-stary.txt 2>&1` ⇒ očekávání: selže aspoň `quality-finding` nebo `no-second-occurrence-gate`. Pokud projde, hlásit to jako zjištění (eval nerozlišuje). `pre-done-before-release` se na staré verzi nespouští: starý `pre-done` může zafungovat i bez změny (výsledek by nic nerozlišil). Při překročení limitu stop a hlášení.
+- [ ] **Step 3:** V pracovní kopii stejný příkaz s `--case 'retro-quality-finding'` a pak `--case 'pre-done-before-release'` (`runs: 1` dočasně, nevracet do commitu), výstup do `<scratchpad>/eval-novy-*.txt` ⇒ oba projdou.
 - [ ] **Step 4:** `git worktree remove <scratchpad>/stary`. Výsledek (PASS/FAIL po hodnotitelích) do popisu PR.
 
 ### Task 6: Leeda `AGENTS.md`
@@ -103,7 +105,7 @@
 **Files:**
 - Modify: `/home/user/objednavkovy-system-leeda/AGENTS.md` (sekce `## Větve a prostředí`, věta „Před vydáním zelené CI na `dev`, pak fast-forward push“)
 
-- [ ] **Step 1:** `add_repo` Leeda s `access: "push"`; v klonu `git fetch --depth=1 origin dev && git checkout -b claude/magical-lamport-ihk06w FETCH_HEAD`.
+- [ ] **Step 1:** `add_repo` Leeda s `access: "push"` (uživatel to pro zápis výslovně určil); klon zůstává `/home/user/objednavkovy-system-leeda`. V něm `git fetch --depth=1 origin dev && git checkout -b claude/magical-lamport-ihk06w FETCH_HEAD` a `grep -n 'Před vydáním zelené CI na `dev`, pak fast-forward push' AGENTS.md` ⇒ právě jeden řádek (na `dev` ověřeno 2026-11-27, ř. 29).
 - [ ] **Step 2:** Větu nahradit (varianta z handoveru 2026-11-27): „Před vydáním zelené CI na `dev` a proběhlý `honzapowers:pre-done` nad diffem projektu (i když ho plán označuje „žádný kód“), pak fast-forward push“.
 - [ ] **Step 3:** `wc -l AGENTS.md` < 200; `git diff --stat` ⇒ jen `AGENTS.md`.
 - [ ] **Step 4:** Commit `docs(agents): pre-done před vydáním dev → main`, push, draft PR do `dev`. Nesloučit (sloučí uživatel).
@@ -111,5 +113,5 @@
 ### Task 7: PR pluginu
 
 - [ ] **Step 1:** `bash tests/run-tests.sh` ⇒ `ALL PASS`; `claude plugin validate --strict .` ⇒ bez chyb.
-- [ ] **Step 2:** Odškrtnout úkoly, do záhlaví `**Stav provedení:** hotovo, PR <odkaz> (nevydáno)`; commit s plánem.
-- [ ] **Step 3:** Push na `claude/magical-lamport-ihk06w`, draft PR do `main` (šablona PR, pokud existuje); v popisu výsledek Task 5. Sledovat PR.
+- [ ] **Step 2:** Push na `claude/magical-lamport-ihk06w`, draft PR do `main` (šablona PR, pokud existuje); v popisu výsledek Task 5. Sledovat PR.
+- [ ] **Step 3:** Odškrtnout úkoly, do záhlaví `**Stav provedení:** hotovo, PR <odkaz ze Step 2> (nevydáno)`; commit s plánem a push.
