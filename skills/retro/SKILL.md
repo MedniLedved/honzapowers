@@ -21,7 +21,7 @@ and do not quote their content in the retro.
 ## 2. Findings (at most 5)
 Two kinds. A **cost** finding comes from the metrics. A **quality** finding is a defect
 that the tests missed and a review, the user or production caught in this session:
-list each one first; it needs no metric.
+list each one first; it needs no metric. Quality findings count toward the 5; if the metrics show a cost finding, keep at least one.
 
 For each finding give:
 - **Evidence**: cost: the metric with its number and `line:N`; quality: `file:line` or the

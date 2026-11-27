@@ -4,7 +4,7 @@
 
 **Goal:** Tři úpravy po incidentu v jednom projektu (vada zachycená revizí, kterou testy nechytily; vydání bez `pre-done`): (1) `retro` umí nález typu *kvalita* bez metriky, (2) nález třídy `project` stačí s jedním výskytem, (3) `pre-done` se váže i na nevratný krok (vydání, migrace do produkce). Policy beze změny.
 
-**Architecture:** Jen text skillů `retro`, `skilly-kdy-ktery`, `pre-done`, uživatelské popisy v `README.md` a `docs/pouziti.md`, dva nové evals. Každou změnu skillu hlídá statický test v `tests/test-components.sh` (blok „Rules agree with each other“). Projektový řádek do `AGENTS.md` repa Leeda je samostatný úkol v jiném repu. Vydání verze je samostatná fáze po merge (není v tomto plánu).
+**Architecture:** Jen text skillů `retro`, `skilly-kdy-ktery`, `pre-done`, uživatelské popisy v `README.md` a `docs/pouziti.md`, dva nové evals. Každou změnu skillu hlídá statický test v `tests/test-components.sh` (blok „Rules agree with each other“). Projektový řádek do `AGENTS.md` projektového repa je samostatný úkol v jiném repu. Vydání verze je samostatná fáze po merge (není v tomto plánu).
 
 **Stav:** kontrola 2026-11-27: 10 nálezů (po sloučení 8), opraveno 5, otázky 2, zamítnuto 1.
 
@@ -100,12 +100,12 @@
 - [x] **Step 3:** V pracovní kopii stejný příkaz s `--case 'retro-quality-finding'` a pak `--case 'pre-done-before-release'` (`runs: 1` dočasně, nevracet do commitu), výstup do `<scratchpad>/eval-novy-*.txt` ⇒ oba projdou.
 - [x] **Step 4:** `git worktree remove <scratchpad>/stary`. Výsledek (PASS/FAIL po hodnotitelích) do popisu PR.
 
-### Task 6: Leeda `AGENTS.md`
+### Task 6: `AGENTS.md` projektového repa
 
 **Files:**
-- Modify: `/home/user/objednavkovy-system-leeda/AGENTS.md` (sekce `## Větve a prostředí`, věta „Před vydáním zelené CI na `dev`, pak fast-forward push“)
+- Modify: `AGENTS.md` projektového repa, větev `dev` (sekce `## Větve a prostředí`, věta „Před vydáním zelené CI na `dev`, pak fast-forward push“)
 
-- [x] **Step 1:** `add_repo` Leeda s `access: "push"` (uživatel to pro zápis výslovně určil); klon zůstává `/home/user/objednavkovy-system-leeda`. V něm `git fetch --depth=1 origin dev && git checkout -b claude/magical-lamport-ihk06w FETCH_HEAD` a `grep -n 'Před vydáním zelené CI na `dev`, pak fast-forward push' AGENTS.md` ⇒ právě jeden řádek (na `dev` ověřeno 2026-11-27, ř. 29).
+- [x] **Step 1:** `add_repo` projektového repa s `access: "push"` (uživatel to pro zápis výslovně určil). V jeho klonu `git fetch --depth=1 origin dev && git checkout -b claude/magical-lamport-ihk06w FETCH_HEAD` a `grep -n 'Před vydáním zelené CI na `dev`, pak fast-forward push' AGENTS.md` ⇒ právě jeden řádek (na `dev` ověřeno 2026-11-27, ř. 29).
 - [x] **Step 2:** Větu nahradit (varianta z handoveru 2026-11-27): „Před vydáním zelené CI na `dev` a proběhlý `honzapowers:pre-done` nad diffem projektu (i když ho plán označuje „žádný kód“), pak fast-forward push“.
 - [x] **Step 3:** `wc -l AGENTS.md` < 200; `git diff --stat` ⇒ jen `AGENTS.md`.
 - [x] **Step 4:** Commit `docs(agents): pre-done před vydáním dev → main`, push, draft PR do `dev`. Nesloučit (sloučí uživatel).

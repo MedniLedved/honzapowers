@@ -116,6 +116,8 @@ grep -qi 'slip past the tests' <<<"$(frontmatter "$S/retro/SKILL.md" description
 sed -n '/^## 3\. Promotion gate/,/^## 4/p' "$S/retro/SKILL.md" | grep -qF 'A `project` finding needs one occurrence' && pass "retro: project finding needs one occurrence" || fail "retro: no one-occurrence rule for project"
 grep -qF 'Also before an irreversible step' "$S/skilly-kdy-ktery/SKILL.md" && grep -qF 'caught a defect the tests missed' "$S/skilly-kdy-ktery/SKILL.md" && pass "skilly-kdy-ktery: pre-done before irreversible step, retro after missed defect" || fail "skilly-kdy-ktery: no irreversible step or missed-defect retro"
 grep -qi 'irreversible step' <<<"$(frontmatter "$S/pre-done/SKILL.md" description)" && pass "pre-done: description names irreversible step" || fail "pre-done: description lacks irreversible step"
+grep -qF 'count toward the 5' "$S/retro/SKILL.md" && pass "retro: quality findings count toward the cap" || fail "retro: quality findings may crowd out the cap"
+grep -F 'Skill `pre-done`' "$REPO_ROOT/README.md" | grep -qF 'pokud od poslední revize přibyla taková změna' && pass "README: pre-done before irreversible step is conditional" || fail "README: pre-done before every release"
 grep -q 'zaplnění kontextu' "$REPO_ROOT/docs/pouziti.md" && grep -q 'překrývá se s `handover`' "$REPO_ROOT/docs/pouziti.md" && pass "pouziti: claude-hud context fill" || fail "pouziti: no claude-hud context fill"
 for h in "## Požadavky" "## Instalace" "## Ověření" "## Návrat zpět" "## Jak pracovat"; do grep -q "^$h" "$REPO_ROOT/README.md" && pass "README: $h" || fail "README: chybí $h"; done
 grep -q "Git Bash" "$REPO_ROOT/README.md" && pass "README: Git Bash" || fail "README: chybí Git Bash"
