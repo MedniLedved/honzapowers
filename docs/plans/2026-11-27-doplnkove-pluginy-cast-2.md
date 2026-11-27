@@ -120,9 +120,9 @@ Pokusná větev: `.claude/` v repu má dnes jen `kontrola-planu.md`; `.claude/se
 
 - [x] **Step 1: Brána (uživatel).** Zeptat se: „Chcete souběžný test `pre-done` proti `pr-review-toolkit`?“ Při **ne** přeskočit na Step 6; řádek `pr-review-toolkit` zůstane „nevyzkoušeno“.
 - [x] **Step 2: Diff.** Větev `pokus/review-test` z `main` (push mimo pracovní větev jen po výslovném souhlasu uživatele) s jedním vymyšleným souborem `pokus/review.sh` (~10 řádků) s vloženou tichou chybou (`cmd || true` spolkne selhání) a bez testu; push, **bez PR**.
-- [ ] **Step 3: Dvě session (uživatel).** Dvě nové cloudové session na `pokus/review-test`, `pr-review-toolkit` zapnutý jen pro druhou. V první `Run pre-done on the diff against main.`, ve druhé `/pr-review-toolkit:review-pr`; v obou pak `retro` ⇒ zapsat počty nálezů, zda chytila `|| true`, a řádek `Context tokens` (`scripts/session-metrics:167`). Žádný nález neopravovat; otázky o commitu/PR: **ne**. Tokeny podagentů, které `retro` nevypíše: „nezměřeno“.
-- [ ] **Step 4: Úklid.** Smazat větev `pokus/review-test` na GitHubu; `main` nemá `pokus/`.
-- [ ] **Step 5: Commit výsledků** `docs(plans): výsledky souběžné revize` (jen tento plán). **Brána:** Step 6 až po tomto commitu.
+- [x] **Step 3: Dvě session (uživatel).** Dvě nové cloudové session na `pokus/review-test`, `pr-review-toolkit` zapnutý jen pro druhou. V první `Run pre-done on the diff against main.`, ve druhé `/pr-review-toolkit:review-pr`; v obou pak `retro` ⇒ zapsat počty nálezů, zda chytila `|| true`, a řádek `Context tokens` (`scripts/session-metrics:167`). Žádný nález neopravovat; otázky o commitu/PR: **ne**. Tokeny podagentů, které `retro` nevypíše: „nezměřeno“.
+- [x] **Step 4: Úklid.** Smazat větev `pokus/review-test` na GitHubu; `main` nemá `pokus/`.
+- [x] **Step 5: Commit výsledků** `docs(plans): výsledky souběžné revize` (jen tento plán). **Brána:** Step 6 až po tomto commitu.
 - [ ] **Step 6: Test.** `grep -q 'zaplnění kontextu' "$REPO_ROOT/docs/pouziti.md" && grep -q 'překrývá se s `handover`' "$REPO_ROOT/docs/pouziti.md" && pass "pouziti: claude-hud context fill" || fail "pouziti: no claude-hud context fill"`.
 - [ ] **Step 7:** `bash tests/test-components.sh` ⇒ `FAIL pouziti: no claude-hud context fill`.
 - [ ] **Step 8: Text (česky).** Řádek `claude-hud`: „ukazuje zaplnění kontextu; hodí se jen při lokální práci“. Řádek `episodic-memory`: doplnit „překrývá se s `handover`“. Řádek `pr-review-toolkit`: při testu naměřené výsledky ze Step 3 místo odhadu „víc agentů znamená víc tokenů“, jinak beze změny.
@@ -159,3 +159,16 @@ Vedlejší zjištění: stop hook prostředí opakovaně žádal commit a push a
 Větev `pokus/hard-rule-test` se z cloudové session na větvi jiné než `main` načetla (soubor `.claude/settings.json` zabral). Úklid: větev na GitHubu zatím existuje (`git ls-remote`), smaže ji uživatel; `origin/main` nemá `.claude/settings.json`.
 
 **Výsledek:** `hook: ano`, `deny: ano`.
+
+### Task 3: souběžná revize `pre-done` × `pr-review-toolkit` (2026-11-27)
+
+Diff: vymyšlený `pokus/review.sh` (10 řádků) s `tar … || true` a „Záloha hotová“ + `exit 0`, bez testu.
+
+| revize | nálezy (Critical/Important/Minor) | zachycená vložená chyba | Context tokens: first / max |
+|---|---|---|---|
+| A: `pre-done` (Sonnet, high, 1 reviewer) | 2 / 4 / 1 | ano: „pokus/review.sh:7: tar ... \|\| true spolkne jakoukoli chybu tar“; druhý Critical: „Záloha hotová“ s `exit 0`; mezi Important chybějící test | 84,4k / 91,6k (+7,2k); tokeny podagenta nezměřeno |
+| B: `/pr-review-toolkit:review-pr` | 1 / 3 / 3 | ano: „silent-failure: pokus/review.sh:7 – \|\| true zahodí chybu tar“ + řádky 9–10; chybějící test neuvedla | 88,4k / 93,2k (+4,8k); agenty pluginu nespustila (u 10 řádků zbytečné), revizi udělala sama |
+
+Vedlejší: zapnutý plugin zvedl kontext na startu o ~4k (84,4k → 88,4k). Stop hook po `retro` chtěl commit, push a v B i draft PR; klasifikátor to zablokoval, odpověď ne. Úklid: `git ls-remote --heads origin 'pokus/*'` nevrací nic (větev smazána).
+
+**Omezení:** jeden běh na každou variantu, jeden vymyšlený diff; B nevyužila podagenty, takže nejde o srovnání víceagentní revize.
