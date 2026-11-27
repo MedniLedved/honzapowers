@@ -53,7 +53,7 @@
 - [ ] **Step 2:** `bash tests/test-components.sh` ⇒ `FAIL pre-done: no reviewer focus`.
 - [ ] **Step 3: Text.** Za „It must not edit.“ vložit větu: `Ask it to look first for silent failures (a swallowed error, a broad catch, a fallback that hides a failure) and for changed behaviour that no test exercises; this adds no lines to its answer.`
 - [ ] **Step 4:** `bash tests/test-components.sh` ⇒ `PASS pre-done: reviewer focus`, žádný FAIL.
-- [ ] **Step 5: Commit** `feat(pre-done): revizor hledá tiché chyby a nepokryté chování` (+ řádek do `CHANGELOG.md` → `## Nepublikováno`).
+- [ ] **Step 5: Commit** `feat(pre-done): revizor hledá tiché chyby a nepokryté chování` (+ řádek do `CHANGELOG.md` → `## Nepublikováno`, sekci vytvořit nad poslední verzí, pokud chybí).
 
 ### Task 2: Hookify jako volitelná podoba příčky `hard` v `retro`
 
@@ -67,7 +67,7 @@
 - [ ] **Step 2:** `bash tests/test-components.sh` ⇒ `FAIL retro: no optional hookify`.
 - [ ] **Step 3: Text.** V odrážce **Rung** nahradit `` `hard` (hook, deny rule or script, 0 context tokens) `` za `` `hard` (hook, deny rule or script, 0 context tokens; a hookify rule only if the hookify plugin is installed) ``.
 - [ ] **Step 4:** `bash tests/run-tests.sh` ⇒ `ALL PASS` (včetně rozpočtu 900 slov) a `claude plugin validate --strict .` bez chyby.
-- [ ] **Step 5: Commit** `feat(retro): hookify jako volitelná podoba tvrdého pravidla` (+ řádek do CHANGELOG). Push na pracovní větev (draft PR #12 už existuje).
+- [ ] **Step 5: Commit** `feat(retro): hookify jako volitelná podoba tvrdého pravidla` (+ řádek do `CHANGELOG.md` → `## Nepublikováno`, sekci vytvořit, pokud chybí). Push na pracovní větev (draft PR #12 už existuje).
 
 ## Fáze 2 – pokus (uživatel; brána: pokračovat až po výsledcích)
 
@@ -104,4 +104,4 @@ Prostředí: povinně cloudová session (claude.ai/code) v repu HP; terminál vo
 - [ ] **Step 2:** `bash tests/test-components.sh` ⇒ `FAIL pouziti: no companion plugins`.
 - [ ] **Step 3: Text (česky).** Tabulka `Plugin | K čemu vedle HP | Kde funguje | Verdikt` s řádky `claude-md-management`, `hookify`, `pr-review-toolkit` (nevyzkoušeno; alternativa revizora `pre-done`, víc agentů = víc tokenů), `episodic-memory` a `claude-hud` (jen lokálně, nevyzkoušeno). Pod ní odstavec „Nedoporučujeme“ (claude-mem, context-mode, samoučící pluginy) s důvody ze sekce „Co do plánu nepatří“. U `claude-md-management` jedna věta o vztahu `/revise-claude-md` a `handover` podle Task 3 Step 5 (bez výsledku věta odpadá).
 - [ ] **Step 4:** `bash tests/run-tests.sh` ⇒ `ALL PASS`.
-- [ ] **Step 5: Commit** `docs(pouziti): doplňkové pluginy podle pokusu` (+ řádek do CHANGELOG), push na pracovní větev.
+- [ ] **Step 5: Commit** `docs(pouziti): doplňkové pluginy podle pokusu` (+ řádek do `CHANGELOG.md` → `## Nepublikováno`, sekci vytvořit, pokud chybí), push na pracovní větev.
