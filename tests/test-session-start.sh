@@ -231,6 +231,17 @@ has handover-plan "Plan: docs/superpowers/plans/2026-11-01-old.md (1 open tasks)
 has handover-plan "Next step: continue docs/superpowers/plans/2026-11-01-old.md"
 lacks handover-plan "2026-11-09-new.md"
 
+echo "Plan marked done: unchecked boxes are not a next step"
+R="$(make_full_repo plan-done)"
+printf '# h\nPlán: docs/superpowers/plans/2026-11-01-old.md\n' >"$R/docs/handover/2026-11-08-topic.md"
+printf '# old\n\n**Stav provedení:** hotovo, vydáno v 1.0.\n\n- [ ] a\n- [ ] b\n' >"$R/docs/superpowers/plans/2026-11-01-old.md"
+run_hook "$(input_for startup.json "$R")" "$TEST_ROOT"
+check_basics plan-done
+has plan-done "Plan: docs/superpowers/plans/2026-11-01-old.md (done)"
+lacks plan-done "open tasks"
+lacks plan-done "continue docs/superpowers/plans/2026-11-01-old.md"
+has plan-done "Next step: read docs/handover/2026-11-08-topic.md"
+
 echo "Handover names a missing or outside path: fall back to newest plan"
 R="$(make_full_repo handover-bad)"
 printf 'Plán: docs/superpowers/plans/neexistuje.md a ../../etc/plans/x.md\n' >"$R/docs/handover/2026-11-08-topic.md"
