@@ -1,6 +1,6 @@
 # Changelog
 
-## Nepublikováno
+## 0.6.0 — 2026-11-27
 - **Přednost pravidel:** při střetu vyhrává projekt (`CLAUDE.md` / `AGENTS.md`), pak uživatelův `~/.claude/CLAUDE.md` a osobní pravidla, nakonec výchozí policy. Dřív první řádka policy jmenovala jen projekt.
 - **Připnutá instalace:** README nabízí připnutí na tag vydání (`#honzapowers--vX.Y.Z`) místo automatické synchronizace; `docs/vydani.md` vytváří tag i přes web GitHubu, bez `claude` CLI.
 - **`pre-done`:** každý nález Critical a Important se opravuje přes test, který kvůli němu nejdřív selže, s vlastním commitem opravy; potom nejvýš jedna opakovaná revize jen nad opravami.
