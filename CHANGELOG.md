@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.1 — 2026-11-27
+- **Hotový plán se nenabízí jako další krok:** hook `session-start` při řádku `**Stav provedení:** hotovo` v záhlaví plánu vypíše `Plan: … (done)` místo počtu otevřených úkolů a „Next step: continue“. Dřív věřil jen zaškrtávátkům, takže provedený a neodškrtnutý plán vypadal jako rozdělaný.
+- **`handover`:** u dokončeného plánu navrhne přidat tento řádek (jen návrh, nic nepíše sám). Policy beze změny.
+
 ## 0.6.0 — 2026-11-27
 - **Přednost pravidel:** při střetu vyhrává projekt (`CLAUDE.md` / `AGENTS.md`), pak uživatelův `~/.claude/CLAUDE.md` a osobní pravidla, nakonec výchozí policy. Dřív první řádka policy jmenovala jen projekt.
 - **Připnutá instalace:** README nabízí připnutí na tag vydání (`#honzapowers--vX.Y.Z`) místo automatické synchronizace; `docs/vydani.md` vytváří tag i přes web GitHubu, bez `claude` CLI.
