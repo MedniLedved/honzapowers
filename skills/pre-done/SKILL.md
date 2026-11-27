@@ -18,7 +18,12 @@ Start one subagent (model Sonnet, effort high) with only: the bullets from
 step 1 and the diff command (`git diff <base>...HEAD`). It reads the diff and
 the touched files, and returns at most 20 lines: findings as Critical,
 Important or Minor, each with `file:line` and one sentence. It must not edit.
-Fix Critical and Important findings, then re-run the checks that cover them.
+For each Critical or Important finding: first add a test that fails because of the finding,
+in the project's own way of testing (if no test can show it, e.g. wording or config, say so).
+Then fix it, see that test pass, and commit the fix on its own if the session commits
+(the project's git rules win). Then run at most one re-review, on the fix changes only
+(their commits, or `git diff` of the files the fixes touched); report what is left and
+never start a third round.
 Do not re-run unrelated passed tests.
 
 ## 3. UI flows: try the main path
