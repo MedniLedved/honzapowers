@@ -105,10 +105,10 @@
 **Files:**
 - Modify: `/home/user/objednavkovy-system-leeda/AGENTS.md` (sekce `## Větve a prostředí`, věta „Před vydáním zelené CI na `dev`, pak fast-forward push“)
 
-- [ ] **Step 1:** `add_repo` Leeda s `access: "push"` (uživatel to pro zápis výslovně určil); klon zůstává `/home/user/objednavkovy-system-leeda`. V něm `git fetch --depth=1 origin dev && git checkout -b claude/magical-lamport-ihk06w FETCH_HEAD` a `grep -n 'Před vydáním zelené CI na `dev`, pak fast-forward push' AGENTS.md` ⇒ právě jeden řádek (na `dev` ověřeno 2026-11-27, ř. 29).
-- [ ] **Step 2:** Větu nahradit (varianta z handoveru 2026-11-27): „Před vydáním zelené CI na `dev` a proběhlý `honzapowers:pre-done` nad diffem projektu (i když ho plán označuje „žádný kód“), pak fast-forward push“.
-- [ ] **Step 3:** `wc -l AGENTS.md` < 200; `git diff --stat` ⇒ jen `AGENTS.md`.
-- [ ] **Step 4:** Commit `docs(agents): pre-done před vydáním dev → main`, push, draft PR do `dev`. Nesloučit (sloučí uživatel).
+- [x] **Step 1:** `add_repo` Leeda s `access: "push"` (uživatel to pro zápis výslovně určil); klon zůstává `/home/user/objednavkovy-system-leeda`. V něm `git fetch --depth=1 origin dev && git checkout -b claude/magical-lamport-ihk06w FETCH_HEAD` a `grep -n 'Před vydáním zelené CI na `dev`, pak fast-forward push' AGENTS.md` ⇒ právě jeden řádek (na `dev` ověřeno 2026-11-27, ř. 29).
+- [x] **Step 2:** Větu nahradit (varianta z handoveru 2026-11-27): „Před vydáním zelené CI na `dev` a proběhlý `honzapowers:pre-done` nad diffem projektu (i když ho plán označuje „žádný kód“), pak fast-forward push“.
+- [x] **Step 3:** `wc -l AGENTS.md` < 200; `git diff --stat` ⇒ jen `AGENTS.md`.
+- [x] **Step 4:** Commit `docs(agents): pre-done před vydáním dev → main`, push, draft PR do `dev`. Nesloučit (sloučí uživatel).
 
 ### Task 7: PR pluginu
 
