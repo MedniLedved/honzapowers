@@ -1,12 +1,12 @@
 ---
 name: retro
-description: Use when the user asks for a retro, a session review, or an analysis of why a session was slow, expensive or token-heavy, to measure it with session-metrics and propose classified, evidence-backed improvements without changing any rules.
+description: Use when the user asks for a retro, a session review, or an analysis of why a session was slow, expensive or token-heavy or let a defect slip past the tests, to measure it with session-metrics and propose classified, evidence-backed improvements without changing any rules.
 model: sonnet
 ---
 
 # Retro
 
-Turn measured session numbers into at most 5 improvement proposals. The script
+Turn measured session numbers, and defects that slipped past the tests, into at most 5 improvement proposals. The script
 measures; you interpret about 30 lines. Never change rules yourself.
 
 ## 1. Measure
@@ -19,8 +19,14 @@ at no more than 3 referenced lines (`sed -n '<N>p' <transcript> | cut -c1-300`)
 and do not quote their content in the retro.
 
 ## 2. Findings (at most 5)
+Two kinds. A **cost** finding comes from the metrics. A **quality** finding is a defect
+that the tests missed and a review, the user or production caught in this session:
+list each one first; it needs no metric.
+
 For each finding give:
-- **Evidence**: the metric with its number and `line:N`.
+- **Evidence**: cost: the metric with its number and `line:N`; quality: `file:line` or the
+  commit of the defect, who caught it, whether a test caught it, and whether it could have
+  reached an irreversible step (a release, a migration, a data change) before it was caught.
 - **Rule**: the policy rule ID it violates or uses (`L1`..`L14`, `S1`, `S2`, `S4`..`S6`, `V1`, `F1`, `G1`; see `${CLAUDE_SKILL_DIR}/../../policy/policy.md`) or `new`.
 - **Class**: `general` (would hold in every project of this user: a personal rule, never a change of the plugin's default policy), `project` (this repo only) or `one-off` (record only).
 - **Rung**: where the fix goes, cheapest first: `hard` (hook, deny rule or script, 0 context tokens; a hookify rule only if the hookify plugin is installed; in a cloud session, a hook or deny rule in the repo's .claude/settings.json), `skill`, `project` (`AGENTS.md`/`CLAUDE.md` line), `policy`. Say in one clause why it cannot go on a cheaper rung.
@@ -41,6 +47,8 @@ confirmed in a second project. Check:
 Otherwise mark it `candidate` and keep it out of the policy. The policy is
 capped at 3,200 characters: a new rule must fit or replace, merge or shorten
 another one.
+
+A `project` finding needs one occurrence (unlike `general`, no second project is needed): propose it in this retro.
 
 ## 4. Save and report
 - Save `docs/retro/YYYY-MM-DD-<topic>.md` in the project: the metrics block, the findings, and a line `Rules flagged: <IDs>` (policy rule IDs), and a section `Kandidáti na poznatek` (the candidates or `žádný kandidát`) so the next duplicate search finds them.

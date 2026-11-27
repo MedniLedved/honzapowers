@@ -33,19 +33,19 @@
 - Modify: `skills/retro/SKILL.md` (frontmatter `description`, úvodní odstavec, `## 2. Findings (at most 5)`, `## 3. Promotion gate`)
 - Test: `tests/test-components.sh` (blok „Rules agree with each other“)
 
-- [ ] **Step 1: Failing test** – do bloku „Rules agree with each other“ přidat:
+- [x] **Step 1: Failing test** – do bloku „Rules agree with each other“ přidat:
   ```bash
   grep -q 'A \*\*quality\*\* finding' "$S/retro/SKILL.md" && grep -qF 'whether a test caught it' "$S/retro/SKILL.md" && pass "retro: quality finding" || fail "retro: no quality finding"
   grep -qi 'slip past the tests' <<<"$(frontmatter "$S/retro/SKILL.md" description)" && pass "retro: description names missed defects" || fail "retro: description is cost-only"
   sed -n '/^## 3\. Promotion gate/,/^## 4/p' "$S/retro/SKILL.md" | grep -qF 'A `project` finding needs one occurrence' && pass "retro: project finding needs one occurrence" || fail "retro: no one-occurrence rule for project"
   ```
-- [ ] **Step 2:** `bash tests/run-tests.sh 2>&1 | grep -E 'FAIL|ALL PASS'` ⇒ tři nové řádky FAIL.
-- [ ] **Step 3:** `description` přesně: `Use when the user asks for a retro, a session review, or an analysis of why a session was slow, expensive or token-heavy or let a defect slip past the tests, to measure it with session-metrics and propose classified, evidence-backed improvements without changing any rules.` (273 znaků).
-- [ ] **Step 4:** Úvod: `Turn measured session numbers, and defects that slipped past the tests, into at most 5 improvement proposals.` (zbytek odstavce beze změny).
-- [ ] **Step 5:** V `## 2. Findings (at most 5)` před „For each finding give:“ vložit: `Two kinds. A **cost** finding comes from the metrics. A **quality** finding is a defect that the tests missed and a review, the user or production caught in this session: list each one first; it needs no metric.` Odrážku Evidence nahradit: `- **Evidence**: cost: the metric with its number and `line:N`; quality: `file:line` or the commit of the defect, who caught it, whether a test caught it, and whether it could have reached an irreversible step (a release, a migration, a data change) before it was caught.`
-- [ ] **Step 6:** V `## 3. Promotion gate` za odstavec končící „…shorten another one.“ přidat řádek: `A `project` finding needs one occurrence (unlike `general`, no second project is needed): propose it in this retro.`
-- [ ] **Step 7:** `bash tests/run-tests.sh 2>&1 | grep -E 'FAIL|ALL PASS'` ⇒ `ALL PASS`.
-- [ ] **Step 8:** Commit `feat(retro): nález typu kvalita, u project stačí jeden výskyt`.
+- [x] **Step 2:** `bash tests/run-tests.sh 2>&1 | grep -E 'FAIL|ALL PASS'` ⇒ tři nové řádky FAIL.
+- [x] **Step 3:** `description` přesně: `Use when the user asks for a retro, a session review, or an analysis of why a session was slow, expensive or token-heavy or let a defect slip past the tests, to measure it with session-metrics and propose classified, evidence-backed improvements without changing any rules.` (273 znaků).
+- [x] **Step 4:** Úvod: `Turn measured session numbers, and defects that slipped past the tests, into at most 5 improvement proposals.` (zbytek odstavce beze změny).
+- [x] **Step 5:** V `## 2. Findings (at most 5)` před „For each finding give:“ vložit: `Two kinds. A **cost** finding comes from the metrics. A **quality** finding is a defect that the tests missed and a review, the user or production caught in this session: list each one first; it needs no metric.` Odrážku Evidence nahradit: `- **Evidence**: cost: the metric with its number and `line:N`; quality: `file:line` or the commit of the defect, who caught it, whether a test caught it, and whether it could have reached an irreversible step (a release, a migration, a data change) before it was caught.`
+- [x] **Step 6:** V `## 3. Promotion gate` za odstavec končící „…shorten another one.“ přidat řádek: `A `project` finding needs one occurrence (unlike `general`, no second project is needed): propose it in this retro.`
+- [x] **Step 7:** `bash tests/run-tests.sh 2>&1 | grep -E 'FAIL|ALL PASS'` ⇒ `ALL PASS`.
+- [x] **Step 8:** Commit `feat(retro): nález typu kvalita, u project stačí jeden výskyt`.
 
 ### Task 2: `pre-done` před nevratným krokem, `retro` po zachycené vadě
 
@@ -60,7 +60,7 @@
   grep -qi 'irreversible step' <<<"$(frontmatter "$S/pre-done/SKILL.md" description)" && pass "pre-done: description names irreversible step" || fail "pre-done: description lacks irreversible step"
   ```
 - [ ] **Step 2:** testy ⇒ dvě nové řádky FAIL.
-- [ ] **Step 3:** `skilly-kdy-ktery`, odrážka `pre-done`: na konec doplnit `Also before an irreversible step (a production release or a migration run against production) if the diff since the last `pre-done` is not empty, even when the plan marks the step as no code.` Odrážka `retro` přesně: `- **`retro`:** when the session was slow, expensive or went in circles, when a review or the user caught a defect the tests missed, or on request. Always before a handover that mentions it.`
+- [ ] **Step 3:** `skilly-kdy-ktery`, odrážka `pre-done`: na konec doplnit `Also before an irreversible step (a production release or a migration run against production) if the diff since the last `pre-done` contains such a change, even when the plan marks the step as no code.` Odrážka `retro` přesně: `- **`retro`:** when the session was slow, expensive or went in circles, when a review or the user caught a defect the tests missed, or on request. Always before a handover that mentions it.`
 - [ ] **Step 4:** `pre-done` `description` přesně: `Use when about to claim done, open a PR or take an irreversible step (production release, migration) on architectural work, data deletion or a shared interface change (see skilly-kdy-ktery), to have a fresh-context reviewer check the diff and walk UI flows. Not for trivial or docs-only changes.` (295 znaků). V úvodu `Run this once, right before "done".` → `Run this once, right before "done", a PR or an irreversible step.`
 - [ ] **Step 5:** testy ⇒ `ALL PASS`.
 - [ ] **Step 6:** Commit `feat(pre-done): také před vydáním a migrací do produkce; retro po vadě, kterou testy nechytily`.
