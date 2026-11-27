@@ -54,16 +54,16 @@
 - Modify: `skills/pre-done/SKILL.md` (frontmatter `description`, úvodní odstavec)
 - Test: `tests/test-components.sh` (blok „Rules agree with each other“)
 
-- [ ] **Step 1: Failing test:**
+- [x] **Step 1: Failing test:**
   ```bash
   grep -qF 'Also before an irreversible step' "$S/skilly-kdy-ktery/SKILL.md" && grep -qF 'caught a defect the tests missed' "$S/skilly-kdy-ktery/SKILL.md" && pass "skilly-kdy-ktery: pre-done before irreversible step, retro after missed defect" || fail "skilly-kdy-ktery: no irreversible step or missed-defect retro"
   grep -qi 'irreversible step' <<<"$(frontmatter "$S/pre-done/SKILL.md" description)" && pass "pre-done: description names irreversible step" || fail "pre-done: description lacks irreversible step"
   ```
-- [ ] **Step 2:** testy ⇒ dvě nové řádky FAIL.
-- [ ] **Step 3:** `skilly-kdy-ktery`, odrážka `pre-done`: na konec doplnit `Also before an irreversible step (a production release or a migration run against production) if the diff since the last `pre-done` contains such a change, even when the plan marks the step as no code.` Odrážka `retro` přesně: `- **`retro`:** when the session was slow, expensive or went in circles, when a review or the user caught a defect the tests missed, or on request. Always before a handover that mentions it.`
-- [ ] **Step 4:** `pre-done` `description` přesně: `Use when about to claim done, open a PR or take an irreversible step (production release, migration) on architectural work, data deletion or a shared interface change (see skilly-kdy-ktery), to have a fresh-context reviewer check the diff and walk UI flows. Not for trivial or docs-only changes.` (295 znaků). V úvodu `Run this once, right before "done".` → `Run this once, right before "done", a PR or an irreversible step.`
-- [ ] **Step 5:** testy ⇒ `ALL PASS`.
-- [ ] **Step 6:** Commit `feat(pre-done): také před vydáním a migrací do produkce; retro po vadě, kterou testy nechytily`.
+- [x] **Step 2:** testy ⇒ dvě nové řádky FAIL.
+- [x] **Step 3:** `skilly-kdy-ktery`, odrážka `pre-done`: na konec doplnit `Also before an irreversible step (a production release or a migration run against production) if the diff since the last `pre-done` contains such a change, even when the plan marks the step as no code.` Odrážka `retro` přesně: `- **`retro`:** when the session was slow, expensive or went in circles, when a review or the user caught a defect the tests missed, or on request. Always before a handover that mentions it.`
+- [x] **Step 4:** `pre-done` `description` přesně: `Use when about to claim done, open a PR or take an irreversible step (production release, migration) on architectural work, data deletion or a shared interface change (see skilly-kdy-ktery), to have a fresh-context reviewer check the diff and walk UI flows. Not for trivial or docs-only changes.` (295 znaků). V úvodu `Run this once, right before "done".` → `Run this once, right before "done", a PR or an irreversible step.`
+- [x] **Step 5:** testy ⇒ `ALL PASS`.
+- [x] **Step 6:** Commit `feat(pre-done): také před vydáním a migrací do produkce; retro po vadě, kterou testy nechytily`.
 
 ### Task 3: Uživatelské popisy a CHANGELOG
 

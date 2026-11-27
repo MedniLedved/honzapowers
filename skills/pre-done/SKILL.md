@@ -1,12 +1,12 @@
 ---
 name: pre-done
-description: Use when about to claim done or open a PR on architectural work, data deletion or a shared interface change (see skilly-kdy-ktery), to have a fresh-context reviewer check the diff and walk UI flows. Not for trivial or docs-only changes.
+description: Use when about to claim done, open a PR or take an irreversible step (production release, migration) on architectural work, data deletion or a shared interface change (see skilly-kdy-ktery), to have a fresh-context reviewer check the diff and walk UI flows. Not for trivial or docs-only changes.
 ---
 
 # Pre-done check
 
 Green lint, type checks and unit tests are not a review: an independent
-review of fully green branches still finds Critical and Important defects. Run this once, right before "done".
+review of fully green branches still finds Critical and Important defects. Run this once, right before "done", a PR or an irreversible step.
 
 ## 1. List what the diff is judged against
 - The user's request, in a few bullets (what must be true when done).
