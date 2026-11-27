@@ -55,6 +55,8 @@ Vedle HP můžeš zapnout další pluginy. Tabulka uvádí jen to, co ověřil p
 
 Pokud pravidla `hookify` zkoušíš lokálně, přidej do `.gitignore` řádek `.claude/*.local.md`, ať se testovací pravidlo omylem nedostane do commitu.
 
+**Tvrdé pravidlo bez pluginu.** Stejnou službu jako hookify udělá soubor `.claude/settings.json` v repu. Zkoušeno v cloudové session na větvi jiné než `main`: hook `PreToolUse` na Bash příkaz zablokoval s hláškou hooku, a pravidlo `permissions.deny` (`Bash(echo …:*)`) příkaz odmítlo hláškou oprávnění; neutrální příkaz proběhl. Na rozdíl od `hookify`, který se v cloudu nepotvrdil, tedy tahle cesta v cloudu funguje. Soubor se dostane do repa commitem, proto ho dávej jen tam, kam ho tým chce; lokální terminál nevyzkoušen.
+
 **Nedoporučujeme:**
 - `claude-mem` a `context-mode`: vkládají kontext na startu session a při PreCompact podruhé, takže zdvojují to, co už dělá HP.
 - Samoučící pluginy (claude-smart a podobné): mění pravidla bez tvého souhlasu, což odporuje bráně G1.

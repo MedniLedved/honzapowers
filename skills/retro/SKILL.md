@@ -23,7 +23,7 @@ For each finding give:
 - **Evidence**: the metric with its number and `line:N`.
 - **Rule**: the policy rule ID it violates or uses (`L1`..`L14`, `S1`, `S2`, `S4`..`S6`, `V1`, `F1`, `G1`; see `${CLAUDE_SKILL_DIR}/../../policy/policy.md`) or `new`.
 - **Class**: `general` (would hold in every project of this user: a personal rule, never a change of the plugin's default policy), `project` (this repo only) or `one-off` (record only).
-- **Rung**: where the fix goes, cheapest first: `hard` (hook, deny rule or script, 0 context tokens; a hookify rule only if the hookify plugin is installed), `skill`, `project` (`AGENTS.md`/`CLAUDE.md` line), `policy`. Say in one clause why it cannot go on a cheaper rung.
+- **Rung**: where the fix goes, cheapest first: `hard` (hook, deny rule or script, 0 context tokens; a hookify rule only if the hookify plugin is installed; in a cloud session, a hook or deny rule in the repo's .claude/settings.json), `skill`, `project` (`AGENTS.md`/`CLAUDE.md` line), `policy`. Say in one clause why it cannot go on a cheaper rung.
 - **Proposal**: the exact text or script to add, or the rule to rephrase.
 
 ## 2b. Candidates
