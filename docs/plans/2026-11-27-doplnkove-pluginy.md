@@ -63,11 +63,11 @@
 
 **Interfaces:** nic dalšího nepotřebuje ani neposkytuje.
 
-- [ ] **Step 1: Test.** `grep -q 'hookify' "$REPO_ROOT/skills/retro/SKILL.md" && grep -qi 'only if .*hookify' "$REPO_ROOT/skills/retro/SKILL.md" && pass "retro: hookify optional" || fail "retro: no optional hookify"`.
-- [ ] **Step 2:** `bash tests/test-components.sh` ⇒ `FAIL retro: no optional hookify`.
-- [ ] **Step 3: Text.** V odrážce **Rung** nahradit `` `hard` (hook, deny rule or script, 0 context tokens) `` za `` `hard` (hook, deny rule or script, 0 context tokens; a hookify rule only if the hookify plugin is installed) ``.
-- [ ] **Step 4:** `bash tests/run-tests.sh` ⇒ `ALL PASS` (včetně rozpočtu 900 slov) a `claude plugin validate --strict .` bez chyby.
-- [ ] **Step 5: Commit** `feat(retro): hookify jako volitelná podoba tvrdého pravidla` (+ řádek do `CHANGELOG.md` → `## Nepublikováno`, sekci vytvořit, pokud chybí). Push na pracovní větev (draft PR #12 už existuje).
+- [x] **Step 1: Test.** `grep -q 'hookify' "$REPO_ROOT/skills/retro/SKILL.md" && grep -qi 'only if .*hookify' "$REPO_ROOT/skills/retro/SKILL.md" && pass "retro: hookify optional" || fail "retro: no optional hookify"`.
+- [x] **Step 2:** `bash tests/test-components.sh` ⇒ `FAIL retro: no optional hookify`.
+- [x] **Step 3: Text.** V odrážce **Rung** nahradit `` `hard` (hook, deny rule or script, 0 context tokens) `` za `` `hard` (hook, deny rule or script, 0 context tokens; a hookify rule only if the hookify plugin is installed) ``.
+- [x] **Step 4:** `bash tests/run-tests.sh` ⇒ `ALL PASS` (včetně rozpočtu 900 slov) a `claude plugin validate --strict .` bez chyby.
+- [x] **Step 5: Commit** `feat(retro): hookify jako volitelná podoba tvrdého pravidla` (+ řádek do `CHANGELOG.md` → `## Nepublikováno`, sekci vytvořit, pokud chybí). Push na pracovní větev (draft PR #12 už existuje).
 
 ## Fáze 2 – pokus (uživatel; brána: pokračovat až po výsledcích)
 

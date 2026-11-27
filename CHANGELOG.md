@@ -1,6 +1,7 @@
 # Changelog
 
 ## Nepublikováno
+- **`retro`:** příčka `hard` může mít podobu pravidla pluginu hookify, ale jen když je plugin nainstalovaný; jinak zůstává hook, deny pravidlo nebo skript.
 - **`pre-done`:** revizor hledá nejdřív tiché chyby (spolknutá chyba, široký catch, záloha skrývající selhání) a změněné chování, které žádný test nepokrývá; odpověď zůstává nejvýš 20 řádků.
 
 ## 0.6.1 — 2026-11-27
