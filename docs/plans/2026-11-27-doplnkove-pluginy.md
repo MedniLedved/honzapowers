@@ -81,13 +81,13 @@
 
 Prostředí: povinně cloudová session (claude.ai/code) v repu HP; terminál volitelně. Co se nezměří, má v tabulce `nevyzkoušeno`; to platí i pro `retro`, které hodnotu `Context tokens: first` nevypíše.
 
-- [ ] **Step 1: Základ (uživatel).** Dvě nové session bez obou pluginů, v každé první zpráva `Jaká pravidla máš na začátku session?`, pak `retro` ⇒ zapsat obě hodnoty `Context tokens: first` a jejich průměr.
-- [ ] **Step 2: Instalace (uživatel).** claude.ai → Customize → Plugins → oficiální marketplace → zapnout `claude-md-management` a `hookify`. Pluginy se načtou až v nové session.
-- [ ] **Step 3: S pluginy.** Dvě **nové** session, stejná první zpráva, `retro` ⇒ zapsat obě hodnoty a průměr.
-- [ ] **Step 4: claude-md-improver.** Zadat `audit my CLAUDE.md files` ⇒ zapsat, zda najde a ohodnotí `AGENTS.md` (HP nemá CLAUDE.md). Žádnou navrženou změnu nepřijímat.
-- [ ] **Step 5: `/revise-claude-md`.** Spustit jednou na konci session ⇒ zapsat, kam navrhuje zapisovat a jestli se překrývá s `handover`. Žádnou změnu nepřijímat.
-- [ ] **Step 6: hookify.** Zadat `/hookify warn when a Bash command contains echo hookify-test`, pak spustit `echo hookify-test` ⇒ zapsat, zda se varování objevilo a jakou cestu má soubor pravidla (`git status --short`). Pravidlo odstranit (`/hookify:list`, smazat soubor) a `git status --short --ignored` ⇒ soubor pravidla tam není.
-- [ ] **Step 7: Verdikt** pro každý plugin: `doporučeno` (funguje a průměr `Context tokens: first` vzroste nejvýš o 2k), `jen lokálně`, nebo `nedoporučeno` (s důvodem). Commit jen tohoto plánu (`git add docs/plans/2026-11-27-doplnkove-pluginy.md`).
+- [x] **Step 1: Základ (uživatel).** Dvě nové session bez obou pluginů, v každé první zpráva `Jaká pravidla máš na začátku session?`, pak `retro` ⇒ zapsat obě hodnoty `Context tokens: first` a jejich průměr.
+- [x] **Step 2: Instalace (uživatel).** claude.ai → Customize → Plugins → oficiální marketplace → zapnout `claude-md-management` a `hookify`. Pluginy se načtou až v nové session.
+- [x] **Step 3: S pluginy.** Dvě **nové** session, stejná první zpráva, `retro` ⇒ zapsat obě hodnoty a průměr.
+- [x] **Step 4: claude-md-improver.** Zadat `audit my CLAUDE.md files` ⇒ zapsat, zda najde a ohodnotí `AGENTS.md` (HP nemá CLAUDE.md). Žádnou navrženou změnu nepřijímat.
+- [x] **Step 5: `/revise-claude-md`.** Spustit jednou na konci session ⇒ zapsat, kam navrhuje zapisovat a jestli se překrývá s `handover`. Žádnou změnu nepřijímat.
+- [x] **Step 6: hookify.** Zadat `/hookify warn when a Bash command contains echo hookify-test`, pak spustit `echo hookify-test` ⇒ zapsat, zda se varování objevilo a jakou cestu má soubor pravidla (`git status --short`). Pravidlo odstranit (`/hookify:list`, smazat soubor) a `git status --short --ignored` ⇒ soubor pravidla tam není.
+- [x] **Step 7: Verdikt** pro každý plugin: `doporučeno` (funguje a průměr `Context tokens: first` vzroste nejvýš o 2k), `jen lokálně`, nebo `nedoporučeno` (s důvodem). Commit jen tohoto plánu (`git add docs/plans/2026-11-27-doplnkove-pluginy.md`).
 
 ## Fáze 3 – doporučení v docs
 
@@ -105,3 +105,24 @@ Prostředí: povinně cloudová session (claude.ai/code) v repu HP; terminál vo
 - [ ] **Step 3: Text (česky).** Tabulka `Plugin | K čemu vedle HP | Kde funguje | Verdikt` s řádky `claude-md-management`, `hookify`, `pr-review-toolkit` (nevyzkoušeno; alternativa revizora `pre-done`, víc agentů = víc tokenů), `episodic-memory` a `claude-hud` (jen lokálně, nevyzkoušeno). Pod ní odstavec „Nedoporučujeme“ (claude-mem, context-mode, samoučící pluginy) s důvody ze sekce „Co do plánu nepatří“. U `claude-md-management` jedna věta o vztahu `/revise-claude-md` a `handover` podle Task 3 Step 5 (bez výsledku věta odpadá).
 - [ ] **Step 4:** `bash tests/run-tests.sh` ⇒ `ALL PASS`.
 - [ ] **Step 5: Commit** `docs(pouziti): doplňkové pluginy podle pokusu` (+ řádek do `CHANGELOG.md` → `## Nepublikováno`, sekci vytvořit, pokud chybí), push na pracovní větev.
+
+## Výsledky pokusu
+
+Prostředí: cloudová session (claude.ai/code) v repu HP, Sonnet medium, zapnuté HP, HP-osobní a superpowers. Hodnota `Context tokens: first` je řádek „Kontext: start“ z `retro` (stejné číslo jako `first` v `scripts/session-metrics`).
+
+| Skupina | Session 1 | Session 2 | Průměr |
+|---|---|---|---|
+| Bez `claude-md-management` a `hookify` | 83,5k | 84,7k | 84,1k |
+| S oběma pluginy | 84,6k | 83,5k | 84,05k |
+
+Rozdíl −0,05k (limit +2k).
+
+| Plugin | Funguje v cloudu | Funguje v terminálu | Context tokens: first (bez / s) | Verdikt |
+|---|---|---|---|---|
+| `claude-md-management` | ano (kroky 4 a 5) | nevyzkoušeno | 84,1k / 84,05k (rozdíl obou pluginů dohromady) | doporučeno |
+| `hookify` | ne: `/hookify` v cloudu neexistuje, pravidlo se nespustilo | nevyzkoušeno | viz výše | jen lokálně |
+
+- **Krok 4 (`claude-md-improver`):** `CLAUDE.md` v HP není, plugin ohodnotil `AGENTS.md` (76/100) a navrhl mapu struktury repa a upřesnění cesty `plugin.json`. Změny nepřijaty.
+- **Krok 5 (`/revise-claude-md`):** navrhuje zapisovat do `AGENTS.md` (řádek o CI); `CLAUDE.md` nezakládá. S `handover` se potkává jen u poznatků ze session (`handover` píše do `docs/handover/`). Změny nepřijaty.
+- **Krok 6 (`hookify`):** příkaz `/hookify` v cloudové session neexistuje. Soubor pravidla `.claude/hookify.*.local.md` vznikl jen ručním zápisem a po `echo hookify-test` se žádné varování neukázalo. Soubor byl smazán. Doporučení pluginu: ignorovat `.claude/*.local.md` v `.gitignore`.
+- **Vedlejší efekty pokusu:** session samy otevřely PR 17 až 20 (nepřijato, uzavřeny); v kroku 6 jedna session omylem commitla `.gitignore` do svého PR.
