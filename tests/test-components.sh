@@ -113,6 +113,13 @@ for f in "$S/retro/SKILL.md" "$S/handover/SKILL.md" "$S/mesicni-projektove-retro
 done
 ! grep -q 'another session or project' "$S/retro/SKILL.md" && pass "retro: no session-or-project gate" || fail "retro: old gate wording"
 ! grep -qi 'ledger rulings\|plan workspace' "$P" && pass "policy: no Superpowers jargon in S5" || fail "policy: jargon in S5"
+head -1 "$P" | grep -q "project's CLAUDE.md/AGENTS.md win, then the user's own" && pass "policy: precedence project > user > default" || fail "policy: precedence line"
+grep -q '~/.claude/CLAUDE.md' "$REPO_ROOT/docs/pouziti.md" && pass "pouziti: user CLAUDE.md layer" || fail "pouziti: no user CLAUDE.md layer"
+grep -q '^### Připnutá verze' "$REPO_ROOT/README.md" && pass "README: pinned install" || fail "README: no pinned install"
+grep -q 'honzapowers--v' "$REPO_ROOT/README.md" && grep -q 'Releases' "$REPO_ROOT/docs/vydani.md" && grep -q 'honzapowers--v' "$REPO_ROOT/docs/vydani.md" \
+  && pass "README/vydani: tag honzapowers--vX.Y.Z, web path" || fail "README/vydani: tag name or web path"
+grep -q 'fails because of the finding' "$S/pre-done/SKILL.md" && grep -qi 'at most one re-review' "$S/pre-done/SKILL.md" \
+  && pass "pre-done: test-first fixes, one re-review" || fail "pre-done: no test-first fix rule"
 grep -q 'cloud session' "$S/handover/SKILL.md" && pass "handover: container loss is cloud-only" || fail "handover: assumes cloud"
 grep -q 'session-assigned branch' "$S/handover/SKILL.md" && grep -q 'session-assigned branch' "$S/kontrola-planu/SKILL.md" \
   && pass "handover, kontrola-planu: cloud commit to the assigned branch" || fail "handover, kontrola-planu: no cloud commit rule"

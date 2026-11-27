@@ -21,6 +21,16 @@ V Claude Code (bez synchronizace účtu) zadej do příkazového řádku Claude 
 /plugin install honzapowers@honzapowers
 ```
 
+### Připnutá verze
+Hooky pluginu běží při každé session bez dotazu, takže se automatická synchronizace hodí, když repu věříš. Chceš-li nové verze nejdřív vidět, připni se na tag vydání (tvar `honzapowers--vX.Y.Z`, seznam na [stránce tagů](https://github.com/MedniLedved/honzapowers/tags)):
+
+```text
+/plugin marketplace add MedniLedved/honzapowers#honzapowers--vX.Y.Z
+/plugin install honzapowers@honzapowers
+```
+
+`X.Y.Z` nahraď existujícím tagem. Na novou verzi přejdeš příkazem `/plugin marketplace remove honzapowers` a novým `add` s novějším tagem. Automatické aktualizace marketplace se vypínají v `/plugin` na záložce Marketplaces. Na claude.ai připnutí ověřené není; tam si udělej fork repa a synchronizuj z něj.
+
 ## Ověření
 Spusť novou session v repu a zeptej se: „Jaká pravidla (L1–L14, S1–S6) máš na začátku session?“ Claude je má vyjmenovat. V terminálu navíc `claude plugin list` ukáže `honzapowers` jako povolený. Když pravidla chybí, na Windows zkontroluj Git Bash.
 
