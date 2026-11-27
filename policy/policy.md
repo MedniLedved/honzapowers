@@ -1,4 +1,4 @@
-The user's standing rules (honzapowers policy; project CLAUDE.md/AGENTS.md rules win):
+The user's standing rules (honzapowers policy; on a clash the project's CLAUDE.md/AGENTS.md win, then the user's own ~/.claude/CLAUDE.md and personal rules):
 
 Lean ops:
 L1 Text over images; screenshot only when the visual result is the subject.

@@ -22,8 +22,8 @@ Skill `handover` se řídí konvencí projektu (cesta `docs/handover/` je jen v�
 
 ## Na které úrovni pravidla platí
 1. **Výchozí** (plugin): `policy/policy.md`, vkládá se při startu session, po `/clear` a po kompaktaci (ne při `resume` a `fork`, tam přijde jen stav repa). Mění se jen ručně vydanou verzí pluginu, nikdy retrem, kontrolou plánu ani handoverem.
-2. **Uživatel** (osobní vrstva): vlastní pravidla v osobním pluginu vytvořeném ze šablony `honzapowers-sablona` (soubor `pravidla.md`, max 800 znaků). Platí ve všech tvých projektech a doplňuje výchozí pravidla. Číslo S3 je vyhrazené pro tvoje osobní pravidlo (výchozí policy ho nepoužívá), další vlastní pravidla čísluj třeba M1, M2…
-3. **Projekt**: `CLAUDE.md` / `AGENTS.md` repa a `.claude/kontrola-planu.md`. Při střetu s pravidly pluginu vyhrává projekt; stojí to v první řádce policy.
+2. **Uživatel**: tvůj `~/.claude/CLAUDE.md` a osobní vrstva, tj. vlastní pravidla v osobním pluginu vytvořeném ze šablony `honzapowers-sablona` (soubor `pravidla.md`, max 800 znaků). Platí ve všech tvých projektech, doplňují výchozí pravidla a při střetu s nimi vyhrávají. Číslo S3 je vyhrazené pro tvoje osobní pravidlo (výchozí policy ho nepoužívá), další vlastní pravidla čísluj třeba M1, M2…
+3. **Projekt**: `CLAUDE.md` / `AGENTS.md` repa a `.claude/kontrola-planu.md`. Při střetu vyhrává projekt, pak uživatel, nakonec výchozí pravidla pluginu; stojí to v první řádce policy.
 
 Nový poznatek patří tam, kde platí: jednorázové věci nikam, projektové do projektu, obecné jako návrh do osobního pluginu; výchozí pravidla se mění jen ručně vydanou verzí.
 
