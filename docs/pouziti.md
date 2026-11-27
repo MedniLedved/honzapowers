@@ -46,14 +46,16 @@ Vedle HP můžeš zapnout další pluginy. Tabulka uvádí jen to, co ověřil p
 | Plugin | K čemu vedle HP | Kde funguje | Verdikt |
 |---|---|---|---|
 | `claude-md-management` | audit `CLAUDE.md` / `AGENTS.md` (`claude-md-improver`) a návrhy zápisu poznatků do souboru s pravidly (`/revise-claude-md`) | cloud: ano; terminál: nevyzkoušeno | doporučeno |
-| `hookify` | pravidla jako soubor `.claude/hookify.*.local.md`, např. varování před příkazem | cloud: ne (`/hookify` tam neexistuje, pravidlo se nespustilo); terminál: nevyzkoušeno | jen lokálně |
-| `pr-review-toolkit` | revize změn více agenty; alternativa k revizoru z `pre-done`, víc agentů znamená víc tokenů | nevyzkoušeno | nevyzkoušeno |
-| `episodic-memory` | paměť napříč session | jen lokálně | nevyzkoušeno |
-| `claude-hud` | stavový panel | jen lokálně | nevyzkoušeno |
+| `hookify` | pravidla jako soubor `.claude/hookify.*.local.md`, např. varování před příkazem | cloud: volá se jako skill `/hookify:hookify`, pravidlo vznikne a je `enabled`, varování se ale při `echo` neukázalo; terminál: nevyzkoušeno | v cloudu nefunguje (příčina nezměřena), lokálně nevyzkoušeno |
+| `pr-review-toolkit` | revize změn více agenty; alternativa k revizoru z `pre-done` | cloud: v jednom běhu na 10řádkovém diffu zachytil vloženou tichou chybu (`\|\| true`) jako `pre-done`, ale nenašel chybějící test; podagenty nespustil; plugin zvedl kontext na startu o ~4k (84,4k → 88,4k) | jeden běh, nerozhoduje; `pre-done` stačí |
+| `episodic-memory` | paměť napříč session; překrývá se s `handover` | jen lokálně | nevyzkoušeno |
+| `claude-hud` | stavový panel, ukazuje zaplnění kontextu; hodí se jen při lokální práci | jen lokálně | nevyzkoušeno |
 
 `/revise-claude-md` navrhuje zápisy do `AGENTS.md`, `CLAUDE.md` nezakládá. S `handover` se potkává jen u poznatků ze session; `handover` píše do `docs/handover/`. Navržené změny posuzuj sám, plugin je nepřijímá za tebe.
 
 Pokud pravidla `hookify` zkoušíš lokálně, přidej do `.gitignore` řádek `.claude/*.local.md`, ať se testovací pravidlo omylem nedostane do commitu.
+
+**Tvrdé pravidlo bez pluginu.** Stejnou službu jako hookify udělá soubor `.claude/settings.json` v repu. Zkoušeno v cloudové session na větvi jiné než `main`: hook `PreToolUse` na Bash příkaz zablokoval s hláškou hooku, a pravidlo `permissions.deny` (`Bash(echo …:*)`) příkaz odmítlo hláškou oprávnění; neutrální příkaz proběhl. Na rozdíl od `hookify`, který se v cloudu nepotvrdil, tedy tahle cesta v cloudu funguje. Soubor se dostane do repa commitem, proto ho dávej jen tam, kam ho tým chce; lokální terminál nevyzkoušen.
 
 **Nedoporučujeme:**
 - `claude-mem` a `context-mode`: vkládají kontext na startu session a při PreCompact podruhé, takže zdvojují to, co už dělá HP.
