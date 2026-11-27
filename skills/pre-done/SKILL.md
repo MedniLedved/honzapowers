@@ -17,7 +17,7 @@ review of fully green branches still finds Critical and Important defects. Run t
 Start one subagent (model Sonnet, effort high) with only: the bullets from
 step 1 and the diff command (`git diff <base>...HEAD`). It reads the diff and
 the touched files, and returns at most 20 lines: findings as Critical,
-Important or Minor, each with `file:line` and one sentence. It must not edit.
+Important or Minor, each with `file:line` and one sentence. It must not edit. Ask it to look first for silent failures (a swallowed error, a broad catch, a fallback that hides a failure) and for changed behaviour that no test exercises; this adds no lines to its answer.
 For each Critical or Important finding: first add a test that fails because of the finding,
 in the project's own way of testing (if no test can show it, e.g. wording or config, say so).
 Then fix it, see that test pass, and commit the fix on its own if the session commits

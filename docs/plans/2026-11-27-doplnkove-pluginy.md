@@ -49,11 +49,11 @@
 
 **Interfaces:** nic dalšího nepotřebuje ani neposkytuje.
 
-- [ ] **Step 1: Test.** Za řádek 32 přidat: `grep -qi 'silent failure' "$REPO_ROOT/skills/pre-done/SKILL.md" && grep -qi 'no test exercises' "$REPO_ROOT/skills/pre-done/SKILL.md" && pass "pre-done: reviewer focus" || fail "pre-done: no reviewer focus"`.
-- [ ] **Step 2:** `bash tests/test-components.sh` ⇒ `FAIL pre-done: no reviewer focus`.
-- [ ] **Step 3: Text.** Za „It must not edit.“ vložit větu: `Ask it to look first for silent failures (a swallowed error, a broad catch, a fallback that hides a failure) and for changed behaviour that no test exercises; this adds no lines to its answer.`
-- [ ] **Step 4:** `bash tests/test-components.sh` ⇒ `PASS pre-done: reviewer focus`, žádný FAIL.
-- [ ] **Step 5: Commit** `feat(pre-done): revizor hledá tiché chyby a nepokryté chování` (+ řádek do `CHANGELOG.md` → `## Nepublikováno`, sekci vytvořit nad poslední verzí, pokud chybí).
+- [x] **Step 1: Test.** Za řádek 32 přidat: `grep -qi 'silent failure' "$REPO_ROOT/skills/pre-done/SKILL.md" && grep -qi 'no test exercises' "$REPO_ROOT/skills/pre-done/SKILL.md" && pass "pre-done: reviewer focus" || fail "pre-done: no reviewer focus"`.
+- [x] **Step 2:** `bash tests/test-components.sh` ⇒ `FAIL pre-done: no reviewer focus`.
+- [x] **Step 3: Text.** Za „It must not edit.“ vložit větu: `Ask it to look first for silent failures (a swallowed error, a broad catch, a fallback that hides a failure) and for changed behaviour that no test exercises; this adds no lines to its answer.`
+- [x] **Step 4:** `bash tests/test-components.sh` ⇒ `PASS pre-done: reviewer focus`, žádný FAIL.
+- [x] **Step 5: Commit** `feat(pre-done): revizor hledá tiché chyby a nepokryté chování` (+ řádek do `CHANGELOG.md` → `## Nepublikováno`, sekci vytvořit nad poslední verzí, pokud chybí).
 
 ### Task 2: Hookify jako volitelná podoba příčky `hard` v `retro`
 
@@ -63,11 +63,11 @@
 
 **Interfaces:** nic dalšího nepotřebuje ani neposkytuje.
 
-- [ ] **Step 1: Test.** `grep -q 'hookify' "$REPO_ROOT/skills/retro/SKILL.md" && grep -qi 'only if .*hookify' "$REPO_ROOT/skills/retro/SKILL.md" && pass "retro: hookify optional" || fail "retro: no optional hookify"`.
-- [ ] **Step 2:** `bash tests/test-components.sh` ⇒ `FAIL retro: no optional hookify`.
-- [ ] **Step 3: Text.** V odrážce **Rung** nahradit `` `hard` (hook, deny rule or script, 0 context tokens) `` za `` `hard` (hook, deny rule or script, 0 context tokens; a hookify rule only if the hookify plugin is installed) ``.
-- [ ] **Step 4:** `bash tests/run-tests.sh` ⇒ `ALL PASS` (včetně rozpočtu 900 slov) a `claude plugin validate --strict .` bez chyby.
-- [ ] **Step 5: Commit** `feat(retro): hookify jako volitelná podoba tvrdého pravidla` (+ řádek do `CHANGELOG.md` → `## Nepublikováno`, sekci vytvořit, pokud chybí). Push na pracovní větev (draft PR #12 už existuje).
+- [x] **Step 1: Test.** `grep -q 'hookify' "$REPO_ROOT/skills/retro/SKILL.md" && grep -qi 'only if .*hookify' "$REPO_ROOT/skills/retro/SKILL.md" && pass "retro: hookify optional" || fail "retro: no optional hookify"`.
+- [x] **Step 2:** `bash tests/test-components.sh` ⇒ `FAIL retro: no optional hookify`.
+- [x] **Step 3: Text.** V odrážce **Rung** nahradit `` `hard` (hook, deny rule or script, 0 context tokens) `` za `` `hard` (hook, deny rule or script, 0 context tokens; a hookify rule only if the hookify plugin is installed) ``.
+- [x] **Step 4:** `bash tests/run-tests.sh` ⇒ `ALL PASS` (včetně rozpočtu 900 slov) a `claude plugin validate --strict .` bez chyby.
+- [x] **Step 5: Commit** `feat(retro): hookify jako volitelná podoba tvrdého pravidla` (+ řádek do `CHANGELOG.md` → `## Nepublikováno`, sekci vytvořit, pokud chybí). Push na pracovní větev (draft PR #12 už existuje).
 
 ## Fáze 2 – pokus (uživatel; brána: pokračovat až po výsledcích)
 
