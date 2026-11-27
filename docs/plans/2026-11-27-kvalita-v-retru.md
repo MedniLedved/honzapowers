@@ -6,6 +6,8 @@
 
 **Architecture:** Jen text skillů `retro`, `skilly-kdy-ktery`, `pre-done`, uživatelské popisy v `README.md` a `docs/pouziti.md`, dva nové evals. Každou změnu skillu hlídá statický test v `tests/test-components.sh` (blok „Rules agree with each other“). Projektový řádek do `AGENTS.md` projektového repa je samostatný úkol v jiném repu. Vydání verze je samostatná fáze po merge (není v tomto plánu).
 
+**Stav provedení:** hotovo, PR MedniLedved/honzapowers#26 (nevydáno).
+
 **Stav:** kontrola 2026-11-27: 10 nálezů (po sloučení 8), opraveno 5, otázky 2, zamítnuto 1.
 
 **Tech Stack:** Markdown, bash testy (`tests/run-tests.sh`), `claude plugin eval` / `claude plugin validate`.
@@ -112,6 +114,6 @@
 
 ### Task 7: PR pluginu
 
-- [ ] **Step 1:** `bash tests/run-tests.sh` ⇒ `ALL PASS`; `claude plugin validate --strict .` ⇒ bez chyb.
-- [ ] **Step 2:** Push na `claude/magical-lamport-ihk06w`, draft PR do `main` (šablona PR, pokud existuje); v popisu výsledek Task 5. Sledovat PR.
-- [ ] **Step 3:** Odškrtnout úkoly, do záhlaví `**Stav provedení:** hotovo, PR <odkaz ze Step 2> (nevydáno)`; commit s plánem a push.
+- [x] **Step 1:** `bash tests/run-tests.sh` ⇒ `ALL PASS`; `claude plugin validate --strict .` ⇒ bez chyb.
+- [x] **Step 2:** Push na `claude/magical-lamport-ihk06w`, draft PR do `main` (šablona PR, pokud existuje); v popisu výsledek Task 5. Sledovat PR.
+- [x] **Step 3:** Odškrtnout úkoly, do záhlaví `**Stav provedení:** hotovo, PR <odkaz ze Step 2> (nevydáno)`; commit s plánem a push.
